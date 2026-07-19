@@ -399,3 +399,23 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# dependencies
+/node_modules
+
+# next.js
+/.next
+/out
+
+# env
+.env
+.env.local
+
+# logs
+*.log
+
+# misc
+.DS_Store
+
+# typescript
+*.tsbuildinfo
