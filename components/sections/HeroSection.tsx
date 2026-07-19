@@ -103,7 +103,7 @@ export function HeroSection({ data }: HeroSectionProps) {
       app = new Application(canvasRef.current!);
       splineAppRef.current = app
 
-      await app.load("/model/mainCube2.splinecode");
+      await app.load("/model/mainCube3.splinecode");
 
       const milBtn = app.findObjectByName("Icon Cube 1");
       const electBtn = app.findObjectByName("Icon Cube 2");
@@ -203,7 +203,7 @@ export function HeroSection({ data }: HeroSectionProps) {
           <nav className="hidden items-center gap-8 md:flex">
             {NAV_LINKS.map((link, index) => (
               <div key={link.label} className="group relative">
-                <a href={link.href} className={`inline-flex items-center gap-1.5 py-2 text-sm text-white transition-colors hover:text-[#A31F1A] ${index === 0 ? 'font-medium' : 'font-light'}`}>
+                <a href={link.href} className={`inline-flex items-center gap-1.5 py-2 text-sm text-slate-700 transition-colors hover:text-[#A31F1A] ${index === 0 ? 'font-medium' : 'font-light'}`}>
                   {link.label}
                   {(link.children || link.columns) && (
                     <svg className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -285,7 +285,7 @@ export function HeroSection({ data }: HeroSectionProps) {
         </div>
       </header>
 
-      <div className="pointer-events-none absolute inset-0 z-0 bg-radial-[at_25%_47%] from-slate-100 via-slate-200 to-slate-500" />
+      <div className="pointer-events-none absolute inset-0 z-0 bg-radial-[at_25%_47%] from-slate-300 via-slate-400 to-slate-900" />
       <div className="pointer-events-none absolute -left-80 bottom-0 z-0 h-[900px] w-[900px] rounded-full bg-gray opacity-90 blur-3xl" />
       <div className="pointer-events-none absolute right-32 top-40 z-0 h-[500px] w-[500px] rounded-full bg-blue-200 opacity-30 blur-[150px]" />
       <div className="pointer-events-none absolute inset-0 z-0">
@@ -312,6 +312,21 @@ export function HeroSection({ data }: HeroSectionProps) {
           <div data-hero-cta className="flex flex-col justify-start gap-4 sm:flex-row">
             <a href={data?.cta?.href ?? '#solutions'} className="glassContainer pointer-events-auto items-center justify-center px-6 py-3 font-semibold text-slate-700">
               {data?.cta?.label ?? 'Khám Phá Giải Pháp'}
+              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80">
+                <svg
+                  aria-hidden="true"
+                  className="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="black"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m13 6 6 6-6 6" />
+                </svg>
+              </span>
             </a>
           </div>
           <div ref={statsRef} className="mx-auto grid max-w-5xl grid-cols-2 gap-8 pt-20 md:grid-cols-3">

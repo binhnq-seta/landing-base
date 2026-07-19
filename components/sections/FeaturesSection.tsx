@@ -37,30 +37,61 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
     const section = sectionRef.current
     if (!section) return
 
-    const targets = section.querySelectorAll<HTMLElement>('[data-feature-reveal]')
+    const heading = section.querySelector<HTMLElement>('[data-feature-reveal]')
+    const titles = section.querySelectorAll<HTMLElement>('[data-feature-title]')
+    const descriptions = section.querySelectorAll<HTMLElement>('[data-feature-description]')
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (reduceMotion) {
-      gsap.set(targets, { opacity: 1, y: 0 })
+      gsap.set([heading, ...titles, ...descriptions], { opacity: 1, x: 0, y: 0, rotation: 0 })
       return
     }
 
-    const revealTween = gsap.fromTo(
-      targets,
-      { opacity: 0, y: 70 },
-      {
+    const revealTween = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 95%',
+        end: 'bottom 85%',
+        scrub: 2.5,
+      },
+    })
+
+    revealTween
+      .fromTo(heading, { opacity: 0, y: -80, rotation: -4 }, {
         opacity: 1,
         y: 0,
-        ease: 'circ.out',
+        rotation: 0,
+        duration: 0.8,
+        ease: 'back.out(1.4)',
+      })
+      .fromTo(titles, {
+        opacity: 0,
+        x: (index) => (index % 2 === 0 ? -160 : 160),
+        y: (index) => (index % 3 === 0 ? -70 : 70),
+        rotation: (index) => (index % 2 === 0 ? -9 : 9),
+      }, {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        rotation: 0,
+        duration: 0.85,
         stagger: 0.1,
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 75%',
-          end: 'top 40%',
-          scrub: 4,
-        },
-      },
-    )
+        ease: 'back.out(1.7)',
+      }, '-=0.4')
+      .fromTo(descriptions, {
+        opacity: 0,
+        x: (index) => (index % 2 === 0 ? 120 : -120),
+        y: (index) => (index % 2 === 0 ? 80 : -80),
+        rotation: (index) => (index % 2 === 0 ? 5 : -5),
+      }, {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        rotation: 0,
+        duration: 0.75,
+        stagger: 0.08,
+        ease: 'power3.out',
+      }, '-=0.65')
 
     return () => {
       revealTween.scrollTrigger?.kill()
@@ -90,13 +121,13 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
 
           <div className="grid grid-cols-2 gap-6 items-stretch justify-start max-w-[800px]">
             {features.map((feature, i) => (
-              <div key={feature.id} data-feature-card data-feature-reveal className="pointer-events-auto h-full">
+              <div key={feature.id} data-feature-card className="pointer-events-auto h-full">
                 <div className="feature-card flex h-full flex-col rounded-xl p-6">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg">
                     {ICONS[i % ICONS.length]}
                   </div>
-                  <h3 className="mb-2 text-xl font-bold text-slate-700">{feature.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{feature.description}</p>
+                  <h3 data-feature-title className="mb-2 text-xl font-bold text-slate-700">{feature.title}</h3>
+                  <p data-feature-description className="text-gray-400 leading-relaxed">{feature.description}</p>
                 </div>
               </div>
             ))}
