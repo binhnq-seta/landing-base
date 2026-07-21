@@ -3,6 +3,7 @@
 import { Application } from '@splinetool/runtime';
 import { useEffect, useRef } from 'react';
 import { gsap } from '@/lib/gsap';
+import Spline from '@splinetool/react-spline';
 
 const X = 750;
 const Y = -250;
@@ -39,28 +40,28 @@ export function CTASection() {
     return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
+  // useEffect(() => {
+  //   if (!canvasRef.current) return;
 
-    let app: Application;
+  //   let app: Application;
 
-    async function init() {
-      app = new Application(canvasRef.current!);
+  //   async function init() {
+  //     app = new Application(canvasRef.current!);
 
-      await app.load("/model/redCube.splinecode");
+  //     await app.load("/model/redCube.splinecode");
 
-      const cube = app.findObjectByName("Group");
-      const background = app.findObjectByName("Ellipse");
-      background!.position.x = X;
-      background!.position.y = Y;
-      cube!.position.x = X;
-      cube!.position.y = Y;
-    }
+  //     const cube = app.findObjectByName("Group");
+  //     const background = app.findObjectByName("Ellipse");
+  //     background!.position.x = X;
+  //     background!.position.y = Y;
+  //     cube!.position.x = X;
+  //     cube!.position.y = Y;
+  //   }
 
-    init();
+  //   init();
 
-    return () => app?.dispose();
-  }, []);
+  //   return () => app?.dispose();
+  // }, []);
 
   return (
     <section ref={sectionRef} id="contact" className="relative min-h-[60vh] overflow-hidden bg-[#EEF4FE] px-[10vw] py-24">
@@ -72,9 +73,13 @@ export function CTASection() {
           Kết nối ngay
         </a>
       </div>
-      <canvas
+      {/* <canvas
         ref={canvasRef}
         className="absolute inset-0 z-0"
+      /> */}
+      <Spline
+        className="absolute inset-0 z-0"
+        scene="https://prod.spline.design/bp1kbK-q0qw-AHdM/scene.splinecode"
       />
     </section>
   )

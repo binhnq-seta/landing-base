@@ -103,7 +103,7 @@ export function HeroSection({ data }: HeroSectionProps) {
       app = new Application(canvasRef.current!);
       splineAppRef.current = app
 
-      await app.load("/model/mainCube3.splinecode");
+      await app.load("/model/mainCube9.splinecode");
 
       const milBtn = app.findObjectByName("Icon Cube 1");
       const electBtn = app.findObjectByName("Icon Cube 2");
@@ -288,9 +288,9 @@ export function HeroSection({ data }: HeroSectionProps) {
       <div className="pointer-events-none absolute inset-0 z-0 bg-radial-[at_25%_47%] from-slate-300 via-slate-400 to-slate-900" />
       <div className="pointer-events-none absolute -left-80 bottom-0 z-0 h-[900px] w-[900px] rounded-full bg-gray opacity-90 blur-3xl" />
       <div className="pointer-events-none absolute right-32 top-40 z-0 h-[500px] w-[500px] rounded-full bg-blue-200 opacity-30 blur-[150px]" />
-      <div className="pointer-events-none absolute inset-0 z-0">
+      {/* <div className="pointer-events-none absolute inset-0 z-0">
         <ParticleCanvas count={10000} color={0xffffff} />
-      </div>
+      </div> */}
 
       <div className="pointer-events-none absolute inset-0 z-10">
         <div className="sticky top-0 h-screen w-full overflow-hidden">

@@ -3,6 +3,7 @@ import type { FeaturesSection as FeaturesData } from '@/types/strapi'
 import { Application } from '@splinetool/runtime'
 import { useEffect, useRef } from 'react'
 import { gsap } from '@/lib/gsap'
+import Spline from '@splinetool/react-spline';
 
 interface FeaturesSectionProps {
     data?: FeaturesData
@@ -23,31 +24,31 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
     const sectionRef = useRef<HTMLElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    useEffect(() => {
-        if (!canvasRef.current) return;
+    // useEffect(() => {
+    //     if (!canvasRef.current) return;
 
-        let app: Application;
+    //     let app: Application;
 
-        async function init() {
-            app = new Application(canvasRef.current!);
+    //     async function init() {
+    //         app = new Application(canvasRef.current!);
 
-            await app.load("/model/atomic.splinecode");
+    //         await app.load("/model/atomic.splinecode");
 
-            const sphere = app.findObjectByName("Sphere 3");
-            const cylinder = app.findObjectByName("Cylinder");
-            const DirectionalLight = app.findObjectByName("Directional Light");
-            sphere!.position.x = X;
-            sphere!.position.y = Y;
-            cylinder!.position.x = X;
-            cylinder!.position.y = Y;
-            DirectionalLight!.position.x = X;
-            DirectionalLight!.position.y = Y;
-        }
+    //         const sphere = app.findObjectByName("Sphere 3");
+    //         const cylinder = app.findObjectByName("Cylinder");
+    //         const DirectionalLight = app.findObjectByName("Directional Light");
+    //         sphere!.position.x = X;
+    //         sphere!.position.y = Y;
+    //         cylinder!.position.x = X;
+    //         cylinder!.position.y = Y;
+    //         DirectionalLight!.position.x = X;
+    //         DirectionalLight!.position.y = Y;
+    //     }
 
-        init();
+    //     init();
 
-        return () => app?.dispose();
-    }, []);
+    //     return () => app?.dispose();
+    // }, []);
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -114,9 +115,13 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
                 </div>
             </div>
 
-            <canvas
+            {/* <canvas
                 ref={canvasRef}
                 className="absolute inset-0 z-0"
+            /> */}
+            <Spline
+                className="absolute inset-0 z-0"
+                scene="https://prod.spline.design/R6-tMJwCtmt55EM7/scene.splinecode"
             />
         </section>
     )
