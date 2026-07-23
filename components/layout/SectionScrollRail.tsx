@@ -9,7 +9,7 @@ const SECTION_LINKS = [
   { id: 'core-values', label: 'Giá trị cốt lõi' },
   { id: 'solutions', label: 'Giải pháp' },
   { id: 'projects', label: 'Dự án' },
-  { id: 'contact', label: 'Liên hệ' },
+  { id: 'partners', label: 'Đối tác' },
 ]
 
 export function SectionScrollRail() {

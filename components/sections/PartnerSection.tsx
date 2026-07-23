@@ -1,0 +1,129 @@
+'use client'
+
+import Image from 'next/image'
+import { useEffect, useRef } from 'react'
+import { gsap } from '@/lib/gsap'
+
+const PARTNER_LOGOS = [
+  { src: '/image/partner-logo/petro.png', alt: 'PetroVietnam' },
+  { src: '/image/partner-logo/evn.png', alt: 'EVN' },
+  { src: '/image/partner-logo/image%2033.png', alt: 'Đối tác General Systems 1' },
+  { src: '/image/partner-logo/image%2032.png', alt: 'Đối tác General Systems 2' },
+  { src: '/image/partner-logo/image%2032-1.png', alt: 'Đối tác General Systems 3' },
+  { src: '/image/partner-logo/image%2032-2.png', alt: 'Đối tác General Systems 4' },
+  { src: '/image/partner-logo/image%2032-3.png', alt: 'Đối tác General Systems 5' },
+  { src: '/image/partner-logo/image%2032-4.png', alt: 'Đối tác General Systems 6' },
+]
+
+export function PartnerSection() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    const track = trackRef.current
+    if (!section || !track) return
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const revealTween = gsap.fromTo(
+      section.querySelectorAll('[data-partner-reveal]'),
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.12,
+        paused: true,
+      },
+    )
+
+    const marqueeTween = reduceMotion
+      ? null
+      : gsap.fromTo(
+        track,
+        { xPercent: -50 },
+        {
+          xPercent: 0,
+          duration: 28,
+          ease: 'none',
+          repeat: -1,
+          paused: true,
+          force3D: true,
+        },
+      )
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (revealTween.progress() === 0) revealTween.play()
+          marqueeTween?.play()
+        } else {
+          marqueeTween?.pause()
+        }
+      },
+      { threshold: 0.2 },
+    )
+
+    observer.observe(section)
+
+    return () => {
+      observer.disconnect()
+      revealTween.kill()
+      marqueeTween?.kill()
+    }
+  }, [])
+
+  return (
+    <section
+      ref={sectionRef}
+      id="partners"
+      className="relative flex min-h-[60vh] items-center overflow-hidden py-24"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-1"
+      />
+
+      <div className="relative z-10 w-full">
+        <h1
+          data-partner-reveal
+          className="mb-16 px-6 text-center text-[clamp(60px,4vw,100px)] font-bold uppercase text-slate-700"
+        >
+          Đối tác của chúng tôi
+        </h1>
+
+        <div
+          data-partner-reveal
+          className="relative w-full overflow-hidden py-6"
+        >
+          <div ref={trackRef} className="flex w-max will-change-transform">
+            {[0, 1].map((groupIndex) => (
+              <div
+                key={groupIndex}
+                aria-hidden={groupIndex === 1}
+                className="flex shrink-0 items-center gap-10 pr-10 md:gap-16 md:pr-16"
+              >
+                {PARTNER_LOGOS.map((logo) => (
+                  <div
+                    key={`${groupIndex}-${logo.src}`}
+                    className="relative h-28 w-48"
+                  >
+                    <Image
+                      src={logo.src}
+                      alt={groupIndex === 0 ? logo.alt : ''}
+                      fill
+                      sizes="(min-width: 768px) 224px, 192px"
+                      className="object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

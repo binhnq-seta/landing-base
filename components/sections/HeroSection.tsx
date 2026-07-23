@@ -97,63 +97,20 @@ export function HeroSection({ data }: HeroSectionProps) {
     if (!canvasRef.current) return;
 
     let app: Application;
-    let handleSplineMouseDown: ((event: SplineEvent) => void) | undefined;
 
     async function init() {
       app = new Application(canvasRef.current!);
       splineAppRef.current = app
 
       await app.load("/model/mainCube9.splinecode");
-
-      const milBtn = app.findObjectByName("Icon Cube 1");
-      const electBtn = app.findObjectByName("Icon Cube 2");
-      const secBtn = app.findObjectByName("Icon Cube 3");
-      const solBtn = app.findObjectByName("Icon Cube 4");
-      const interBtn = app.findObjectByName("Icon Cube 5");
-      const airlineBtn = app.findObjectByName("Icon Cube 6");
-
-      const solutionIndexByButtonName = new Map<string, number>()
-      if (milBtn) solutionIndexByButtonName.set(milBtn.name, 1)
-      if (electBtn) solutionIndexByButtonName.set(electBtn.name, 3)
-      if (secBtn) solutionIndexByButtonName.set(secBtn.name, 2)
-      if (solBtn) solutionIndexByButtonName.set(solBtn.name, 4)
-      if (interBtn) solutionIndexByButtonName.set(interBtn.name, 0)
-      if (airlineBtn) solutionIndexByButtonName.set(airlineBtn.name, 5)
-
-      handleSplineMouseDown = (event) => {
-        const solutionIndex = solutionIndexByButtonName.get(event.target.name)
-        if (solutionIndex === undefined) return
-
-        document.querySelector<HTMLElement>(`[data-solution-index="${solutionIndex}"]`)?.click()
-
-        const solutionsSection = document.getElementById('solutions')
-        if (!solutionsSection) return
-
-        const targetTop = window.scrollY + solutionsSection.getBoundingClientRect().top
-        if (lenisRef.current) {
-          lenisRef.current.scrollTo(targetTop, {
-            duration: 1.5,
-            force: true,
-            lock: true,
-          })
-        } else {
-          window.scrollTo({ top: targetTop, behavior: 'smooth' })
-        }
-      }
-
-      app.addEventListener('mouseDown', handleSplineMouseDown)
     }
 
     init();
 
     return () => {
-      if (app && handleSplineMouseDown) {
-        app.removeEventListener('mouseDown', handleSplineMouseDown)
-      }
-      splineAppRef.current = null
       app?.dispose()
     };
-  }, [lenisRef]);
+  }, []);
 
   useEffect(() => {
     const updateSplineInteraction = () => {
@@ -181,11 +138,11 @@ export function HeroSection({ data }: HeroSectionProps) {
   }, [])
 
   return (
-    <section ref={containerRef} id="home" className="relative min-h-[200vh] bg-slate-200">
+    <section ref={containerRef} id="home" className="relative min-h-[200vh]">
       <header className="absolute top-0 z-50 w-full">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4">
+        <div className="mx-auto flex w-full items-center justify-between px-20 py-4">
           <Link href="/" className="inline-flex items-center pt-2">
-            <Image src="/image/logoLg.png" alt="Logo" width={180} height={50} priority />
+            <Image src="/image/logoLg.png" alt="Logo" width={300} height={90} priority />
           </Link>
 
           <button
@@ -215,7 +172,7 @@ export function HeroSection({ data }: HeroSectionProps) {
                   <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                     <div className="overflow-hidden rounded-xl border border-white/40 bg-white/90 p-2 shadow-xl shadow-slate-900/10 backdrop-blur-xl">
                       {link.children.map((child) => (
-                        <a key={child.label} href={child.href} className="block rounded-lg px-4 py-2.5 text-sm font-light text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#A31F1A]">
+                        <a key={child.label} href={child.href} className="block rounded-lg px-4 py-2.5 text-sm font-light text-slate-700 transition-colors hover:text-[#A31F1A]">
                           {child.label}
                         </a>
                       ))}
@@ -223,7 +180,7 @@ export function HeroSection({ data }: HeroSectionProps) {
                   </div>
                 )}
                 {link.columns && (
-                  <div className="invisible absolute left-1/2 top-full z-50 w-[34rem] -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                  <div className="invisible absolute right-0 top-full z-50 w-[min(34rem,calc(100vw-2rem))] pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                     <div className="grid grid-cols-2 gap-2 overflow-hidden rounded-xl border border-white/40 bg-white/90 p-3 shadow-xl shadow-slate-900/10 backdrop-blur-xl">
                       {link.columns.map((column) => (
                         <div key={column.label} className="rounded-lg p-2">
@@ -232,7 +189,7 @@ export function HeroSection({ data }: HeroSectionProps) {
                           </a>
                           <div className="space-y-1">
                             {column.items.map((item) => (
-                              <a key={item.label} href={item.href} className="block rounded-lg px-2 py-2 text-sm font-light text-slate-600 transition-colors hover:bg-slate-100 hover:text-[#A31F1A]">
+                              <a key={item.label} href={item.href} className="block rounded-lg px-2 py-2 text-sm font-light text-slate-600 transition-colors hover:text-[#A31F1A]">
                                 {item.label}
                               </a>
                             ))}
@@ -285,20 +242,13 @@ export function HeroSection({ data }: HeroSectionProps) {
         </div>
       </header>
 
-      <div className="pointer-events-none absolute inset-0 z-0 bg-radial-[at_25%_47%] from-slate-300 via-slate-400 to-slate-900" />
-      <div className="pointer-events-none absolute -left-80 bottom-0 z-0 h-[900px] w-[900px] rounded-full bg-gray opacity-90 blur-3xl" />
-      <div className="pointer-events-none absolute right-32 top-40 z-0 h-[500px] w-[500px] rounded-full bg-blue-200 opacity-30 blur-[150px]" />
-      {/* <div className="pointer-events-none absolute inset-0 z-0">
-        <ParticleCanvas count={10000} color={0xffffff} />
-      </div> */}
-
       <div className="pointer-events-none absolute inset-0 z-10">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
+        {/* <div className="sticky top-0 h-screen w-full overflow-hidden">
           <canvas
             ref={canvasRef}
             className={`block h-full w-full ${disableSpline ? 'pointer-events-none' : 'pointer-events-auto'}`}
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-center justify-start px-[10vw] text-start">

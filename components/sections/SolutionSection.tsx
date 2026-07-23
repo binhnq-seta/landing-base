@@ -14,6 +14,7 @@ const SOLUTION_IMAGE = [
 const ROW_ACTIVE = 1.4, ROW_REST = 0.6;   // tổng = 2
 const COL_ACTIVE = 1, COL_REST = 0.7;   // tổng = 3 (chỉ áp dụng cho hàng active)
 const IMG_SCALE_ACTIVE = 1;
+const HOVER_DELAY = 180;
 
 export default function SolutionSection() {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -29,6 +30,7 @@ export default function SolutionSection() {
     const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
     const imgRefs = useRef<(HTMLImageElement | null)[]>([]);
     const titleRefs = useRef<(HTMLHeadingElement | null)[]>([]);
+    const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const rows = useRef({ r0: ROW_ACTIVE, r1: ROW_REST });
     const cols = useRef([
@@ -187,8 +189,26 @@ export default function SolutionSection() {
         setActiveIndex(index);
     };
 
+    const cancelHoverSelect = () => {
+        if (hoverTimerRef.current === null) return;
+        clearTimeout(hoverTimerRef.current);
+        hoverTimerRef.current = null;
+    };
+
+    const handleHoverSelect = (index: number) => {
+        cancelHoverSelect();
+        if (index === activeIndex) return;
+
+        hoverTimerRef.current = setTimeout(() => {
+            hoverTimerRef.current = null;
+            handleSelect(index);
+        }, HOVER_DELAY);
+    };
+
+    useEffect(() => cancelHoverSelect, []);
+
     return (
-        <section ref={sectionRef} id="solutions" className="bg-[#E3F2FD] min-h-screen overflow-hidden relative">
+        <section ref={sectionRef} id="solutions" className="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat">
             <div className="grid grid-cols-[35%_65%] min-h-screen">
                 <img ref={crystalRef} src="/image/crystal.png" alt="Crystal" className="absolute z-0 w-[50%] -top-1/5 -left-[25%] drop-shadow-[0_0_80px_rgba(120,120,120,0.35)]" />
                 <div className="flex h-full items-end justify-center">
@@ -212,7 +232,8 @@ export default function SolutionSection() {
                                         key={index}
                                         data-solution-index={index}
                                         ref={(el) => { cardRefs.current[index] = el; }}
-                                        onClick={() => handleSelect(index)}
+                                        onMouseEnter={() => handleHoverSelect(index)}
+                                        onMouseLeave={cancelHoverSelect}
                                         className="relative overflow-hidden cursor-pointer basis-0 min-w-0 min-h-0"
                                         style={{
                                             flexGrow: rowIdx === 0
@@ -237,6 +258,24 @@ export default function SolutionSection() {
                                         <div ref={(el) => { overlayGradRefs.current[index] = el; }} className="absolute inset-0 bg-gradient-to-t from-gray-200/80 via-black/5 to-transparent" />
 
                                         <div className="absolute flex flex-col justify-end items-start inset-0 p-6">
+                                            <span
+                                                className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/80 mb-5"
+                                                style={{ opacity: index === activeIndex ? 1 : 0 }}
+                                            >
+                                                <svg
+                                                    aria-hidden="true"
+                                                    className="h-5 w-5"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="black"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <path d="M5 12h14" />
+                                                    <path d="m13 6 6 6-6 6" />
+                                                </svg>
+                                            </span>
                                             <h3
                                                 ref={(el) => { titleRefs.current[index] = el; }}
                                                 className="text-slate-700 text-xl">

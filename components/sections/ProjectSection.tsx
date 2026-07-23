@@ -1,15 +1,15 @@
 'use client';
 
 import Image from 'next/image'
-import { useEffect, useRef } from 'react'
-import { gsap, ScrollTrigger } from '@/lib/gsap'
+import { useEffect, useRef, useState } from 'react'
+import { gsap } from '@/lib/gsap'
 
 const PROJECTS = [
     {
         id: '01',
         category: 'VIETNAM AIRLINES',
         title: 'Phần mềm phân bay (AVES)',
-        img: '/image/small/rocket.png',
+        img: '/image/slide-bg.jpg',
         description:
             'Năm 2018, Chúng tôi được VNA lựa chọn là đơn vị cung cấp giải pháp phần mềm phân bay phi công, tiếp viên (AVES). Cho đến nay Chúng tôi tiếp tục cung cấp dịch vụ bảo trì, nâng cấp và hỗ trợ kỹ thuật cho VNA.',
     },
@@ -17,7 +17,7 @@ const PROJECTS = [
         id: '02',
         category: 'CỤC KTVN - BỘ CÔNG An',
         title: 'Hệ thống GSM cơ động',
-        img: '/image/small/cloud.png',
+        img: '/image/slide-bg.jpg',
         description:
             'Năm 2017, Chúng tôi được lựa chọn là đơn vị triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến cho Cục KTNV - Bộ Công an',
     },
@@ -25,14 +25,51 @@ const PROJECTS = [
         id: '03',
         category: 'TỔNG CÔNG TY TRUYỀN TẢI ĐIỆN QUỐC GIA',
         title: 'Hệ thống An toàn Thông tin',
-        img: '/image/small/shield.png',
+        img: '/image/slide-bg.jpg',
         description:
             'Dự án trang bị hệ thống An ninh thông tin cho Tổng công ty Truyền tải điện Quốc gia nhằm xây dựng hạ tầng bảo mật tổng thể, bảo vệ an toàn hệ thống CNTT và điều hành lưới điện, đảm bảo vận hành liên tục, tin cậy và tuân thủ các yêu cầu an ninh quốc gia',
     },
 ]
 
 export default function ProjectSection() {
+    const [activeIndex, setActiveIndex] = useState(0)
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+    const [isCarouselHovered, setIsCarouselHovered] = useState(false)
+    const [isSectionVisible, setIsSectionVisible] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
+    const touchStartXRef = useRef<number | null>(null)
+    const isCarouselHoveredRef = useRef(false)
+
+    const showPrevious = () => {
+        setActiveIndex((current) =>
+            current === 0 ? PROJECTS.length - 1 : current - 1,
+        )
+    }
+
+    const showNext = () => {
+        setActiveIndex((current) => (current + 1) % PROJECTS.length)
+    }
+
+    const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+        touchStartXRef.current = event.touches[0].clientX
+    }
+
+    const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+        if (touchStartXRef.current === null) return
+
+        const distance = event.changedTouches[0].clientX - touchStartXRef.current
+        touchStartXRef.current = null
+
+        if (Math.abs(distance) < 50) return
+        if (distance > 0) showPrevious()
+        else showNext()
+    }
+
+    const getSlidePosition = (index: number) => {
+        if (index === activeIndex) return 0
+        if (index === (activeIndex - 1 + PROJECTS.length) % PROJECTS.length) return -1
+        return 1
+    }
 
     useEffect(() => {
         const section = sectionRef.current
@@ -45,9 +82,6 @@ export default function ProjectSection() {
         }
 
         const ctx = gsap.context(() => {
-            const images =
-                gsap.utils.toArray<HTMLElement>('[data-project-image]')
-
             const revealTargets =
                 gsap.utils.toArray<HTMLElement>('[data-project-reveal]')
 
@@ -65,87 +99,159 @@ export default function ProjectSection() {
                 },
             })
 
-            const floatTween = gsap.to(images, {
-                y: 8,
-                duration: 2.5,
-                ease: 'sine.inOut',
-                stagger: 0.25,
-                repeat: -1,
-                yoyo: true,
-                paused: true,
-                force3D: true,
-            })
-
-            ScrollTrigger.create({
-                trigger: section,
-                start: 'top bottom',
-                end: 'bottom top',
-                onEnter: () => floatTween.play(),
-                onEnterBack: () => floatTween.play(),
-                onLeave: () => floatTween.pause(),
-                onLeaveBack: () => floatTween.pause(),
-            })
         }, section)
 
         return () => ctx.revert()
     }, [])
 
+    useEffect(() => {
+        const section = sectionRef.current
+        if (!section) return
+
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsSectionVisible(entry.isIntersecting),
+            { threshold: 0.3 },
+        )
+
+        observer.observe(section)
+        return () => observer.disconnect()
+    }, [])
+
+    useEffect(() => {
+        if (isCarouselHovered || !isSectionVisible) return
+
+        const autoplayTimer = window.setInterval(() => {
+            if (isCarouselHoveredRef.current) return
+            setActiveIndex((current) => (current + 1) % PROJECTS.length)
+        }, 2000)
+
+        return () => window.clearInterval(autoplayTimer)
+    }, [isCarouselHovered, isSectionVisible])
+
     return (
-        <section ref={sectionRef} id="projects" className="bg-[#FAFAFF] px-[10vw] py-24">
-            <div className="mx-auto max-w-[clamp(500px,80%,1200px)]">
-                <h2 data-project-reveal className="mb-14 text-center text-4xl font-bold uppercase text-slate-700 sm:text-5xl">
-                    Dự án <span className="text-[#A31F1A]">tiêu biểu</span>
-                </h2>
+        <section ref={sectionRef} id="projects" className="relative flex min-h-screen items-center overflow-hidden bg-[#FAFAFF]">
+            <Image
+                src="/image/project-bg.png"
+                alt=""
+                fill
+                sizes="100vw"
+                className="z-0 scale-60 object-cover blur-[80px] -rotate-[100deg] translate-x-[20%] -translate-y-[40%]"
+                aria-hidden="true"
+            />
 
-                <div>
-                    {PROJECTS.map((project, index) => (
-                        <article
-                            key={project.id}
-                            data-project-reveal
-                            className={`grid items-center gap-2 py-12 lg:gap-2 ${index === 1 ? 'md:grid-cols-[minmax(0,55fr)_minmax(0,45fr)]' : 'md:grid-cols-[minmax(0,45fr)_minmax(0,55fr)]'}`}
-                        >
-                            <div
-                                data-project-model={project.id}
-                                className={`relative aspect-[4/3] w-[88%] max-w-[20vw] justify-self-center overflow-visible md:w-[82%] ${index === 1 ? 'md:order-2 md:justify-self-end' : 'md:justify-self-start'}`}
-                            >
-                                <div
-                                    aria-hidden="true"
-                                    className="absolute inset-0 z-0 rounded-xl border border-white/70 bg-[linear-gradient(135deg,rgba(147,197,253,0.52)_0%,rgba(219,234,254,0.30)_48%,rgba(255,255,255,0.68)_100%)]"
-                                />
+            <div className="relative z-10 w-full">
+                <h1 data-project-reveal className="mb-30 text-start px-[10vw] text-[clamp(60px,4vw,100px)] font-bold uppercase text-slate-700">
+                    Dự án tiêu biểu
+                </h1>
 
-                                <div className="absolute -inset-[14%] z-10 -translate-y-[5%]">
-                                    <div
-                                        data-project-image
-                                        className="relative h-full w-full"
+                <div data-project-reveal>
+                    <div
+                        className="-my-48 touch-pan-y overflow-hidden py-48"
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        <div className="grid">
+                            {PROJECTS.map((project, index) => {
+                                const position = getSlidePosition(index)
+                                const isActive = position === 0
+                                const isHovered = hoveredIndex === index && !isActive
+                                const slideOffset = position * (isHovered ? 86 : 92)
+                                const slideScale = isActive ? 0.90 : isHovered ? 0.79 : 0.75
+
+                                return (
+                                    <article
+                                        key={project.id}
+                                        aria-current={isActive ? 'true' : undefined}
+                                        aria-label={isActive ? undefined : `Chuyển tới dự án ${index + 1}`}
+                                        role={isActive ? undefined : 'button'}
+                                        tabIndex={isActive ? -1 : 0}
+                                        onMouseEnter={() => {
+                                            isCarouselHoveredRef.current = true
+                                            setIsCarouselHovered(true)
+                                            setHoveredIndex(index)
+                                        }}
+                                        onMouseLeave={() => {
+                                            isCarouselHoveredRef.current = false
+                                            setIsCarouselHovered(false)
+                                            setHoveredIndex(null)
+                                        }}
+                                        onClick={() => !isActive && setActiveIndex(index)}
+                                        onKeyDown={(event) => {
+                                            if (!isActive && (event.key === 'Enter' || event.key === ' ')) {
+                                                event.preventDefault()
+                                                setActiveIndex(index)
+                                            }
+                                        }}
+                                        className={`relative col-start-1 row-start-1 grid w-[78%] grid-cols-[minmax(0,30fr)_minmax(0,70fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-7 py-10 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:gap-8 md:px-10 lg:gap-12 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] backdrop-blur-xl hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
+                                        style={{
+                                            opacity: isActive ? 1 : isHovered ? 0.78 : 0.48,
+                                            transform: `translateX(${slideOffset}%) scale(${slideScale})`,
+                                            zIndex: isActive ? 3 : isHovered ? 2 : 1,
+                                        }}
                                     >
-                                        <Image
-                                            src={project.img}
-                                            alt={project.title}
-                                            fill
-                                            sizes="(min-width: 768px) 26vw, 100vw"
-                                            quality={60}
-                                            className="select-none object-contain"
-                                            draggable={false}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+                                        <div className="absolute inset-y-0 left-0 z-0 w-[30%] overflow-hidden rounded-l-[2rem] bg-blue-50/70">
+                                            <Image
+                                                src={project.img}
+                                                alt="Dự án tiêu biểu"
+                                                fill
+                                                sizes="300vw"
+                                                quality={75}
+                                                className="h-full w-full object-contain"
+                                                aria-hidden="true"
+                                            />
+                                        </div>
 
-                            <div className={`flex flex-col items-start ${index === 1 ? 'md:order-1' : ''}`}>
-                                <div className="mb-5 flex items-center gap-4">
-                                    <span className="text-sm font-medium uppercase text-slate-500">
-                                        {project.category}
-                                    </span>
-                                </div>
-                                <h3 className="max-w-2xl text-2xl font-bold leading-snug text-slate-700 sm:text-3xl">
-                                    {project.title}
-                                </h3>
-                                <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500">
-                                    {project.description}
-                                </p>
-                            </div>
-                        </article>
-                    ))}
+                                        <div aria-hidden="true" className="min-h-48" />
+
+                                        <div className="relative z-10 flex flex-col items-start">
+                                            <span className="mb-5 text-sm font-medium uppercase text-slate-500">
+                                                {project.category}
+                                            </span>
+                                            <h3 className="max-w-2xl text-2xl font-bold leading-snug text-slate-700 sm:text-3xl">
+                                                {project.title}
+                                            </h3>
+                                            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500">
+                                                {project.description}
+                                            </p>
+                                            <a
+                                                href="#contact"
+                                                className="mt-7 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                                            >
+                                                Xem thêm
+                                                <span aria-hidden="true">→</span>
+                                            </a>
+                                        </div>
+                                    </article>
+                                )
+                            })}
+                        </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-center">
+                        <div
+                            className="flex items-center gap-2"
+                            aria-label="Chọn dự án"
+                            onMouseEnter={() => {
+                                isCarouselHoveredRef.current = true
+                                setIsCarouselHovered(true)
+                            }}
+                            onMouseLeave={() => {
+                                isCarouselHoveredRef.current = false
+                                setIsCarouselHovered(false)
+                            }}
+                        >
+                            {PROJECTS.map((project, index) => (
+                                <button
+                                    key={project.id}
+                                    type="button"
+                                    onClick={() => setActiveIndex(index)}
+                                    aria-label={`Xem dự án ${index + 1}`}
+                                    aria-current={index === activeIndex ? 'true' : undefined}
+                                    className={`cursor-pointer h-2.5 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-blue-600' : 'w-2.5 bg-blue-200 hover:bg-blue-400'}`}
+                                />
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

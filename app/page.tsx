@@ -1,6 +1,6 @@
 import { SiteFooter } from '@/components/layout/Footer'
 import { HeroSection } from '@/components/sections/HeroSection'
-import { CTASection } from '@/components/sections/CTASection'
+import { PartnerSection } from '@/components/sections/PartnerSection'
 import { CoreValueSection } from '@/components/sections/CoreValueSection'
 import SolutionSection from '@/components/sections/SolutionSection'
 import ProjectSection from '@/components/sections/ProjectSection'
@@ -27,7 +27,7 @@ export default async function Home() {
         <CoreValueSection />
         <SolutionSection />
         <ProjectSection />
-        <CTASection />
+        <PartnerSection />
       </main>
       <SiteFooter />
     </>
