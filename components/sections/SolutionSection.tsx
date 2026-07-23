@@ -1,5 +1,6 @@
 'use client'
-import { useRef, useState, useEffect } from "react";
+import Image from 'next/image'
+import { useRef, useEffect } from "react";
 import { gsap } from "@/lib/gsap";
 
 const SOLUTION_IMAGE = [
@@ -17,8 +18,6 @@ const IMG_SCALE_ACTIVE = 1;
 const HOVER_DELAY = 180;
 
 export default function SolutionSection() {
-    const [activeIndex, setActiveIndex] = useState(0);
-
     const sectionRef = useRef<HTMLElement>(null);
     const crystalRef = useRef<HTMLImageElement>(null);
     const sectionTitleRef = useRef<HTMLHeadingElement>(null);
@@ -27,37 +26,15 @@ export default function SolutionSection() {
     const overlayRefs = useRef<(HTMLDivElement | null)[]>([]);
     const overlayGradRefs = useRef<(HTMLDivElement | null)[]>([]);
     const descWrapRefs = useRef<(HTMLDivElement | null)[]>([]);
-    const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
     const imgRefs = useRef<(HTMLImageElement | null)[]>([]);
     const titleRefs = useRef<(HTMLHeadingElement | null)[]>([]);
+    const arrowRefs = useRef<(HTMLSpanElement | null)[]>([]);
     const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    const rows = useRef({ r0: ROW_ACTIVE, r1: ROW_REST });
-    const cols = useRef([
-        [COL_ACTIVE, COL_REST, COL_REST],
-        [1, 1, 1],
-    ]);
-
-    const applyRows = () => {
-        rowContainerRefs.current.forEach((el, r) => {
-            if (!el) return;
-            el.style.flexGrow = String(r === 0 ? rows.current.r0 : rows.current.r1);
-        });
-    };
-
-    const applyCols = () => {
-        cardRefs.current.forEach((el, i) => {
-            if (!el) return;
-            const row = Math.floor(i / 3);
-            const col = i % 3;
-            el.style.flexGrow = String(cols.current[row][col]);
-        });
-    };
+    const selectionTimelineRef = useRef<gsap.core.Timeline | null>(null);
+    const activeIndexRef = useRef(0);
+    const descriptionHeightsRef = useRef<number[]>([]);
 
     useEffect(() => {
-        applyRows();
-        applyCols();
-
         overlayRefs.current.forEach((el, i) => {
             if (!el) return;
             gsap.set(el, { opacity: i === 0 ? 1 : 0 });
@@ -84,7 +61,11 @@ export default function SolutionSection() {
         descWrapRefs.current.forEach((el, i) => {
             if (!el) return;
             const natural = el.scrollHeight;
+            descriptionHeightsRef.current[i] = natural;
             gsap.set(el, { height: i === 0 ? natural : 0 });
+        });
+        arrowRefs.current.forEach((el, i) => {
+            gsap.set(el, { autoAlpha: i === 0 ? 1 : 0 });
         });
 
         const cards = cardRefs.current.filter((el): el is HTMLDivElement => el !== null);
@@ -104,12 +85,13 @@ export default function SolutionSection() {
                 opacity: 1,
                 y: 0,
                 ease: 'circ.out',
-                stagger: 0.1,
+                duration: 0.9,
+                stagger: 0.08,
                 scrollTrigger: {
                     trigger: sectionRef.current,
                     start: 'top 75%',
                     end: 'top 40%',
-                    scrub: 4,
+                    scrub: 1,
                 },
             },
         );
@@ -121,36 +103,27 @@ export default function SolutionSection() {
     }, []);
 
     const handleSelect = (index: number) => {
-        if (index === activeIndex) return;
+        if (index === activeIndexRef.current) return;
 
         const row = Math.floor(index / 3);
         const col = index % 3;
+        activeIndexRef.current = index;
 
-        const tl = gsap.timeline({ defaults: { duration: 0.6, ease: "power3.inOut" } });
+        selectionTimelineRef.current?.kill();
+        const tl = gsap.timeline({
+            defaults: { duration: 0.55, ease: "power3.inOut", overwrite: 'auto' },
+        });
+        selectionTimelineRef.current = tl;
 
-        tl.to(rows.current, {
-            r0: row === 0 ? ROW_ACTIVE : ROW_REST,
-            r1: row === 1 ? ROW_ACTIVE : ROW_REST,
-            onUpdate: applyRows,
+        tl.to(rowContainerRefs.current, {
+            flexGrow: (rowIndex) => rowIndex === row ? ROW_ACTIVE : ROW_REST,
         }, 0);
 
-        const nextCols = [
-            row === 0 ? [0, 1, 2].map((c) => (c === col ? COL_ACTIVE : COL_REST)) : [1, 1, 1],
-            row === 1 ? [0, 1, 2].map((c) => (c === col ? COL_ACTIVE : COL_REST)) : [1, 1, 1],
-        ];
-        const proxy = {
-            r0c0: cols.current[0][0], r0c1: cols.current[0][1], r0c2: cols.current[0][2],
-            r1c0: cols.current[1][0], r1c1: cols.current[1][1], r1c2: cols.current[1][2],
-        };
-        tl.to(proxy, {
-            r0c0: nextCols[0][0], r0c1: nextCols[0][1], r0c2: nextCols[0][2],
-            r1c0: nextCols[1][0], r1c1: nextCols[1][1], r1c2: nextCols[1][2],
-            onUpdate: () => {
-                cols.current = [
-                    [proxy.r0c0, proxy.r0c1, proxy.r0c2],
-                    [proxy.r1c0, proxy.r1c1, proxy.r1c2],
-                ];
-                applyCols();
+        tl.to(cardRefs.current, {
+            flexGrow: (cardIndex) => {
+                const cardRow = Math.floor(cardIndex / 3);
+                if (cardRow !== row) return 1;
+                return cardIndex % 3 === col ? COL_ACTIVE : COL_REST;
             },
         }, 0);
 
@@ -183,10 +156,13 @@ export default function SolutionSection() {
 
         descWrapRefs.current.forEach((el, i) => {
             if (!el) return;
-            tl.to(el, { height: i === index ? 110 : 0 }, 0);
+            tl.to(el, { height: i === index ? descriptionHeightsRef.current[i] : 0 }, 0);
         });
 
-        setActiveIndex(index);
+        arrowRefs.current.forEach((el, i) => {
+            if (!el) return;
+            tl.to(el, { autoAlpha: i === index ? 1 : 0, duration: 0.25 }, 0);
+        });
     };
 
     const cancelHoverSelect = () => {
@@ -197,7 +173,7 @@ export default function SolutionSection() {
 
     const handleHoverSelect = (index: number) => {
         cancelHoverSelect();
-        if (index === activeIndex) return;
+        if (index === activeIndexRef.current) return;
 
         hoverTimerRef.current = setTimeout(() => {
             hoverTimerRef.current = null;
@@ -205,12 +181,24 @@ export default function SolutionSection() {
         }, HOVER_DELAY);
     };
 
-    useEffect(() => cancelHoverSelect, []);
+    useEffect(() => () => {
+        cancelHoverSelect();
+        selectionTimelineRef.current?.kill();
+    }, []);
 
     return (
         <section ref={sectionRef} id="solutions" className="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat">
             <div className="grid grid-cols-[35%_65%] min-h-screen">
-                <img ref={crystalRef} src="/image/crystal.png" alt="Crystal" className="absolute z-0 w-[50%] -top-1/5 -left-[25%] drop-shadow-[0_0_80px_rgba(120,120,120,0.35)]" />
+                <Image
+                    ref={crystalRef}
+                    src="/image/crystal.png"
+                    alt=""
+                    width={640}
+                    height={640}
+                    sizes="50vw"
+                    aria-hidden="true"
+                    className="absolute z-0 h-auto w-[50%] -top-1/5 -left-[25%] drop-shadow-[0_0_48px_rgba(120,120,120,0.28)]"
+                />
                 <div className="flex h-full items-end justify-center">
                     <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(60px,4vw,100px)] z-1 font-semibold tracking-wider text-slate-700">
                         GIẢI <br /> PHÁP
@@ -241,11 +229,13 @@ export default function SolutionSection() {
                                                 : 1,
                                         }}
                                     >
-                                        <img
+                                        <Image
                                             ref={(el) => { imgRefs.current[index] = el; }}
                                             src={solution.src}
                                             alt={solution.alt}
-                                            className="absolute inset-0 w-full h-full object-cover"
+                                            fill
+                                            sizes="(max-width: 768px) 33vw, 22vw"
+                                            className="object-cover"
                                             style={{ opacity: 0.4, filter: "grayscale(100%)" }}
                                         />
 
@@ -259,8 +249,9 @@ export default function SolutionSection() {
 
                                         <div className="absolute flex flex-col justify-end items-start inset-0 p-6">
                                             <span
+                                                ref={(el) => { arrowRefs.current[index] = el; }}
                                                 className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white/80 mb-5"
-                                                style={{ opacity: index === activeIndex ? 1 : 0 }}
+                                                style={{ opacity: index === 0 ? 1 : 0 }}
                                             >
                                                 <svg
                                                     aria-hidden="true"
@@ -288,7 +279,6 @@ export default function SolutionSection() {
                                                 style={{ height: 0 }}
                                             >
                                                 <p
-                                                    ref={(el) => { descRefs.current[index] = el; }}
                                                     className="mt-2 font-light text-sm text-white"
                                                 >
                                                     {solution.desc}

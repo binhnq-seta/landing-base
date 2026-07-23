@@ -114,10 +114,10 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
                 </div>
             </div>
 
-            {/* <canvas
+            <canvas
                 ref={canvasRef}
                 className="absolute inset-0 z-0"
-            /> */}
+            />
         </section>
     )
 }

@@ -182,7 +182,7 @@ export default function ProjectSection() {
                                                 setActiveIndex(index)
                                             }
                                         }}
-                                        className={`relative col-start-1 row-start-1 grid w-[78%] grid-cols-[minmax(0,30fr)_minmax(0,70fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-7 py-10 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:gap-8 md:px-10 lg:gap-12 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] backdrop-blur-xl hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
+                                        className={`relative col-start-1 row-start-1 grid w-[78%] grid-cols-[minmax(0,30fr)_minmax(0,70fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-7 py-10 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:gap-8 md:px-10 lg:gap-12 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
                                         style={{
                                             opacity: isActive ? 1 : isHovered ? 0.78 : 0.48,
                                             transform: `translateX(${slideOffset}%) scale(${slideScale})`,
@@ -194,7 +194,7 @@ export default function ProjectSection() {
                                                 src={project.img}
                                                 alt="Dự án tiêu biểu"
                                                 fill
-                                                sizes="300vw"
+                                                sizes="30vw"
                                                 quality={75}
                                                 className="h-full w-full object-contain"
                                                 aria-hidden="true"
