@@ -2,56 +2,14 @@
 
 import { Application } from '@splinetool/runtime'
 import type { SplineEvent } from '@splinetool/runtime'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { SiteHeader } from '@/components/layout/SiteHeader'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
 import { ParticleCanvas } from '@/components/canvas/ParticleCanvas'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { useSmoothScroll } from '@/context/SmoothScrollProvider'
 import { gsap } from '@/lib/gsap'
 import type { HeroSection as HeroData } from '@/types/strapi'
-
-const NAV_LINKS = [
-  { label: 'Trang chủ', href: '#home' },
-  {
-    label: 'Về chúng tôi',
-    href: '#about',
-    children: [
-      { label: 'Về GS Group', href: '#about' },
-      { label: 'Tầm nhìn & sứ mệnh', href: '#about' },
-      { label: 'Giá trị cốt lõi', href: '#core-values' },
-    ],
-  },
-  {
-    label: 'Giải pháp',
-    href: '#solutions',
-    columns: [
-      {
-        label: 'Giải pháp',
-        href: '#solutions',
-        items: [
-          { label: 'Giải pháp tích hợp', href: '#solutions' },
-          { label: 'An ninh - Quốc phòng', href: '#solutions' },
-          { label: 'Bảo mật - ATTT', href: '#solutions' },
-          { label: 'Điện lực - Năng lượng', href: '#solutions' },
-          { label: 'Viễn thông', href: '#solutions' },
-          { label: 'Hàng không', href: '#solutions' },
-        ],
-      },
-      {
-        label: 'Dự án tiêu biểu',
-        href: '#projects',
-        items: [
-          { label: 'Hệ thống GSM tự động', href: '#projects' },
-          { label: 'Phần mềm bay Aves', href: '#projects' },
-          { label: 'Hệ thống ATTT', href: '#projects' },
-        ],
-      },
-    ],
-  },
-  { label: 'Liên hệ', href: '#contact' },
-]
 
 const STATS = [
   { value: '200+', label: 'Khách hàng' },
@@ -76,7 +34,6 @@ export function HeroSection({ data }: HeroSectionProps) {
     start: 'top 85%',
     childSelector: '[data-stat]',
   })
-  const [menuOpen, setMenuOpen] = useState(false)
   const [disableSpline, setDisableSpline] = useState(false);
 
   useEffect(() => {
@@ -139,116 +96,15 @@ export function HeroSection({ data }: HeroSectionProps) {
 
   return (
     <section ref={containerRef} id="home" className="relative min-h-[200vh]">
-      <header className="absolute top-0 z-50 w-full">
-        <div className="mx-auto flex w-full items-center justify-between px-20 py-4">
-          <Link href="/" className="inline-flex items-center pt-2">
-            <Image src="/image/logoLg.png" alt="Logo" width={300} height={90} priority />
-          </Link>
-
-          <button
-            type="button"
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((current) => !current)}
-            className="pointer-events-auto inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white/70 p-2 text-slate-900 transition-colors hover:bg-white md:hidden"
-          >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
-          <nav className="hidden items-center gap-8 md:flex">
-            {NAV_LINKS.map((link, index) => (
-              <div key={link.label} className="group relative">
-                <a href={link.href} className={`inline-flex items-center gap-1.5 py-2 text-sm text-slate-700 transition-colors hover:text-[#A31F1A] ${index === 0 ? 'font-medium' : 'font-light'}`}>
-                  {link.label}
-                  {(link.children || link.columns) && (
-                    <svg className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </a>
-                {link.children && (
-                  <div className="invisible absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                    <div className="overflow-hidden rounded-xl border border-white/40 bg-white/90 p-2 shadow-xl shadow-slate-900/10 backdrop-blur-xl">
-                      {link.children.map((child) => (
-                        <a key={child.label} href={child.href} className="block rounded-lg px-4 py-2.5 text-sm font-light text-slate-700 transition-colors hover:text-[#A31F1A]">
-                          {child.label}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {link.columns && (
-                  <div className="invisible absolute right-0 top-full z-50 w-[min(34rem,calc(100vw-2rem))] pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                    <div className="grid grid-cols-2 gap-2 overflow-hidden rounded-xl border border-white/40 bg-white/90 p-3 shadow-xl shadow-slate-900/10 backdrop-blur-xl">
-                      {link.columns.map((column) => (
-                        <div key={column.label} className="rounded-lg p-2">
-                          <a href={column.href} className="mb-2 block px-2 text-sm font-medium text-slate-800 transition-colors hover:text-[#A31F1A]">
-                            {column.label}
-                          </a>
-                          <div className="space-y-1">
-                            {column.items.map((item) => (
-                              <a key={item.label} href={item.href} className="block rounded-lg px-2 py-2 text-sm font-light text-slate-600 transition-colors hover:text-[#A31F1A]">
-                                {item.label}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-        </div>
-
-        <div className={`${menuOpen ? 'block' : 'hidden'} border-t border-slate-300/70 bg-white/80 px-5 py-4 md:hidden`}>
-          <nav className="mx-auto flex max-w-6xl flex-col gap-3">
-            {NAV_LINKS.map((link, index) => (
-              <div key={link.label}>
-                <a href={link.href} onClick={() => setMenuOpen(false)} className={`block rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-950 ${index === 0 ? 'font-medium' : 'font-light'}`}>
-                  {link.label}
-                </a>
-                {link.children && (
-                  <div className="ml-4 border-l border-slate-200 pl-2">
-                    {link.children.map((child) => (
-                      <a key={child.label} href={child.href} onClick={() => setMenuOpen(false)} className="block rounded-lg px-3 py-2 text-sm font-light text-slate-500 hover:bg-slate-100 hover:text-[#A31F1A]">
-                        {child.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-                {link.columns && (
-                  <div className="ml-4 grid grid-cols-1 gap-3 border-l border-slate-200 pl-4 sm:grid-cols-2">
-                    {link.columns.map((column) => (
-                      <div key={column.label}>
-                        <a href={column.href} onClick={() => setMenuOpen(false)} className="block py-2 text-sm font-medium text-slate-700">
-                          {column.label}
-                        </a>
-                        {column.items.map((item) => (
-                          <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)} className="block rounded-lg px-2 py-2 text-sm font-light text-slate-500 hover:bg-slate-100 hover:text-[#A31F1A]">
-                            {item.label}
-                          </a>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-        </div>
-      </header>
+      <SiteHeader overlay />
 
       <div className="pointer-events-none absolute inset-0 z-10">
-        {/* <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
           <canvas
             ref={canvasRef}
             className={`block h-full w-full ${disableSpline ? 'pointer-events-none' : 'pointer-events-auto'}`}
           />
-        </div> */}
+        </div>
       </div>
 
       <div className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-center justify-start px-[10vw] text-start">
