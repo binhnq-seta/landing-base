@@ -1,12 +1,14 @@
 'use client';
 
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 
 const PROJECTS = [
     {
         id: '01',
+        slug: 'phan-mem-phan-bay-aves',
         category: 'VIETNAM AIRLINES',
         title: 'Phần mềm phân bay (AVES)',
         img: '/image/slide-bg.jpg',
@@ -15,6 +17,7 @@ const PROJECTS = [
     },
     {
         id: '02',
+        slug: 'he-thong-gsm-co-dong',
         category: 'CỤC KTVN - BỘ CÔNG An',
         title: 'Hệ thống GSM cơ động',
         img: '/image/slide-bg.jpg',
@@ -23,6 +26,7 @@ const PROJECTS = [
     },
     {
         id: '03',
+        slug: 'he-thong-an-toan-thong-tin',
         category: 'TỔNG CÔNG TY TRUYỀN TẢI ĐIỆN QUỐC GIA',
         title: 'Hệ thống An toàn Thông tin',
         img: '/image/slide-bg.jpg',
@@ -32,6 +36,7 @@ const PROJECTS = [
 ]
 
 export default function ProjectSection() {
+    const router = useRouter()
     const [activeIndex, setActiveIndex] = useState(0)
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
     const [isCarouselHovered, setIsCarouselHovered] = useState(false)
@@ -163,8 +168,8 @@ export default function ProjectSection() {
                                         key={project.id}
                                         aria-current={isActive ? 'true' : undefined}
                                         aria-label={isActive ? undefined : `Chuyển tới dự án ${index + 1}`}
-                                        role={isActive ? undefined : 'button'}
-                                        tabIndex={isActive ? -1 : 0}
+                                        role={isActive ? 'link' : 'button'}
+                                        tabIndex={0}
                                         onMouseEnter={() => {
                                             isCarouselHoveredRef.current = true
                                             setIsCarouselHovered(true)
@@ -175,11 +180,18 @@ export default function ProjectSection() {
                                             setIsCarouselHovered(false)
                                             setHoveredIndex(null)
                                         }}
-                                        onClick={() => !isActive && setActiveIndex(index)}
+                                        onClick={() => {
+                                            if (isActive) {
+                                                router.push(`/projects/${project.slug}`)
+                                                return
+                                            }
+                                            setActiveIndex(index)
+                                        }}
                                         onKeyDown={(event) => {
-                                            if (!isActive && (event.key === 'Enter' || event.key === ' ')) {
+                                            if (event.key === 'Enter' || event.key === ' ') {
                                                 event.preventDefault()
-                                                setActiveIndex(index)
+                                                if (isActive) router.push(`/projects/${project.slug}`)
+                                                else setActiveIndex(index)
                                             }
                                         }}
                                         className={`relative col-start-1 row-start-1 grid w-[78%] grid-cols-[minmax(0,30fr)_minmax(0,70fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-7 py-10 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:gap-8 md:px-10 lg:gap-12 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
@@ -214,7 +226,8 @@ export default function ProjectSection() {
                                                 {project.description}
                                             </p>
                                             <a
-                                                href="#contact"
+                                                href={`/projects/${project.slug}`}
+                                                onClick={(event) => event.stopPropagation()}
                                                 className="mt-7 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                                             >
                                                 Xem thêm

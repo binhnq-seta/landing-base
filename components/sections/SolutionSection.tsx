@@ -1,5 +1,6 @@
 'use client'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useRef, useEffect } from "react";
 import { gsap } from "@/lib/gsap";
 
@@ -17,7 +18,17 @@ const COL_ACTIVE = 1, COL_REST = 0.7;   // tổng = 3 (chỉ áp dụng cho hàn
 const IMG_SCALE_ACTIVE = 1;
 const HOVER_DELAY = 180;
 
+const SOLUTION_SLUGS = [
+    'giai-phap-tich-hop',
+    'an-ninh-quoc-phong',
+    'bao-mat-attt',
+    'dien-luc-nang-luong',
+    'vien-thong',
+    'hang-khong',
+];
+
 export default function SolutionSection() {
+    const router = useRouter();
     const sectionRef = useRef<HTMLElement>(null);
     const crystalRef = useRef<HTMLImageElement>(null);
     const sectionTitleRef = useRef<HTMLHeadingElement>(null);
@@ -222,6 +233,24 @@ export default function SolutionSection() {
                                         ref={(el) => { cardRefs.current[index] = el; }}
                                         onMouseEnter={() => handleHoverSelect(index)}
                                         onMouseLeave={cancelHoverSelect}
+                                        onClick={() => {
+                                            if (index === activeIndexRef.current) {
+                                                router.push(`/solutions/${SOLUTION_SLUGS[index]}`);
+                                                return;
+                                            }
+                                            handleSelect(index);
+                                        }}
+                                        onKeyDown={(event) => {
+                                            if (event.key !== 'Enter' && event.key !== ' ') return;
+                                            event.preventDefault();
+                                            if (index === activeIndexRef.current) {
+                                                router.push(`/solutions/${SOLUTION_SLUGS[index]}`);
+                                                return;
+                                            }
+                                            handleSelect(index);
+                                        }}
+                                        role="button"
+                                        tabIndex={0}
                                         className="relative overflow-hidden cursor-pointer basis-0 min-w-0 min-h-0"
                                         style={{
                                             flexGrow: rowIdx === 0
