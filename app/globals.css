@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme inline {
+  --font-sans: var(--font-gilroy);
+  --font-display: var(--font-science-gothic);
+}
+
+body {
+  font-family: var(--font-gilroy), sans-serif;
+}
+
+h1,
+.font-display {
+  font-family: var(--font-science-gothic), sans-serif;
+}
+
 html {
   scrollbar-width: none;
 }

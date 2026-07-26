@@ -78,7 +78,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
                     </svg>
                   </div>
                 </div>
-                <p data-detail-reveal data-detail-hero data-detail-delay="0.18" className="absolute bottom-0 left-1/2 z-10 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-2xl border border-slate-200/80 bg-white/95 px-6 py-5 text-base font-light leading-7 text-slate-600 shadow-[0_16px_40px_rgba(15,23,42,0.14)] backdrop-blur-sm md:bottom-auto md:left-0 md:top-[60%] md:w-full md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-3xl md:px-8 md:py-7 md:text-lg md:leading-8">
+                <p data-detail-reveal data-detail-hero data-detail-delay="0.18" className="absolute bottom-0 left-1/2 z-10 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-2xl border border-slate-200/80 bg-white/95 px-6 py-5 text-base font-light leading-7 text-slate-600 shadow-[0_16px_40px_rgba(15,23,42,0.14)] backdrop-blur-sm md:bottom-auto md:left-0 md:top-[60%] md:w-full md:-translate-x-1/2 md:-translate-y-1/5 md:rounded-3xl md:px-8 md:py-7 md:text-lg md:leading-8">
                   {page.summary}
                 </p>
               </div>
