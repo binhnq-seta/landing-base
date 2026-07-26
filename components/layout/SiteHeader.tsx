@@ -14,6 +14,12 @@ const SOLUTIONS = [
   { label: 'Hàng không', href: '/solutions/hang-khong' },
 ]
 
+const PROJECTS = [
+  { label: 'Hệ thống GSM cơ động', href: '/projects/he-thong-gsm-co-dong' },
+  { label: 'Phần mềm phân bay (AVES)', href: '/projects/phan-mem-phan-bay-aves' },
+  { label: 'Hệ thống An toàn Thông tin', href: '/projects/he-thong-an-toan-thong-tin' },
+]
+
 const NAV_LINKS = [
   { label: 'Trang chủ', href: '/#home' },
   {
@@ -33,11 +39,7 @@ const NAV_LINKS = [
       {
         label: 'Dự án tiêu biểu',
         href: '/#projects',
-        items: [
-          { label: 'Hệ thống GSM tự động', href: '/#projects' },
-          { label: 'Phần mềm bay Aves', href: '/#projects' },
-          { label: 'Hệ thống ATTT', href: '/#projects' },
-        ],
+        items: PROJECTS,
       },
     ],
   },
@@ -49,7 +51,9 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const isActive = (label: string) => {
-    if (label === 'Giải pháp') return pathname.startsWith('/solutions')
+    if (label === 'Giải pháp') {
+      return pathname.startsWith('/solutions') || pathname.startsWith('/projects')
+    }
     if (label === 'Trang chủ') return pathname === '/'
     return false
   }

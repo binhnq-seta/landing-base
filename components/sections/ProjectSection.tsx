@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 
@@ -36,7 +36,6 @@ const PROJECTS = [
 ]
 
 export default function ProjectSection() {
-    const router = useRouter()
     const [activeIndex, setActiveIndex] = useState(0)
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
     const [isCarouselHovered, setIsCarouselHovered] = useState(false)
@@ -145,7 +144,7 @@ export default function ProjectSection() {
             />
 
             <div className="relative z-10 w-full">
-                <h1 data-project-reveal className="mb-30 text-start px-[10vw] text-[clamp(60px,4vw,100px)] font-bold uppercase text-slate-700">
+                <h1 data-project-reveal className="mb-[3vw] text-start px-[10vw] text-[clamp(60px,4vw,100px)] font-bold uppercase text-slate-700">
                     Dự án tiêu biểu
                 </h1>
 
@@ -161,15 +160,15 @@ export default function ProjectSection() {
                                 const isActive = position === 0
                                 const isHovered = hoveredIndex === index && !isActive
                                 const slideOffset = position * (isHovered ? 86 : 92)
-                                const slideScale = isActive ? 0.90 : isHovered ? 0.79 : 0.75
+                                const slideScale = isActive ? 0.9 : isHovered ? 0.79 : 0.75
 
                                 return (
                                     <article
                                         key={project.id}
                                         aria-current={isActive ? 'true' : undefined}
                                         aria-label={isActive ? undefined : `Chuyển tới dự án ${index + 1}`}
-                                        role={isActive ? 'link' : 'button'}
-                                        tabIndex={0}
+                                        role={isActive ? undefined : 'button'}
+                                        tabIndex={isActive ? undefined : 0}
                                         onMouseEnter={() => {
                                             isCarouselHoveredRef.current = true
                                             setIsCarouselHovered(true)
@@ -181,39 +180,34 @@ export default function ProjectSection() {
                                             setHoveredIndex(null)
                                         }}
                                         onClick={() => {
-                                            if (isActive) {
-                                                router.push(`/projects/${project.slug}`)
-                                                return
-                                            }
-                                            setActiveIndex(index)
+                                            if (!isActive) setActiveIndex(index)
                                         }}
                                         onKeyDown={(event) => {
-                                            if (event.key === 'Enter' || event.key === ' ') {
+                                            if (!isActive && (event.key === 'Enter' || event.key === ' ')) {
                                                 event.preventDefault()
-                                                if (isActive) router.push(`/projects/${project.slug}`)
-                                                else setActiveIndex(index)
+                                                setActiveIndex(index)
                                             }
                                         }}
-                                        className={`relative col-start-1 row-start-1 grid w-[78%] grid-cols-[minmax(0,30fr)_minmax(0,70fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-7 py-10 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:gap-8 md:px-10 lg:gap-12 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
+                                        className={`relative col-start-1 row-start-1 grid w-[60%] grid-cols-[minmax(0,40fr)_minmax(0,60fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-7 py-12 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
                                         style={{
                                             opacity: isActive ? 1 : isHovered ? 0.78 : 0.48,
                                             transform: `translateX(${slideOffset}%) scale(${slideScale})`,
                                             zIndex: isActive ? 3 : isHovered ? 2 : 1,
                                         }}
                                     >
-                                        <div className="absolute inset-y-0 left-0 z-0 w-[30%] overflow-hidden rounded-l-[2rem] bg-blue-50/70">
+                                        <div className="absolute inset-y-0 left-0 z-0 w-[40%] overflow-hidden rounded-l-[2rem] bg-blue-50/70">
                                             <Image
                                                 src={project.img}
                                                 alt="Dự án tiêu biểu"
                                                 fill
-                                                sizes="30vw"
+                                                sizes="40vw"
                                                 quality={75}
                                                 className="h-full w-full object-contain"
                                                 aria-hidden="true"
                                             />
                                         </div>
 
-                                        <div aria-hidden="true" className="min-h-48" />
+                                        <div aria-hidden="true" className="min-h-[clamp(14rem,25vw,45rem)]" />
 
                                         <div className="relative z-10 flex flex-col items-start">
                                             <span className="mb-5 text-sm font-medium uppercase text-slate-500">
@@ -225,14 +219,13 @@ export default function ProjectSection() {
                                             <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500">
                                                 {project.description}
                                             </p>
-                                            <a
+                                            <Link
                                                 href={`/projects/${project.slug}`}
-                                                onClick={(event) => event.stopPropagation()}
                                                 className="mt-7 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                                             >
                                                 Xem thêm
                                                 <span aria-hidden="true">→</span>
-                                            </a>
+                                            </Link>
                                         </div>
                                     </article>
                                 )
