@@ -36,7 +36,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
   return (
     <>
       <SiteHeader overlay />
-      <main className="relative overflow-hidden bg-[#f8fafc] text-slate-900">
+      <main className="relative overflow-hidden text-slate-900">
         <div
           className="pointer-events-none absolute left-[-40vw] top-[40vh] z-0 h-screen w-screen"
           aria-hidden="true"
