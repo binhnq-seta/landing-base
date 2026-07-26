@@ -26,8 +26,8 @@ const NAV_LINKS = [
     label: 'Về chúng tôi',
     href: '/#about',
     children: [
-      { label: 'Về GS Group', href: '/#about' },
-      { label: 'Tầm nhìn & sứ mệnh', href: '/#about' },
+      { label: 'Về GS Group', href: '/#home' },
+      { label: 'Tầm nhìn & sứ mệnh', href: '/#features' },
       { label: 'Giá trị cốt lõi', href: '/#core-values' },
     ],
   },
@@ -43,7 +43,7 @@ const NAV_LINKS = [
       },
     ],
   },
-  { label: 'Liên hệ', href: '/#contact' },
+  { label: 'Liên hệ', href: '/#footer' },
 ]
 
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {

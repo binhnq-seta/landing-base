@@ -7,7 +7,7 @@ export function SiteFooter({ siteName = 'General Systems. All Rights Reserved.',
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#00162F]">
+    <footer id="footer" className="bg-[#00162F]">
       <div className="mx-auto w-full px-5 py-15">
         <div className="grid gap-10 md:grid-cols-2">
           <div className="text-start flex flex-col max-w-[45vw] pl-20">
