@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useSmoothScroll } from '@/context/SmoothScrollProvider'
+import { HERO_INTRO_COMPLETE_EVENT } from '@/lib/intro'
 
 const SECTION_LINKS = [
   { id: 'home', label: 'Trang chủ' },
@@ -14,7 +15,15 @@ const SECTION_LINKS = [
 
 export function SectionScrollRail() {
   const [activeId, setActiveId] = useState(SECTION_LINKS[0].id)
+  const [isIntroComplete, setIsIntroComplete] = useState(false)
   const { lenisRef } = useSmoothScroll()
+
+  useEffect(() => {
+    const showScrollRail = () => setIsIntroComplete(true)
+
+    window.addEventListener(HERO_INTRO_COMPLETE_EVENT, showScrollRail)
+    return () => window.removeEventListener(HERO_INTRO_COMPLETE_EVENT, showScrollRail)
+  }, [])
 
   useEffect(() => {
     let animationFrameId = 0
@@ -78,7 +87,12 @@ export function SectionScrollRail() {
   return (
     <nav
       aria-label="Điều hướng các phần"
-      className="fixed right-1 top-1/2 z-[90] flex -translate-y-1/2 flex-col items-center py-2 sm:right-3"
+      aria-hidden={!isIntroComplete}
+      className={`fixed right-1 top-1/2 z-[90] flex flex-col items-center py-2 transition-[opacity,transform] duration-700 ease-out sm:right-3 ${
+        isIntroComplete
+          ? 'pointer-events-auto -translate-y-1/2 opacity-100'
+          : 'pointer-events-none -translate-y-[45%] opacity-0'
+      }`}
     >
       {SECTION_LINKS.map(({ id, label }) => {
         const isActive = activeId === id
@@ -87,6 +101,7 @@ export function SectionScrollRail() {
           <button
             key={id}
             type="button"
+            disabled={!isIntroComplete}
             aria-label={`Đi tới ${label}`}
             aria-current={isActive ? 'location' : undefined}
             onClick={() => scrollToSection(id)}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { DetailScrollAnimations } from '@/components/detail/DetailScrollAnimations'
+import { DetailSpline } from '@/components/detail/DetailSpline'
 import { SiteFooter } from '@/components/layout/Footer'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { detailPages, getDetailPage } from '@/lib/detail-pages'
@@ -35,20 +36,15 @@ export default async function DetailPage({ params }: DetailPageProps) {
   return (
     <>
       <SiteHeader overlay />
-      <main className="overflow-hidden bg-[#f8fafc] text-slate-900">
-        <article data-detail-page>
+      <main className="relative overflow-hidden bg-[#f8fafc] text-slate-900">
+        <div
+          className="pointer-events-none absolute left-[-40vw] top-[40vh] z-0 h-screen w-screen"
+          aria-hidden="true"
+        >
+          <DetailSpline sceneUrl="/model/circle.splinecode" />
+        </div>
+        <article data-detail-page className="relative z-10">
           <DetailScrollAnimations />
-          <Image
-            src="/image/slug-bg.png"
-            alt=""
-            width={405}
-            height={533}
-            quality={100}
-            aria-hidden="true"
-            data-detail-reveal
-            data-detail-hero
-            className="absolute left-0 top-[80%] h-auto w-[40vw] max-w-none -translate-x-[20%] -translate-y-90 -rotate-60 select-none object-contain opacity-80"
-          />
           <div className="flex flex-cols-2 min-h-screen items-center">
             <header className="relative isolate mx-auto w-full max-w-[1600px] px-5 pb-16 pt-16 md:px-12 md:pb-24 md:pt-24 lg:px-40">
               <h1 data-detail-reveal data-detail-hero className="relative max-w-3xl -translate-y-20 text-[clamp(1rem,3.5vw,5rem)] font-semibold text-[#00162F]">

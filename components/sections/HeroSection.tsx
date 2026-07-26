@@ -1,14 +1,13 @@
 'use client'
 
 import { Application } from '@splinetool/runtime'
-import type { SplineEvent } from '@splinetool/runtime'
 import { useEffect, useRef, useState } from 'react'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
-import { ParticleCanvas } from '@/components/canvas/ParticleCanvas'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { useSmoothScroll } from '@/context/SmoothScrollProvider'
 import { gsap } from '@/lib/gsap'
+import { HERO_INTRO_COMPLETE_EVENT } from '@/lib/intro'
 import type { HeroSection as HeroData } from '@/types/strapi'
 
 const STATS = [
@@ -16,6 +15,8 @@ const STATS = [
   { value: '350+', label: 'Dự án thành công' },
   { value: '10+', label: 'Năm kinh nghiệm' },
 ]
+
+const SPLINE_INTRO_MS = 5000
 
 interface HeroSectionProps {
   data?: HeroData
@@ -28,6 +29,7 @@ export function HeroSection({ data }: HeroSectionProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const splineAppRef = useRef<Application | null>(null)
   const splineDisabledRef = useRef(false)
+  const [introComplete, setIntroComplete] = useState(false)
   const statsRef = useScrollReveal<HTMLDivElement>({
     from: { opacity: 0, y: 30 },
     to: { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', stagger: 0.08 },
@@ -37,34 +39,82 @@ export function HeroSection({ data }: HeroSectionProps) {
   const [disableSpline, setDisableSpline] = useState(false);
 
   useEffect(() => {
+    if (!introComplete) return
+
+    window.dispatchEvent(new Event(HERO_INTRO_COMPLETE_EVENT))
+
     const container = containerRef.current
     if (!container) return
 
     const ctx = gsap.context(() => {
       gsap.timeline({ defaults: { ease: 'power3.out' } })
-        .from('[data-hero-heading]', { opacity: 0, y: 50, duration: 0.9 })
+        .to('[data-hero-header]', { opacity: 1, y: 0, duration: 0.7 })
+        .to('[data-hero-content]', { opacity: 1, duration: 0.15 }, '-=0.35')
+        .from('[data-hero-heading]', { opacity: 0, y: 50, duration: 0.9 }, '-=0.15')
         .from('[data-hero-sub]', { opacity: 0, y: 30, duration: 0.7 }, '-=0.5')
         .from('[data-hero-cta]', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
     }, container)
 
     return () => ctx.revert()
-  }, [])
+  }, [introComplete])
+
+  useEffect(() => {
+    const html = document.documentElement
+    const body = document.body
+    const previousHtmlOverflow = html.style.overflow
+    const previousBodyOverflow = body.style.overflow
+    const previousBodyTouchAction = body.style.touchAction
+    const lenis = lenisRef.current
+
+    window.scrollTo(0, 0)
+    html.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+    body.style.touchAction = 'none'
+    lenis?.stop()
+
+    if (!introComplete) return () => {
+      html.style.overflow = previousHtmlOverflow
+      body.style.overflow = previousBodyOverflow
+      body.style.touchAction = previousBodyTouchAction
+      lenis?.start()
+    }
+
+    html.style.overflow = previousHtmlOverflow
+    body.style.overflow = previousBodyOverflow
+    body.style.touchAction = previousBodyTouchAction
+    lenisRef.current?.start()
+
+    return undefined
+  }, [introComplete, lenisRef])
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
     let app: Application;
+    let introTimer: number | undefined
+    let isDisposed = false
 
     async function init() {
       app = new Application(canvasRef.current!);
       splineAppRef.current = app
 
-      await app.load("/model/mainCube9.splinecode");
+      try {
+        await app.load("/model/finalCube.splinecode");
+        if (isDisposed) return
+
+        introTimer = window.setTimeout(() => {
+          setIntroComplete(true)
+        }, SPLINE_INTRO_MS)
+      } catch {
+        if (!isDisposed) setIntroComplete(true)
+      }
     }
 
     init();
 
     return () => {
+      isDisposed = true
+      if (introTimer !== undefined) window.clearTimeout(introTimer)
       app?.dispose()
     };
   }, []);
@@ -96,7 +146,9 @@ export function HeroSection({ data }: HeroSectionProps) {
 
   return (
     <section ref={containerRef} id="home" className="relative min-h-[200vh]">
-      <SiteHeader overlay />
+      <div data-hero-header className="relative z-50 -translate-y-4 opacity-0">
+        <SiteHeader overlay />
+      </div>
 
       <div className="pointer-events-none absolute inset-0 z-10">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -107,7 +159,7 @@ export function HeroSection({ data }: HeroSectionProps) {
         </div>
       </div>
 
-      <div className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-center justify-start px-[10vw] text-start">
+      <div data-hero-content className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-center justify-start px-[10vw] text-start opacity-0">
         <div className="w-[clamp(200px,45%,900px)]">
           <h1 data-hero-heading className="mb-6 text-[clamp(30px,2.5vw,60px)] font-bold text-slate-950">
             {data?.heading ?? <>KẾT NỐI CÔNG NGHỆ XÂY DỰNG <span className="text-blue-500">TƯƠNG LAI</span></>}

@@ -95,17 +95,33 @@ body::-webkit-scrollbar {
   padding: 1.5rem;
   border-radius: 0.75rem;
   background-color: rgba(223, 223, 223, 0.2);
-  transition: background-color 300ms ease-out,
-    box-shadow 300ms ease-out;
+  transition:
+    background 300ms ease-out,
+    box-shadow 300ms ease-out,
+    transform 300ms ease-out;
 }
 
 .feature-card:hover {
   transform: translateY(-2px) scale(1.015);
   box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
     0 10px 15px -3px rgba(147, 197, 253, 0.4),
     0 4px 6px -4px rgba(147, 197, 253, 0.4);
-  background: linear-gradient(500deg,
-      rgba(40, 187, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.507) 50%,
-      rgba(0, 61, 141, 0.034) 100%);
+  background: linear-gradient(135deg,
+      rgba(56, 189, 248, 0.88) 0%,
+      rgba(37, 99, 235, 0.84) 48%,
+      rgba(52, 73, 141, 0.92) 100%);
+}
+
+.feature-card p {
+  transition: color 300ms ease-out;
+}
+
+.feature-card:hover h3,
+.feature-card:hover p {
+  color: #ffffff;
+}
+
+.feature-card:hover svg {
+  color: #ffffff;
 }
