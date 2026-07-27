@@ -104,7 +104,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
                                         {feature.title}
                                     </h3>
 
-                                    <p className="font-light leading-relaxed text-gray-400">
+                                    <p className="font-light leading-relaxed text-slate-700">
                                         {feature.description}
                                     </p>
                                 </div>

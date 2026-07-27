@@ -108,7 +108,7 @@ body::-webkit-scrollbar {
 .feature-card {
   padding: 1.5rem;
   border-radius: 0.75rem;
-  background-color: rgba(223, 223, 223, 0.2);
+  background-color: #64b9ff1a;
   transition:
     background 300ms ease-out,
     box-shadow 300ms ease-out,

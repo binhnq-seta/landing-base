@@ -127,7 +127,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
                     {ICONS[i % ICONS.length]}
                   </div>
                   <h3 data-feature-title className="mb-2 text-xl font-bold text-slate-700">{feature.title}</h3>
-                  <p data-feature-description className="text-gray-400 leading-relaxed">{feature.description}</p>
+                  <p data-feature-description className="text-slate-700 leading-relaxed">{feature.description}</p>
                 </div>
               </div>
             ))}

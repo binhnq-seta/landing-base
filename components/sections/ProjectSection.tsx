@@ -210,13 +210,13 @@ export default function ProjectSection() {
                                         <div aria-hidden="true" className="min-h-[clamp(14rem,25vw,45rem)]" />
 
                                         <div className="relative z-10 flex flex-col items-start">
-                                            <span className="mb-5 text-sm font-medium uppercase text-slate-500">
+                                            <span className="mb-5 text-sm font-medium uppercase text-slate-700">
                                                 {project.category}
                                             </span>
                                             <h3 className="max-w-2xl text-2xl font-bold leading-snug text-slate-700 sm:text-3xl">
                                                 {project.title}
                                             </h3>
-                                            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500">
+                                            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-700">
                                                 {project.description}
                                             </p>
                                             <Link
