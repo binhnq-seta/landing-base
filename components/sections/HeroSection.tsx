@@ -99,7 +99,7 @@ export function HeroSection({ data }: HeroSectionProps) {
       splineAppRef.current = app
 
       try {
-        await app.load("/model/finalCube.splinecode");
+        await app.load("/model/finalCube12.splinecode");
         if (isDisposed) return
 
         introTimer = window.setTimeout(() => {
