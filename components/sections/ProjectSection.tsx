@@ -95,7 +95,7 @@ export default function ProjectSection() {
                 duration: 0.9,
                 ease: 'power3.out',
                 stagger: 0.1,
-                force3D: true,
+                force3D: false,
                 scrollTrigger: {
                     trigger: section,
                     start: 'top 75%',
@@ -160,7 +160,7 @@ export default function ProjectSection() {
                                 const isActive = position === 0
                                 const isHovered = hoveredIndex === index && !isActive
                                 const slideOffset = position * (isHovered ? 86 : 92)
-                                const slideScale = isActive ? 0.9 : isHovered ? 0.79 : 0.75
+                                const slideScale = isActive ? 1 : isHovered ? 0.79 : 0.75
 
                                 return (
                                     <article
@@ -237,7 +237,7 @@ export default function ProjectSection() {
                         </div>
                     </div>
 
-                    <div className="mt-4 flex items-center justify-center">
+                    <div className="mt-12 flex items-center justify-center">
                         <div
                             className="flex items-center gap-2"
                             aria-label="Chọn dự án"
