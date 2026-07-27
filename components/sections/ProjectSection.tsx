@@ -11,7 +11,7 @@ const PROJECTS = [
         slug: 'phan-mem-phan-bay-aves',
         category: 'VIETNAM AIRLINES',
         title: 'Phần mềm phân bay (AVES)',
-        img: '/image/slide-bg.jpg',
+        img: '/image/project/aves.jpg',
         description:
             'Năm 2018, Chúng tôi được VNA lựa chọn là đơn vị cung cấp giải pháp phần mềm phân bay phi công, tiếp viên (AVES). Cho đến nay Chúng tôi tiếp tục cung cấp dịch vụ bảo trì, nâng cấp và hỗ trợ kỹ thuật cho VNA.',
     },
@@ -20,7 +20,7 @@ const PROJECTS = [
         slug: 'he-thong-gsm-co-dong',
         category: 'CỤC KTVN - BỘ CÔNG An',
         title: 'Hệ thống GSM cơ động',
-        img: '/image/slide-bg.jpg',
+        img: '/image/project/gms.jpg',
         description:
             'Năm 2017, Chúng tôi được lựa chọn là đơn vị triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến cho Cục KTNV - Bộ Công an',
     },
@@ -29,7 +29,7 @@ const PROJECTS = [
         slug: 'he-thong-an-toan-thong-tin',
         category: 'TỔNG CÔNG TY TRUYỀN TẢI ĐIỆN QUỐC GIA',
         title: 'Hệ thống An toàn Thông tin',
-        img: '/image/slide-bg.jpg',
+        img: '/image/project/sec.jpg',
         description:
             'Dự án trang bị hệ thống An ninh thông tin cho Tổng công ty Truyền tải điện Quốc gia nhằm xây dựng hạ tầng bảo mật tổng thể, bảo vệ an toàn hệ thống CNTT và điều hành lưới điện, đảm bảo vận hành liên tục, tin cậy và tuân thủ các yêu cầu an ninh quốc gia',
     },
@@ -202,8 +202,12 @@ export default function ProjectSection() {
                                                 fill
                                                 sizes="40vw"
                                                 quality={75}
-                                                className="h-full w-full object-contain"
+                                                className="object-cover object-center"
                                                 aria-hidden="true"
+                                            />
+                                            <div
+                                                aria-hidden="true"
+                                                className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[45%] bg-gradient-to-t from-white/80 via-white/30 to-transparent"
                                             />
                                         </div>
 
