@@ -1,0 +1,475 @@
+{
+  "hero": {
+    "heading": "KẾT NỐI CÔNG NGHỆ XÂY DỰNG TƯƠNG LAI",
+    "description": "General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.",
+    "ctaLabel": "Khám Phá Giải Pháp",
+    "ctaHref": "#solutions"
+  },
+  "coreValues": {
+    "heading": "GIÁ TRỊ CỐT LÕI",
+    "items": [
+      {
+        "id": "01",
+        "title": "Giá trị và Niềm tin là trên hết",
+        "description": "Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp."
+      },
+      {
+        "id": "02",
+        "title": "Tôn trọng giá trị cá nhân",
+        "description": "Ứng dụng công nghệ mới nhất tối ưu hiệu quả và năng cao năng lực cạnh tranh."
+      },
+      {
+        "id": "03",
+        "title": "Tư duy hệ thống - Tư duy toàn cầu",
+        "description": "Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình."
+      },
+      {
+        "id": "04",
+        "title": "Học tập liên tục - Đổi mới không ngừng",
+        "description": "Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp."
+      },
+      {
+        "id": "05",
+        "title": "Một công ty - Một gia đình",
+        "description": "Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp."
+      }
+    ]
+  },
+  "solutions": [
+    {
+      "slug": "giai-phap-tich-hop",
+      "title": "Giải pháp tích hợp",
+      "src": "/image/solution/integration.jpg",
+      "alt": "Giải pháp tích hợp",
+      "desc": "GS GROUP có năng lực triển khai trọn gói Data Center, các giải pháp hội nghị truyền hình, và hệ thống thiết bị trường quay chuyên nghiệp."
+    },
+    {
+      "slug": "an-ninh-quoc-phong",
+      "title": "An ninh - Quốc phòng",
+      "src": "/image/solution/military.jpg",
+      "alt": "An ninh - Quốc phòng",
+      "desc": "GS GROUP cung cấp nền tảng quản lý mối đe dọa bên ngoài (External Threat Management) và giải pháp phù hợp cho hạ tầng trọng yếu."
+    },
+    {
+      "slug": "bao-mat-attt",
+      "title": "Bảo mật - ATTT",
+      "src": "/image/solution/security.jpg",
+      "alt": "Bảo mật - ATTT",
+      "desc": "GS GROUP cung cấp nền tảng quản lý mối đe dọa bên ngoài (External Threat Management) và giải pháp phù hợp cho hạ tầng trọng yếu."
+    },
+    {
+      "slug": "dien-luc-nang-luong",
+      "title": "Điện lực - Năng lượng",
+      "src": "/image/solution/energy.jpg",
+      "alt": "Điện lực - Năng lượng",
+      "desc": "GS GROUP cung cấp giải pháp quản lý thiết bị, sửa chữa và báo trì, thu thập và truyền tải số liệu kỹ thuật, giám sát từ xa."
+    },
+    {
+      "slug": "vien-thong",
+      "title": "Viễn thông",
+      "src": "/image/solution/tele.jpg",
+      "alt": "Viễn thông",
+      "desc": "GS GROUP cung cấp giải pháp truyền thông di động cao cấp thế hệ mới, mang lại khả năng kiểm soát toàn diện quyền riêng tư."
+    },
+    {
+      "slug": "hang-khong",
+      "title": "Hàng không",
+      "src": "/image/solution/air.jpg",
+      "alt": "Hàng không",
+      "desc": "GS GROUP cung cấp giải pháp quản lý và lập lịch khai thác bay, hỗ trợ phân công phi công – tiếp viên."
+    }
+  ],
+  "projects": [
+    {
+      "id": "01",
+      "slug": "phan-mem-phan-bay-aves",
+      "category": "VIETNAM AIRLINES",
+      "title": "Phần mềm phân bay (AVES)",
+      "img": "/image/project/aves.jpg",
+      "description": "Năm 2018, Chúng tôi được VNA lựa chọn là đơn vị cung cấp giải pháp phần mềm phân bay phi công, tiếp viên (AVES)."
+    },
+    {
+      "id": "02",
+      "slug": "he-thong-gsm-co-dong",
+      "category": "CỤC KTVN - BỘ CÔNG AN",
+      "title": "Hệ thống GSM cơ động",
+      "img": "/image/project/gms.jpg",
+      "description": "Năm 2017, Chúng tôi được lựa chọn là đơn vị triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến cho Cục KTNV - Bộ Công an."
+    },
+    {
+      "id": "03",
+      "slug": "he-thong-an-toan-thong-tin",
+      "category": "TỔNG CÔNG TY TRUYỀN TẢI ĐIỆN QUỐC GIA",
+      "title": "Hệ thống An toàn Thông tin",
+      "img": "/image/project/sec.jpg",
+      "description": "Dự án trang bị hệ thống An ninh thông tin cho Tổng công ty Truyền tải điện Quốc gia nhằm xây dựng hạ tầng bảo mật tổng thể."
+    }
+  ],
+  "partners": [
+    {
+      "src": "/image/partner-logo/petro.png",
+      "alt": "PetroVietnam"
+    },
+    {
+      "src": "/image/partner-logo/evn.png",
+      "alt": "EVN"
+    },
+    {
+      "src": "/image/partner-logo/image%2033.png",
+      "alt": "Đối tác General Systems 1"
+    },
+    {
+      "src": "/image/partner-logo/image%2032.png",
+      "alt": "Đối tác General Systems 2"
+    },
+    {
+      "src": "/image/partner-logo/image%2032-1.png",
+      "alt": "Đối tác General Systems 3"
+    },
+    {
+      "src": "/image/partner-logo/image%2032-2.png",
+      "alt": "Đối tác General Systems 4"
+    },
+    {
+      "src": "/image/partner-logo/image%2032-3.png",
+      "alt": "Đối tác General Systems 5"
+    },
+    {
+      "src": "/image/partner-logo/image%2032-4.png",
+      "alt": "Đối tác General Systems 6"
+    }
+  ],
+  "detailPages": [
+    {
+      "type": "solutions",
+      "slug": "giai-phap-tich-hop",
+      "eyebrow": "Giải pháp",
+      "title": "Giải pháp tích hợp toàn diện cho hạ tầng số",
+      "summary": "GS Group kết nối công nghệ, con người và quy trình để kiến tạo những hệ thống đồng bộ, an toàn và sẵn sàng mở rộng theo nhu cầu thực tế của doanh nghiệp.",
+      "heroImage": "/image/solution/integration.jpg",
+      "heroImageAlt": "Hạ tầng công nghệ tích hợp hiện đại",
+      "sections": [
+        {
+          "title": "Thiết kế từ nhu cầu thực tế",
+          "description": "Mỗi giải pháp bắt đầu bằng việc khảo sát hiện trạng, xác định mục tiêu vận hành và xây dựng kiến trúc phù hợp với nguồn lực của khách hàng.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Chuyên gia phân tích hệ thống bảo mật",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Triển khai đồng bộ, kiểm soát chặt chẽ",
+          "description": "Quy trình triển khai được chuẩn hóa từ tích hợp thiết bị, phần mềm đến kiểm thử, chuyển giao và đào tạo đội ngũ vận hành.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Hệ thống viễn thông được tích hợp đồng bộ",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Đồng hành trong suốt vòng đời hệ thống",
+          "description": "Dịch vụ giám sát, bảo trì và nâng cấp giúp hệ thống luôn ổn định, bảo mật và thích ứng với những yêu cầu mới.",
+          "image": "/image/solution/energy.jpg",
+          "imageAlt": "Hệ thống năng lượng và trung tâm vận hành",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "projects",
+      "slug": "phan-mem-phan-bay-aves",
+      "eyebrow": "Dự án tiêu biểu · Vietnam Airlines",
+      "title": "Phần mềm phân bay AVES",
+      "summary": "Nền tảng hỗ trợ lập lịch, phân công phi công và tiếp viên, góp phần tối ưu nguồn lực khai thác bay và bảo đảm các yêu cầu an toàn vận hành.",
+      "heroImage": "/image/slide-bg.jpg",
+      "heroImageAlt": "Dự án phần mềm phân bay AVES",
+      "sections": [
+        {
+          "title": "Bài toán vận hành quy mô lớn",
+          "description": "Hệ thống cần xử lý khối lượng lịch bay phức tạp, nhiều ràng buộc nghiệp vụ và thay đổi liên tục trong quá trình khai thác.",
+          "image": "/image/solution/air.jpg",
+          "imageAlt": "Hoạt động khai thác hàng không",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Tự động hóa công tác phân bay",
+          "description": "AVES hỗ trợ lập kế hoạch và phân bổ tổ bay dựa trên năng lực, lịch làm việc và những quy định về giờ bay, giờ nghỉ.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Nền tảng phần mềm quản lý tập trung",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Bảo trì và phát triển dài hạn",
+          "description": "Từ năm 2018, GS Group tiếp tục cung cấp dịch vụ bảo trì, nâng cấp và hỗ trợ kỹ thuật để hệ thống đáp ứng hoạt động thực tế.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Đội ngũ theo dõi và hỗ trợ hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "an-ninh-quoc-phong",
+      "eyebrow": "Giải pháp",
+      "title": "An ninh - Quốc phòng",
+      "summary": "Giải pháp công nghệ chuyên dụng, bảo đảm khả năng chỉ huy, kết nối và vận hành an toàn cho các hệ thống trọng yếu.",
+      "heroImage": "/image/solution/military.jpg",
+      "heroImageAlt": "An ninh - Quốc phòng",
+      "sections": [
+        {
+          "title": "Khảo sát và phân tích",
+          "description": "Đội ngũ chuyên gia đánh giá hiện trạng, yêu cầu nghiệp vụ và các tiêu chuẩn kỹ thuật trước khi xây dựng phương án.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Khảo sát và phân tích hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Thiết kế và triển khai",
+          "description": "Giải pháp được thiết kế theo từng nhu cầu cụ thể, triển khai đồng bộ và kiểm thử chặt chẽ trước khi chuyển giao.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Thiết kế và triển khai giải pháp",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Vận hành và đồng hành",
+          "description": "Dịch vụ hỗ trợ, bảo trì và nâng cấp giúp hệ thống duy trì hiệu quả, ổn định và sẵn sàng phát triển lâu dài.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Giám sát và vận hành hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "bao-mat-attt",
+      "eyebrow": "Giải pháp",
+      "title": "Bảo mật - An toàn thông tin",
+      "summary": "Nền tảng bảo vệ nhiều lớp giúp nhận diện sớm nguy cơ, giám sát liên tục và chủ động ứng phó với các mối đe dọa số.",
+      "heroImage": "/image/solution/security.jpg",
+      "heroImageAlt": "Bảo mật - ATTT",
+      "sections": [
+        {
+          "title": "Khảo sát và phân tích",
+          "description": "Đội ngũ chuyên gia đánh giá hiện trạng, yêu cầu nghiệp vụ và các tiêu chuẩn kỹ thuật trước khi xây dựng phương án.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Khảo sát và phân tích hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Thiết kế và triển khai",
+          "description": "Giải pháp được thiết kế theo từng nhu cầu cụ thể, triển khai đồng bộ và kiểm thử chặt chẽ trước khi chuyển giao.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Thiết kế và triển khai giải pháp",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Vận hành và đồng hành",
+          "description": "Dịch vụ hỗ trợ, bảo trì và nâng cấp giúp hệ thống duy trì hiệu quả, ổn định và sẵn sàng phát triển lâu dài.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Giám sát và vận hành hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "dien-luc-nang-luong",
+      "eyebrow": "Giải pháp",
+      "title": "Điện lực - Năng lượng",
+      "summary": "GS GROUP thấu hiểu các bài toán về dữ liệu, vận hành và an toàn thông tin trong quá trình số hóa ngành Điện lực Việt Nam. Cùng INTER RAO EUS và SIGMA, chúng tôi tích hợp, bản địa hóa các giải pháp tiên tiến, phù hợp với hạ tầng, quy trình vận hành và yêu cầu đặc thù tại Việt Nam.",
+      "heroImage": "/uploads/1785231067205-7rema9zc7fc.png",
+      "heroImageAlt": "Điện lực - Năng lượng",
+      "sections": [
+        {
+          "title": "SIGMA.SUPA",
+          "description": "SUPA (Enterprise Asset Management - EAM) là hệ thống quản lý tài sản doanh nghiệp dành cho ngành điện và năng lượng, hỗ trợ số hóa và quản lý toàn bộ vòng đời tài sản trên một nền tảng thống nhất. Hệ thống tích hợp dữ liệu thiết bị, tình trạng kỹ thuật, bảo trì – sửa chữa, vật tư và chi phí vận hành, giúp doanh nghiệp nâng cao độ tin cậy của thiết bị, chuẩn hóa quy trình bảo trì và tối ưu hiệu quả khai thác tài sản. ",
+          "image": "/uploads/1785231144990-e17979j2gw6.png",
+          "imageAlt": "SIGMA.SUPA",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "SIGMA.PAS",
+          "description": "SIGMA.PAS (Predictive Analytics System) là giải pháp giám sát, chẩn đoán và phân tích tình trạng thiết bị, ứng dụng mô hình toán học tiên tiến kết hợp trí tuệ nhân tạo (AI) và Machine Learning (ML). Giải pháp giúp phát hiện sớm các bất thường, dự báo nguy cơ hư hỏng và đánh giá rủi ro sự cố trước khi xảy ra, góp phần nâng cao độ tin cậy vận hành và tối ưu công tác bảo trì. ",
+          "image": "/uploads/1785231213740-klqss80yvxa.png",
+          "imageAlt": "SIGMA.PAS",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "SIGMA.SSPTI",
+          "description": "SSPTI là hệ thống phần mềm công nghiệp hỗ trợ thu thập, hợp nhất, chuẩn hóa, xử lý, lưu trữ và truyền tải dữ liệu công nghệ từ nhiều nguồn khác nhau như DCS, SCADA, PLC, cảm biến, thiết bị đo và cơ sở dữ liệu. Hệ thống tập trung dữ liệu phân tán trên một nền tảng thống nhất, cung cấp nguồn dữ liệu tin cậy phục vụ giám sát vận hành, phân tích, báo cáo và tích hợp với các hệ thống nghiệp vụ, quản lý và phân tích như ERP, EAM và PAS",
+          "image": "/uploads/1785231260242-168xcl4liha.png",
+          "imageAlt": "SIGMA.SSPTI",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "SIGMA.ALKOR ",
+          "description": "Giải pháp SIGMA.ALKOR – Quản lý đội kỹ thuật hiện trường\nlà nền tảng phần mềm di động hỗ trợ quản lý và tự động hóa công việc của lực lượng kỹ thuật hiện trường trong ngành điện và hạ tầng tiện ích. Giải pháp tích hợp định vị GPS, kết nối với các hệ thống MRO/EAM/ERP và GIS, hỗ trợ điều phối các hoạt động kiểm tra, bảo trì, sửa chữa và xử lý sự cố.\n",
+          "image": "/uploads/1785231290300-mwtgwkg515b.png",
+          "imageAlt": "SIGMA.ALKOR ",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "SIGMA.SUS ",
+          "description": "SIGMA.SUS là hệ thống quản lý lưới điện hỗ trợ thu thập, tổng hợp, xác minh và trực quan hóa dữ liệu từ nhiều hệ thống công nghệ và nghiệp vụ trên một nền tảng thống nhất. Giải pháp giúp chuẩn hóa dữ liệu thiết bị, kiểm tra tính chính xác của cấu trúc và dữ liệu lưới điện, đồng thời cung cấp thông tin phục vụ điều hành theo tình huống, bảo trì – sửa chữa, truyền tải, quy hoạch phát triển lưới điện và quản lý đấu nối. ",
+          "image": "/uploads/1785231319093-84k6rcgrwwp.png",
+          "imageAlt": "SIGMA.SUS ",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "vien-thong",
+      "eyebrow": "Giải pháp",
+      "title": "Viễn thông",
+      "summary": "Hạ tầng truyền thông thế hệ mới mang lại kết nối ổn định, bảo mật và khả năng kiểm soát toàn diện.",
+      "heroImage": "/image/solution/tele.jpg",
+      "heroImageAlt": "Viễn thông",
+      "sections": [
+        {
+          "title": "Khảo sát và phân tích",
+          "description": "Đội ngũ chuyên gia đánh giá hiện trạng, yêu cầu nghiệp vụ và các tiêu chuẩn kỹ thuật trước khi xây dựng phương án.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Khảo sát và phân tích hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Thiết kế và triển khai",
+          "description": "Giải pháp được thiết kế theo từng nhu cầu cụ thể, triển khai đồng bộ và kiểm thử chặt chẽ trước khi chuyển giao.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Thiết kế và triển khai giải pháp",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Vận hành và đồng hành",
+          "description": "Dịch vụ hỗ trợ, bảo trì và nâng cấp giúp hệ thống duy trì hiệu quả, ổn định và sẵn sàng phát triển lâu dài.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Giám sát và vận hành hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "hang-khong",
+      "eyebrow": "Giải pháp",
+      "title": "Hàng không",
+      "summary": "Các nền tảng quản lý khai thác bay hỗ trợ lập lịch, điều phối nguồn lực và tuân thủ yêu cầu an toàn hàng không.",
+      "heroImage": "/image/solution/air.jpg",
+      "heroImageAlt": "Hàng không",
+      "sections": [
+        {
+          "title": "Khảo sát và phân tích",
+          "description": "Đội ngũ chuyên gia đánh giá hiện trạng, yêu cầu nghiệp vụ và các tiêu chuẩn kỹ thuật trước khi xây dựng phương án.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Khảo sát và phân tích hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Thiết kế và triển khai",
+          "description": "Giải pháp được thiết kế theo từng nhu cầu cụ thể, triển khai đồng bộ và kiểm thử chặt chẽ trước khi chuyển giao.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Thiết kế và triển khai giải pháp",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Vận hành và đồng hành",
+          "description": "Dịch vụ hỗ trợ, bảo trì và nâng cấp giúp hệ thống duy trì hiệu quả, ổn định và sẵn sàng phát triển lâu dài.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Giám sát và vận hành hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "projects",
+      "slug": "he-thong-gsm-co-dong",
+      "eyebrow": "Dự án tiêu biểu · Cục KTNV - Bộ Công an",
+      "title": "Hệ thống GSM cơ động",
+      "summary": "Hệ thống GSM cơ động và phân tích tín hiệu vô tuyến được triển khai nhằm đáp ứng yêu cầu nghiệp vụ chuyên biệt.",
+      "heroImage": "/image/solution/tele.jpg",
+      "heroImageAlt": "Hệ thống GSM cơ động",
+      "sections": [
+        {
+          "title": "Khảo sát và phân tích",
+          "description": "Đội ngũ chuyên gia đánh giá hiện trạng, yêu cầu nghiệp vụ và các tiêu chuẩn kỹ thuật trước khi xây dựng phương án.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Khảo sát và phân tích hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Thiết kế và triển khai",
+          "description": "Giải pháp được thiết kế theo từng nhu cầu cụ thể, triển khai đồng bộ và kiểm thử chặt chẽ trước khi chuyển giao.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Thiết kế và triển khai giải pháp",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Vận hành và đồng hành",
+          "description": "Dịch vụ hỗ trợ, bảo trì và nâng cấp giúp hệ thống duy trì hiệu quả, ổn định và sẵn sàng phát triển lâu dài.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Giám sát và vận hành hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "projects",
+      "slug": "he-thong-an-toan-thong-tin",
+      "eyebrow": "Dự án tiêu biểu · EVNNPT",
+      "title": "Hệ thống An toàn Thông tin",
+      "summary": "Hạ tầng bảo mật tổng thể bảo vệ hệ thống công nghệ thông tin và hoạt động điều hành lưới điện quốc gia.",
+      "heroImage": "/image/solution/security.jpg",
+      "heroImageAlt": "Hệ thống An toàn Thông tin",
+      "sections": [
+        {
+          "title": "Khảo sát và phân tích",
+          "description": "Đội ngũ chuyên gia đánh giá hiện trạng, yêu cầu nghiệp vụ và các tiêu chuẩn kỹ thuật trước khi xây dựng phương án.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Khảo sát và phân tích hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Thiết kế và triển khai",
+          "description": "Giải pháp được thiết kế theo từng nhu cầu cụ thể, triển khai đồng bộ và kiểm thử chặt chẽ trước khi chuyển giao.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Thiết kế và triển khai giải pháp",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Vận hành và đồng hành",
+          "description": "Dịch vụ hỗ trợ, bảo trì và nâng cấp giúp hệ thống duy trì hiệu quả, ổn định và sẵn sàng phát triển lâu dài.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Giám sát và vận hành hệ thống",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    }
+  ]
+}
