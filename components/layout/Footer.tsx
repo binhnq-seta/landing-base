@@ -10,7 +10,7 @@ export function SiteFooter({ siteName = 'General Systems. All Rights Reserved.',
     <footer id="footer" className="bg-[#00162F]">
       <div className="mx-auto w-full px-5 py-15">
         <div className="grid gap-10 md:grid-cols-2">
-          <div className="text-start flex flex-col max-w-[45vw] pl-20">
+          <div className="text-start flex flex-col max-w-full px-5 md:max-w-[45vw] md:pl-20 md:px-0">
             <span className="text-xl font-semibold text-white">CÔNG TY CỔ PHẦN TẬP ĐOÀN PHÁT TRIỂN CÔNG NGHỆ VÀ ĐẦU TƯ
               - GS GROUP</span>
             <p className="mt-3 font-light text-sm leading-6 text-white">
@@ -18,7 +18,7 @@ export function SiteFooter({ siteName = 'General Systems. All Rights Reserved.',
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-8 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Giải pháp</h3>
               <ul className="mt-4 space-y-3 font-light text-sm text-white">
@@ -51,7 +51,7 @@ export function SiteFooter({ siteName = 'General Systems. All Rights Reserved.',
           </div>
         </div>
 
-        <div className="ml-20 mt-10 flex flex-col gap-3 border-t border-[#BEDBFF] font-light pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="ml-0 md:ml-20 mt-10 flex flex-col gap-3 border-t border-[#BEDBFF] font-light pt-6 px-5 md:px-0 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-white">© {year} {siteName}</p>
           {copyright && <p className="text-sm text-white">{copyright}</p>}
         </div>

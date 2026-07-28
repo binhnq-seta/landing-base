@@ -27,7 +27,20 @@ const SOLUTION_SLUGS = [
     'hang-khong',
 ];
 
-export default function SolutionSection() {
+interface SolutionItem {
+    slug: string
+    title: string
+    src: string
+    alt: string
+    desc: string
+}
+
+interface SolutionSectionProps {
+    data?: SolutionItem[]
+}
+
+export default function SolutionSection({ data }: SolutionSectionProps) {
+    const solutions = data ?? SOLUTION_IMAGE.map((item, i) => ({ ...item, slug: SOLUTION_SLUGS[i] }))
     const router = useRouter();
     const sectionRef = useRef<HTMLElement>(null);
     const crystalRef = useRef<HTMLImageElement>(null);
@@ -199,7 +212,28 @@ export default function SolutionSection() {
 
     return (
         <section ref={sectionRef} id="solutions" className="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat">
-            <div className="grid grid-cols-[35%_65%] min-h-screen">
+            {/* Mobile layout */}
+        <div className="block md:hidden px-5 py-14">
+            <h1 className="mb-8 text-[clamp(36px,6vw,60px)] font-semibold tracking-wider text-slate-700">
+                GIẢI <br /> PHÁP
+            </h1>
+            <div className="grid grid-cols-2 gap-3">
+                {solutions.map((solution, index) => (
+                    <div
+                        key={index}
+                        onClick={() => router.push(`/solutions/${solution.slug}`)}
+                        className="relative aspect-[3/4] overflow-hidden rounded-xl cursor-pointer"
+                    >
+                        <Image src={solution.src} alt={solution.alt} fill sizes="50vw" className="object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                        <h3 className="absolute bottom-3 left-3 right-3 text-sm font-bold text-white leading-tight">{solution.title}</h3>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        {/* Desktop layout */}
+        <div className="hidden md:grid grid-cols-[35%_65%] min-h-screen">
                 <Image
                     ref={crystalRef}
                     src="/image/crystal.png"
@@ -224,7 +258,7 @@ export default function SolutionSection() {
                             className="flex min-h-0"
                             style={{ flexGrow: rowIdx === 0 ? ROW_ACTIVE : ROW_REST }}
                         >
-                            {SOLUTION_IMAGE.slice(rowIdx * 3, rowIdx * 3 + 3).map((solution, colIdx) => {
+                            {solutions.slice(rowIdx * 3, rowIdx * 3 + 3).map((solution, colIdx) => {
                                 const index = rowIdx * 3 + colIdx;
                                 return (
                                     <div
@@ -235,7 +269,7 @@ export default function SolutionSection() {
                                         onMouseLeave={cancelHoverSelect}
                                         onClick={() => {
                                             if (index === activeIndexRef.current) {
-                                                router.push(`/solutions/${SOLUTION_SLUGS[index]}`);
+                                                router.push(`/solutions/${solutions[index].slug}`);
                                                 return;
                                             }
                                             handleSelect(index);
@@ -244,7 +278,7 @@ export default function SolutionSection() {
                                             if (event.key !== 'Enter' && event.key !== ' ') return;
                                             event.preventDefault();
                                             if (index === activeIndexRef.current) {
-                                                router.push(`/solutions/${SOLUTION_SLUGS[index]}`);
+                                                router.push(`/solutions/${solutions[index].slug}`);
                                                 return;
                                             }
                                             handleSelect(index);

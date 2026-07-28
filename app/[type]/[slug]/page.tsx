@@ -6,6 +6,11 @@ import { DetailSpline } from '@/components/detail/DetailSpline'
 import { SiteFooter } from '@/components/layout/Footer'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { detailPages, getDetailPage } from '@/lib/detail-pages'
+import { getContent } from '@/lib/admin/content'
+import type { CMSDetailSection } from '@/lib/admin/content'
+
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
 
 type DetailPageProps = {
   params: Promise<{ type: string; slug: string }>
@@ -17,21 +22,55 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
   const { type, slug } = await params
-  const page = getDetailPage(type, slug)
-
+  const content = getContent()
+  const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
+  const page = cmsPage ?? getDetailPage(type, slug)
   if (!page) return {}
-
   return {
     title: `${page.title} | General Systems`,
     description: page.summary,
   }
 }
 
+function sectionImageClasses(section: CMSDetailSection): string {
+  const style = section.imageStyle ?? 'cover'
+  const aspect =
+    style === 'portrait' ? 'aspect-[3/4]' : style === 'wide' ? 'aspect-[16/9]' : 'aspect-[4/3]'
+  const objectFit = style === 'contain' ? 'object-contain bg-slate-100' : 'object-cover'
+  return `${aspect} ${objectFit}`
+}
+
+function sectionImageOrder(section: CMSDetailSection, index: number): boolean {
+  const pos = section.imagePosition ?? 'auto'
+  if (pos === 'right') return true
+  if (pos === 'left') return false
+  return index % 2 === 1
+}
+
 export default async function DetailPage({ params }: DetailPageProps) {
   const { type, slug } = await params
-  const page = getDetailPage(type, slug)
 
-  if (!page) notFound()
+  const content = getContent()
+  const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
+
+  type PageData = { type: string; slug: string; eyebrow: string; title: string; summary: string; heroImage: string; heroImageAlt: string; sections: CMSDetailSection[] }
+
+  let page: PageData
+
+  if (cmsPage) {
+    page = cmsPage
+  } else {
+    const fallback = getDetailPage(type, slug)
+    if (!fallback) notFound()
+    page = {
+      ...fallback,
+      sections: fallback.sections.map((s) => ({
+        ...s,
+        imagePosition: 'auto' as const,
+        imageStyle: 'cover' as const,
+      })),
+    }
+  }
 
   return (
     <>
@@ -86,31 +125,37 @@ export default async function DetailPage({ params }: DetailPageProps) {
           </div>
 
           <div className="mx-auto w-full max-w-[1600px] space-y-24 px-5 py-24 md:space-y-36 md:px-12 md:py-36 lg:px-20">
-            {page.sections.map((section, index) => (
-              <section
-                key={section.title}
-                className="grid items-center gap-10 md:grid-cols-2 md:gap-16 lg:gap-24"
-              >
-                <div data-detail-reveal className={`relative aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-slate-200 md:rounded-[2rem] ${index % 2 === 1 ? 'md:order-2' : ''}`}>
-                  <Image
-                    src={section.image}
-                    alt={section.imageAlt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 45vw"
-                    className="object-cover transition-transform duration-700 hover:scale-[1.03]"
-                  />
-                </div>
+            {page.sections.map((section, index) => {
+              const imgRight = sectionImageOrder(section, index)
+              return (
+                <section
+                  key={section.title}
+                  className="grid items-center gap-10 md:grid-cols-2 md:gap-16 lg:gap-24"
+                >
+                  <div
+                    data-detail-reveal
+                    className={`relative overflow-hidden rounded-[1.5rem] bg-slate-200 md:rounded-[2rem] ${sectionImageClasses(section)} ${imgRight ? 'md:order-2' : ''}`}
+                  >
+                    <Image
+                      src={section.image}
+                      alt={section.imageAlt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 45vw"
+                      className={`transition-transform duration-700 hover:scale-[1.03] ${(section.imageStyle ?? 'cover') === 'contain' ? 'object-contain' : 'object-cover'}`}
+                    />
+                  </div>
 
-                <div className={index % 2 === 1 ? 'md:order-1' : ''}>
-                  <h2 data-detail-reveal data-detail-delay="0.08" className="max-w-xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-5xl">
-                    {section.title}
-                  </h2>
-                  <p data-detail-reveal data-detail-delay="0.16" className="mt-6 max-w-xl text-base font-light leading-8 text-slate-600 md:text-lg">
-                    {section.description}
-                  </p>
-                </div>
-              </section>
-            ))}
+                  <div className={imgRight ? 'md:order-1' : ''}>
+                    <h2 data-detail-reveal data-detail-delay="0.08" className="max-w-xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-5xl">
+                      {section.title}
+                    </h2>
+                    <p data-detail-reveal data-detail-delay="0.16" className="mt-6 max-w-xl text-base font-light leading-8 text-slate-600 md:text-lg">
+                      {section.description}
+                    </p>
+                  </div>
+                </section>
+              )
+            })}
           </div>
         </article>
       </main>

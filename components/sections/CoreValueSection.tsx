@@ -1,11 +1,21 @@
 'use client'
-import type { FeaturesSection as FeaturesData } from '@/types/strapi'
 import { Application } from '@splinetool/runtime'
 import { useEffect, useRef } from 'react'
 import { gsap } from '@/lib/gsap'
 
+interface CVFeatureItem {
+    id: string | number
+    title: string
+    description: string
+}
+
+interface CVFeaturesData {
+    heading?: string
+    features?: CVFeatureItem[]
+}
+
 interface FeaturesSectionProps {
-    data?: FeaturesData
+    data?: CVFeaturesData
 }
 
 const X = 350;
@@ -24,29 +34,47 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (!canvasRef.current) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        if (window.innerWidth < 1024) return;
 
         let app: Application;
+        let isDisposed = false;
 
-        async function init() {
-            app = new Application(canvasRef.current!);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries[0].isIntersecting) return;
+                observer.disconnect();
 
-            await app.load("/model/atomic.splinecode");
+                async function init() {
+                    app = new Application(canvas!);
+                    try {
+                        await app.load("/model/atomic.splinecode");
+                        if (isDisposed) return;
 
-            const sphere = app.findObjectByName("Sphere 3");
-            const cylinder = app.findObjectByName("Cylinder");
-            const DirectionalLight = app.findObjectByName("Directional Light");
-            sphere!.position.x = X;
-            sphere!.position.y = Y;
-            cylinder!.position.x = X;
-            cylinder!.position.y = Y;
-            DirectionalLight!.position.x = X;
-            DirectionalLight!.position.y = Y;
-        }
+                        const sphere = app.findObjectByName("Sphere 3");
+                        const cylinder = app.findObjectByName("Cylinder");
+                        const light = app.findObjectByName("Directional Light");
+                        if (sphere) { sphere.position.x = X; sphere.position.y = Y; }
+                        if (cylinder) { cylinder.position.x = X; cylinder.position.y = Y; }
+                        if (light) { light.position.x = X; light.position.y = Y; }
+                    } catch {
+                        // ignore load errors
+                    }
+                }
 
-        init();
+                init();
+            },
+            { rootMargin: '200px' },
+        );
 
-        return () => app?.dispose();
+        observer.observe(canvas);
+
+        return () => {
+            isDisposed = true;
+            observer.disconnect();
+            app?.dispose();
+        };
     }, []);
 
     useEffect(() => {
@@ -84,15 +112,15 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
             id="core-values"
             className="relative min-h-screen overflow-hidden"
         >
-            <div className="relative z-10 grid min-h-screen grid-cols-[60%_40%]">
-                <div className="flex min-h-screen flex-col justify-center py-24 pl-[10vw]">
+            <div className="relative z-10 grid min-h-screen md:grid-cols-[60%_40%]">
+                <div className="flex min-h-screen flex-col justify-center py-14 md:py-24 px-5 md:px-0 md:pl-[10vw]">
                     <div data-core-reveal className="text-start">
-                        <h1 className="mb-4 text-[clamp(60px,4vw,100px)] font-semibold text-slate-700">
+                        <h1 className="mb-4 text-[clamp(36px,4vw,100px)] font-semibold text-slate-700">
                             {data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
                         </h1>
                     </div>
 
-                    <div className="grid grid-cols-2 items-stretch gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 items-stretch gap-2">
                         {features.map((feature) => (
                             <div key={feature.id} data-core-reveal className="h-full">
                                 <div className="flex h-full flex-col rounded-xl p-6">

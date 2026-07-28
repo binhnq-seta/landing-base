@@ -15,7 +15,17 @@ const PARTNER_LOGOS = [
   { src: '/image/partner-logo/image%2032-4.png', alt: 'Đối tác General Systems 6' },
 ]
 
-export function PartnerSection() {
+interface PartnerLogo {
+  src: string
+  alt: string
+}
+
+interface PartnerSectionProps {
+  data?: PartnerLogo[]
+}
+
+export function PartnerSection({ data }: PartnerSectionProps) {
+  const logos = data ?? PARTNER_LOGOS
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
 
@@ -89,7 +99,7 @@ export function PartnerSection() {
       <div className="relative z-10 w-full">
         <h1
           data-partner-reveal
-          className="mb-16 px-6 text-center text-[clamp(60px,4vw,100px)] font-bold uppercase text-slate-700"
+          className="mb-16 px-6 text-center text-[clamp(32px,4vw,100px)] font-bold uppercase text-slate-700"
         >
           Đối tác của chúng tôi
         </h1>
@@ -105,7 +115,7 @@ export function PartnerSection() {
                 aria-hidden={groupIndex === 1}
                 className="flex shrink-0 items-center gap-10 pr-10 md:gap-16 md:pr-16"
               >
-                {PARTNER_LOGOS.map((logo) => (
+                {logos.map((logo) => (
                   <div
                     key={`${groupIndex}-${logo.src}`}
                     className="relative h-28 w-48"

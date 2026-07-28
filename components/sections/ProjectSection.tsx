@@ -35,7 +35,21 @@ const PROJECTS = [
     },
 ]
 
-export default function ProjectSection() {
+interface ProjectItem {
+    id: string
+    slug: string
+    category: string
+    title: string
+    img: string
+    description: string
+}
+
+interface ProjectSectionProps {
+    data?: ProjectItem[]
+}
+
+export default function ProjectSection({ data }: ProjectSectionProps) {
+    const PROJECTS_DATA = data ?? PROJECTS
     const [activeIndex, setActiveIndex] = useState(0)
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
     const [isCarouselHovered, setIsCarouselHovered] = useState(false)
@@ -46,12 +60,12 @@ export default function ProjectSection() {
 
     const showPrevious = () => {
         setActiveIndex((current) =>
-            current === 0 ? PROJECTS.length - 1 : current - 1,
+            current === 0 ? PROJECTS_DATA.length - 1 : current - 1,
         )
     }
 
     const showNext = () => {
-        setActiveIndex((current) => (current + 1) % PROJECTS.length)
+        setActiveIndex((current) => (current + 1) % PROJECTS_DATA.length)
     }
 
     const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
@@ -71,7 +85,7 @@ export default function ProjectSection() {
 
     const getSlidePosition = (index: number) => {
         if (index === activeIndex) return 0
-        if (index === (activeIndex - 1 + PROJECTS.length) % PROJECTS.length) return -1
+        if (index === (activeIndex - 1 + PROJECTS_DATA.length) % PROJECTS_DATA.length) return -1
         return 1
     }
 
@@ -126,7 +140,7 @@ export default function ProjectSection() {
 
         const autoplayTimer = window.setInterval(() => {
             if (isCarouselHoveredRef.current) return
-            setActiveIndex((current) => (current + 1) % PROJECTS.length)
+            setActiveIndex((current) => (current + 1) % PROJECTS_DATA.length)
         }, 2000)
 
         return () => window.clearInterval(autoplayTimer)
@@ -144,7 +158,7 @@ export default function ProjectSection() {
             />
 
             <div className="relative z-10 w-full">
-                <h1 data-project-reveal className="mb-[3vw] text-start px-[10vw] text-[clamp(60px,4vw,100px)] font-bold uppercase text-slate-700">
+                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(36px,4vw,100px)] font-bold uppercase text-slate-700">
                     Dự án tiêu biểu
                 </h1>
 
@@ -155,7 +169,7 @@ export default function ProjectSection() {
                         onTouchEnd={handleTouchEnd}
                     >
                         <div className="grid">
-                            {PROJECTS.map((project, index) => {
+                            {PROJECTS_DATA.map((project, index) => {
                                 const position = getSlidePosition(index)
                                 const isActive = position === 0
                                 const isHovered = hoveredIndex === index && !isActive
@@ -188,7 +202,7 @@ export default function ProjectSection() {
                                                 setActiveIndex(index)
                                             }
                                         }}
-                                        className={`relative col-start-1 row-start-1 grid w-[60%] grid-cols-[minmax(0,40fr)_minmax(0,60fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-7 py-12 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
+                                        className={`relative col-start-1 row-start-1 grid w-[88%] md:w-[60%] grid-cols-[minmax(0,40fr)_minmax(0,60fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-5 py-8 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-7 sm:py-12 md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
                                         style={{
                                             opacity: isActive ? 1 : isHovered ? 0.78 : 0.48,
                                             transform: `translateX(${slideOffset}%) scale(${slideScale})`,
@@ -217,10 +231,10 @@ export default function ProjectSection() {
                                             <span className="mb-5 text-sm font-medium uppercase text-slate-700">
                                                 {project.category}
                                             </span>
-                                            <h3 className="max-w-2xl text-2xl font-bold leading-snug text-slate-700 sm:text-3xl">
+                                            <h3 className="max-w-2xl text-xl font-bold leading-snug text-slate-700 sm:text-2xl md:text-3xl">
                                                 {project.title}
                                             </h3>
-                                            <p className="mt-5 max-w-2xl text-base leading-8 text-slate-700">
+                                            <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-700 md:text-base md:leading-8">
                                                 {project.description}
                                             </p>
                                             <Link
@@ -250,7 +264,7 @@ export default function ProjectSection() {
                                 setIsCarouselHovered(false)
                             }}
                         >
-                            {PROJECTS.map((project, index) => (
+                            {PROJECTS_DATA.map((project, index) => (
                                 <button
                                     key={project.id}
                                     type="button"

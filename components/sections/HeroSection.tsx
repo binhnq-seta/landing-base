@@ -17,6 +17,22 @@ const STATS = [
 ]
 
 const SPLINE_INTRO_MS = 5000
+const MAX_DPR = 1.5 // cap pixel ratio — halves GPU work on retina screens
+
+// Runs only in useEffect (client-only), no hydration risk
+function isLowEnd(): boolean {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true
+  if (window.innerWidth < 1024) return true // mobile / small tablet
+
+  type NavExt = Navigator & { connection?: { saveData?: boolean; effectiveType?: string }; deviceMemory?: number }
+  const nav = navigator as NavExt
+  if (nav.connection?.saveData) return true
+  if (['slow-2g', '2g', '3g'].includes(nav.connection?.effectiveType ?? '')) return true
+  if ((nav.deviceMemory ?? 8) < 4) return true
+  if ((navigator.hardwareConcurrency ?? 8) <= 4) return true
+
+  return false
+}
 
 interface HeroSectionProps {
   data?: HeroData
@@ -88,36 +104,69 @@ export function HeroSection({ data }: HeroSectionProps) {
   }, [introComplete, lenisRef])
 
   useEffect(() => {
-    if (!canvasRef.current) return;
+    // Skip Spline on low-end devices — complete intro immediately
+    if (isLowEnd()) {
+      const t = window.setTimeout(() => setIntroComplete(true), 200)
+      return () => clearTimeout(t)
+    }
 
-    let app: Application;
+    if (!canvasRef.current) return
+
+    let app: Application
     let introTimer: number | undefined
     let isDisposed = false
 
+    // Hard ceiling: page never waits more than SPLINE_INTRO_MS total
+    const pageTimer = window.setTimeout(() => setIntroComplete(true), SPLINE_INTRO_MS)
+
     async function init() {
-      app = new Application(canvasRef.current!);
-      splineAppRef.current = app
+      const canvas = canvasRef.current!
+
+      // Cap pixel ratio before Application reads it — reduces GPU fill rate
+      const nativeDPR = window.devicePixelRatio
+      let dprOverridden = false
+      if (nativeDPR > MAX_DPR) {
+        try {
+          Object.defineProperty(window, 'devicePixelRatio', { value: MAX_DPR, configurable: true })
+          dprOverridden = true
+        } catch {
+          // property not configurable on this browser — skip
+        }
+      }
 
       try {
-        await app.load("/model/finalCube12.splinecode");
-        if (isDisposed) return
-
-        introTimer = window.setTimeout(() => {
-          setIntroComplete(true)
-        }, SPLINE_INTRO_MS)
-      } catch {
-        if (!isDisposed) setIntroComplete(true)
+        app = new Application(canvas)
+        splineAppRef.current = app
+        await app.load('/model/finalCube12.splinecode')
+      } finally {
+        if (dprOverridden) {
+          try {
+            Object.defineProperty(window, 'devicePixelRatio', { value: nativeDPR, configurable: true })
+          } catch {
+            // ignore
+          }
+        }
       }
+
+      if (isDisposed) return
+      clearTimeout(pageTimer)
+
+      introTimer = window.setTimeout(() => {
+        if (!isDisposed) setIntroComplete(true)
+      }, SPLINE_INTRO_MS)
     }
 
-    init();
+    init().catch(() => {
+      if (!isDisposed) setIntroComplete(true)
+    })
 
     return () => {
       isDisposed = true
-      if (introTimer !== undefined) window.clearTimeout(introTimer)
+      clearTimeout(pageTimer)
+      if (introTimer !== undefined) clearTimeout(introTimer)
       app?.dispose()
-    };
-  }, []);
+    }
+  }, [])
 
   useEffect(() => {
     const updateSplineInteraction = () => {
@@ -151,7 +200,7 @@ export function HeroSection({ data }: HeroSectionProps) {
       </div>
 
       <div className="pointer-events-none absolute inset-0 z-10">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
+        <div className="sticky top-0 h-screen w-full overflow-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200">
           <canvas
             ref={canvasRef}
             className={`block h-full w-full ${disableSpline ? 'pointer-events-none' : 'pointer-events-auto'}`}
@@ -159,12 +208,12 @@ export function HeroSection({ data }: HeroSectionProps) {
         </div>
       </div>
 
-      <div data-hero-content className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-center justify-start px-[10vw] text-start opacity-0">
-        <div className="w-[clamp(200px,45%,900px)]">
-          <h1 data-hero-heading className="mb-6 text-[clamp(30px,2.5vw,60px)] font-bold text-slate-950">
+      <div data-hero-content className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-start md:items-center justify-start px-5 md:px-[10vw] pt-24 md:pt-0 text-start opacity-0">
+        <div className="w-full md:w-[clamp(400px,45%,900px)]">
+          <h1 data-hero-heading className="mb-6 text-[clamp(22px,2.5vw,60px)] font-bold text-slate-950">
             {data?.heading ?? <>KẾT NỐI CÔNG NGHỆ XÂY DỰNG <span className="text-blue-500">TƯƠNG LAI</span></>}
           </h1>
-          <p data-hero-sub className="mb-10 text-start text-[clamp(13px,1vw,24px)] font-light text-slate-600">
+          <p data-hero-sub className="mb-10 text-start text-[clamp(16px,1vw,24px)] font-light text-slate-600">
             {data?.description ?? 'General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.'}
           </p>
           <div data-hero-cta className="flex flex-col justify-start gap-4 sm:flex-row">

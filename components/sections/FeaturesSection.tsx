@@ -103,12 +103,12 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
 
   return (
     <section ref={sectionRef} id="features" className="relative min-h-screen bg-white">
-      <div className="pointer-events-none relative z-20 grid grid-cols-2 gap-6">
-        <div className="relative flex flex-col mr-5 justify-center items-center min-h-screen">
+      <div className="pointer-events-none relative z-20 grid md:grid-cols-2 gap-6">
+        <div className="hidden md:flex relative flex-col mr-5 justify-center items-center min-h-screen">
           <div className="w-full h-full flex justify-center items-center">
           </div>
         </div>
-        <div className="relative flex flex-col mr-5 justify-center max-w-[800px] min-h-screen py-24">
+        <div className="relative flex flex-col px-5 md:px-0 mr-0 md:mr-5 justify-center max-w-[800px] min-h-screen py-14 md:py-24">
           <div data-feature-reveal className="text-start">
             <h1 className="mb-4 text-[clamp(30px,2.5vw,60px)] font-semibold text-slate-700 text-start bottom-0">
               {data?.heading ?? (
@@ -119,7 +119,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 items-stretch justify-start max-w-[800px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch justify-start max-w-[800px]">
             {features.map((feature, i) => (
               <div key={feature.id} data-feature-card className="pointer-events-auto h-full">
                 <div className="feature-card flex h-full flex-col rounded-xl p-6">
