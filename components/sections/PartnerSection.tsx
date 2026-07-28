@@ -99,7 +99,7 @@ export function PartnerSection({ data }: PartnerSectionProps) {
       <div className="relative z-10 w-full">
         <h1
           data-partner-reveal
-          className="mb-16 px-6 text-center text-[clamp(60px,4vw,100px)] font-bold uppercase text-slate-700"
+          className="mb-16 px-6 text-center text-[clamp(32px,4vw,100px)] font-bold uppercase text-slate-700"
         >
           Đối tác của chúng tôi
         </h1>

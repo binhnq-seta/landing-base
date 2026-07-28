@@ -212,7 +212,28 @@ export default function SolutionSection({ data }: SolutionSectionProps) {
 
     return (
         <section ref={sectionRef} id="solutions" className="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat">
-            <div className="grid grid-cols-[35%_65%] min-h-screen">
+            {/* Mobile layout */}
+        <div className="block md:hidden px-5 py-14">
+            <h1 className="mb-8 text-[clamp(36px,6vw,60px)] font-semibold tracking-wider text-slate-700">
+                GIẢI <br /> PHÁP
+            </h1>
+            <div className="grid grid-cols-2 gap-3">
+                {solutions.map((solution, index) => (
+                    <div
+                        key={index}
+                        onClick={() => router.push(`/solutions/${solution.slug}`)}
+                        className="relative aspect-[3/4] overflow-hidden rounded-xl cursor-pointer"
+                    >
+                        <Image src={solution.src} alt={solution.alt} fill sizes="50vw" className="object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                        <h3 className="absolute bottom-3 left-3 right-3 text-sm font-bold text-white leading-tight">{solution.title}</h3>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        {/* Desktop layout */}
+        <div className="hidden md:grid grid-cols-[35%_65%] min-h-screen">
                 <Image
                     ref={crystalRef}
                     src="/image/crystal.png"

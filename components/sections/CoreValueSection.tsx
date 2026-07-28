@@ -36,6 +36,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+        if (window.innerWidth < 1024) return;
 
         let app: Application;
         let isDisposed = false;
@@ -111,15 +112,15 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
             id="core-values"
             className="relative min-h-screen overflow-hidden"
         >
-            <div className="relative z-10 grid min-h-screen grid-cols-[60%_40%]">
-                <div className="flex min-h-screen flex-col justify-center py-24 pl-[10vw]">
+            <div className="relative z-10 grid min-h-screen md:grid-cols-[60%_40%]">
+                <div className="flex min-h-screen flex-col justify-center py-14 md:py-24 px-5 md:px-0 md:pl-[10vw]">
                     <div data-core-reveal className="text-start">
-                        <h1 className="mb-4 text-[clamp(60px,4vw,100px)] font-semibold text-slate-700">
+                        <h1 className="mb-4 text-[clamp(36px,4vw,100px)] font-semibold text-slate-700">
                             {data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
                         </h1>
                     </div>
 
-                    <div className="grid grid-cols-2 items-stretch gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 items-stretch gap-2">
                         {features.map((feature) => (
                             <div key={feature.id} data-core-reveal className="h-full">
                                 <div className="flex h-full flex-col rounded-xl p-6">

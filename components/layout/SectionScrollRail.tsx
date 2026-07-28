@@ -88,7 +88,7 @@ export function SectionScrollRail() {
     <nav
       aria-label="Điều hướng các phần"
       aria-hidden={!isIntroComplete}
-      className={`fixed right-1 top-1/2 z-[90] flex flex-col items-center py-2 transition-[opacity,transform] duration-700 ease-out sm:right-3 ${
+      className={`hidden md:flex fixed right-1 top-1/2 z-[90] flex-col items-center py-2 transition-[opacity,transform] duration-700 ease-out sm:right-3 ${
         isIntroComplete
           ? 'pointer-events-auto -translate-y-1/2 opacity-100'
           : 'pointer-events-none -translate-y-[45%] opacity-0'
