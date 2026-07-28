@@ -29,7 +29,16 @@ export function ImageUploader({
       const fd = new FormData()
       fd.append('file', file)
       const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-      const data = (await res.json()) as { url?: string; error?: string }
+
+      // Guard: response may not be JSON (e.g. server crash → HTML 500)
+      const text = await res.text()
+      let data: { url?: string; error?: string } = {}
+      try {
+        data = JSON.parse(text) as { url?: string; error?: string }
+      } catch {
+        throw new Error(`Server trả về lỗi ${res.status}. Kiểm tra log server.`)
+      }
+
       if (!res.ok || !data.url) throw new Error(data.error ?? 'Upload thất bại')
       onChange(data.url)
     } catch (err) {
