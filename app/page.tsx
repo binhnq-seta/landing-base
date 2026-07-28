@@ -1,33 +1,45 @@
+import lazy from 'next/dynamic'
 import { SiteFooter } from '@/components/layout/Footer'
 import { HeroSection } from '@/components/sections/HeroSection'
-import { PartnerSection } from '@/components/sections/PartnerSection'
-import { CoreValueSection } from '@/components/sections/CoreValueSection'
-import SolutionSection from '@/components/sections/SolutionSection'
-import ProjectSection from '@/components/sections/ProjectSection'
 import { SectionScrollRail } from '@/components/layout/SectionScrollRail'
+import { getContent } from '@/lib/admin/content'
 
-// Uncomment when Strapi is running:
-// import { getSingle } from '@/lib/strapi/client'
-// import type { LandingPage } from '@/types/strapi'
+export const dynamic = 'force-dynamic'
+
+const CoreValueSection = lazy(() =>
+  import('@/components/sections/CoreValueSection').then((m) => ({ default: m.CoreValueSection })),
+)
+const SolutionSection = lazy(() => import('@/components/sections/SolutionSection'))
+const ProjectSection = lazy(() => import('@/components/sections/ProjectSection'))
+const PartnerSection = lazy(() =>
+  import('@/components/sections/PartnerSection').then((m) => ({ default: m.PartnerSection })),
+)
 
 export default async function Home() {
-  // const page = await getSingle<LandingPage>('landing-page', {
-  //   populate: {
-  //     hero: { populate: ['cta', 'backgroundImage'] },
-  //     features: { populate: ['features'] },
-  //     seo: true,
-  //   },
-  // })
+  const content = getContent()
+
+  const heroData = {
+    id: 0,
+    heading: content.hero.heading,
+    description: content.hero.description,
+    cta: { id: 0, label: content.hero.ctaLabel, href: content.hero.ctaHref },
+  }
+
+  const coreValuesData = {
+    heading: content.coreValues.heading,
+    features: content.coreValues.items,
+  }
 
   return (
     <>
       <SectionScrollRail />
       <main className="pt-0">
-        <HeroSection />
-        <CoreValueSection />
-        <SolutionSection />
-        <ProjectSection />
-        <PartnerSection />
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        <HeroSection data={heroData as any} />
+        <CoreValueSection data={coreValuesData} />
+        <SolutionSection data={content.solutions} />
+        <ProjectSection data={content.projects} />
+        <PartnerSection data={content.partners} />
       </main>
       <SiteFooter />
     </>

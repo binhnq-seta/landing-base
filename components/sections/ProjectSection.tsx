@@ -35,7 +35,21 @@ const PROJECTS = [
     },
 ]
 
-export default function ProjectSection() {
+interface ProjectItem {
+    id: string
+    slug: string
+    category: string
+    title: string
+    img: string
+    description: string
+}
+
+interface ProjectSectionProps {
+    data?: ProjectItem[]
+}
+
+export default function ProjectSection({ data }: ProjectSectionProps) {
+    const PROJECTS_DATA = data ?? PROJECTS
     const [activeIndex, setActiveIndex] = useState(0)
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
     const [isCarouselHovered, setIsCarouselHovered] = useState(false)
@@ -46,12 +60,12 @@ export default function ProjectSection() {
 
     const showPrevious = () => {
         setActiveIndex((current) =>
-            current === 0 ? PROJECTS.length - 1 : current - 1,
+            current === 0 ? PROJECTS_DATA.length - 1 : current - 1,
         )
     }
 
     const showNext = () => {
-        setActiveIndex((current) => (current + 1) % PROJECTS.length)
+        setActiveIndex((current) => (current + 1) % PROJECTS_DATA.length)
     }
 
     const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
@@ -71,7 +85,7 @@ export default function ProjectSection() {
 
     const getSlidePosition = (index: number) => {
         if (index === activeIndex) return 0
-        if (index === (activeIndex - 1 + PROJECTS.length) % PROJECTS.length) return -1
+        if (index === (activeIndex - 1 + PROJECTS_DATA.length) % PROJECTS_DATA.length) return -1
         return 1
     }
 
@@ -126,7 +140,7 @@ export default function ProjectSection() {
 
         const autoplayTimer = window.setInterval(() => {
             if (isCarouselHoveredRef.current) return
-            setActiveIndex((current) => (current + 1) % PROJECTS.length)
+            setActiveIndex((current) => (current + 1) % PROJECTS_DATA.length)
         }, 2000)
 
         return () => window.clearInterval(autoplayTimer)
@@ -155,7 +169,7 @@ export default function ProjectSection() {
                         onTouchEnd={handleTouchEnd}
                     >
                         <div className="grid">
-                            {PROJECTS.map((project, index) => {
+                            {PROJECTS_DATA.map((project, index) => {
                                 const position = getSlidePosition(index)
                                 const isActive = position === 0
                                 const isHovered = hoveredIndex === index && !isActive
@@ -250,7 +264,7 @@ export default function ProjectSection() {
                                 setIsCarouselHovered(false)
                             }}
                         >
-                            {PROJECTS.map((project, index) => (
+                            {PROJECTS_DATA.map((project, index) => (
                                 <button
                                     key={project.id}
                                     type="button"

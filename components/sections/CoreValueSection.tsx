@@ -1,11 +1,21 @@
 'use client'
-import type { FeaturesSection as FeaturesData } from '@/types/strapi'
 import { Application } from '@splinetool/runtime'
 import { useEffect, useRef } from 'react'
 import { gsap } from '@/lib/gsap'
 
+interface CVFeatureItem {
+    id: string | number
+    title: string
+    description: string
+}
+
+interface CVFeaturesData {
+    heading?: string
+    features?: CVFeatureItem[]
+}
+
 interface FeaturesSectionProps {
-    data?: FeaturesData
+    data?: CVFeaturesData
 }
 
 const X = 350;
@@ -24,29 +34,46 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
-        if (!canvasRef.current) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
 
         let app: Application;
+        let isDisposed = false;
 
-        async function init() {
-            app = new Application(canvasRef.current!);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries[0].isIntersecting) return;
+                observer.disconnect();
 
-            await app.load("/model/atomic.splinecode");
+                async function init() {
+                    app = new Application(canvas!);
+                    try {
+                        await app.load("/model/atomic.splinecode");
+                        if (isDisposed) return;
 
-            const sphere = app.findObjectByName("Sphere 3");
-            const cylinder = app.findObjectByName("Cylinder");
-            const DirectionalLight = app.findObjectByName("Directional Light");
-            sphere!.position.x = X;
-            sphere!.position.y = Y;
-            cylinder!.position.x = X;
-            cylinder!.position.y = Y;
-            DirectionalLight!.position.x = X;
-            DirectionalLight!.position.y = Y;
-        }
+                        const sphere = app.findObjectByName("Sphere 3");
+                        const cylinder = app.findObjectByName("Cylinder");
+                        const light = app.findObjectByName("Directional Light");
+                        if (sphere) { sphere.position.x = X; sphere.position.y = Y; }
+                        if (cylinder) { cylinder.position.x = X; cylinder.position.y = Y; }
+                        if (light) { light.position.x = X; light.position.y = Y; }
+                    } catch {
+                        // ignore load errors
+                    }
+                }
 
-        init();
+                init();
+            },
+            { rootMargin: '200px' },
+        );
 
-        return () => app?.dispose();
+        observer.observe(canvas);
+
+        return () => {
+            isDisposed = true;
+            observer.disconnect();
+            app?.dispose();
+        };
     }, []);
 
     useEffect(() => {

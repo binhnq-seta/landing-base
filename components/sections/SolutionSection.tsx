@@ -27,7 +27,20 @@ const SOLUTION_SLUGS = [
     'hang-khong',
 ];
 
-export default function SolutionSection() {
+interface SolutionItem {
+    slug: string
+    title: string
+    src: string
+    alt: string
+    desc: string
+}
+
+interface SolutionSectionProps {
+    data?: SolutionItem[]
+}
+
+export default function SolutionSection({ data }: SolutionSectionProps) {
+    const solutions = data ?? SOLUTION_IMAGE.map((item, i) => ({ ...item, slug: SOLUTION_SLUGS[i] }))
     const router = useRouter();
     const sectionRef = useRef<HTMLElement>(null);
     const crystalRef = useRef<HTMLImageElement>(null);
@@ -224,7 +237,7 @@ export default function SolutionSection() {
                             className="flex min-h-0"
                             style={{ flexGrow: rowIdx === 0 ? ROW_ACTIVE : ROW_REST }}
                         >
-                            {SOLUTION_IMAGE.slice(rowIdx * 3, rowIdx * 3 + 3).map((solution, colIdx) => {
+                            {solutions.slice(rowIdx * 3, rowIdx * 3 + 3).map((solution, colIdx) => {
                                 const index = rowIdx * 3 + colIdx;
                                 return (
                                     <div
@@ -235,7 +248,7 @@ export default function SolutionSection() {
                                         onMouseLeave={cancelHoverSelect}
                                         onClick={() => {
                                             if (index === activeIndexRef.current) {
-                                                router.push(`/solutions/${SOLUTION_SLUGS[index]}`);
+                                                router.push(`/solutions/${solutions[index].slug}`);
                                                 return;
                                             }
                                             handleSelect(index);
@@ -244,7 +257,7 @@ export default function SolutionSection() {
                                             if (event.key !== 'Enter' && event.key !== ' ') return;
                                             event.preventDefault();
                                             if (index === activeIndexRef.current) {
-                                                router.push(`/solutions/${SOLUTION_SLUGS[index]}`);
+                                                router.push(`/solutions/${solutions[index].slug}`);
                                                 return;
                                             }
                                             handleSelect(index);
