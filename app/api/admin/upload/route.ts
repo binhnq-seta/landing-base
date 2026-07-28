@@ -35,16 +35,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'File quá lớn. Giới hạn 10 MB.' }, { status: 400 })
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer())
+  let buffer: Buffer
+  try {
+    buffer = Buffer.from(await file.arrayBuffer())
+  } catch {
+    return NextResponse.json({ error: 'Không thể đọc file.' }, { status: 400 })
+  }
+
   const ext = path.extname(file.name).toLowerCase() || '.jpg'
   const name = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`
   const uploadDir = path.join(process.cwd(), 'public', 'uploads')
 
-  if (!existsSync(uploadDir)) {
-    await mkdir(uploadDir, { recursive: true })
+  try {
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true })
+    }
+    await writeFile(path.join(uploadDir, name), buffer)
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err)
+    console.error('[upload] writeFile failed:', detail)
+    return NextResponse.json(
+      { error: 'Không thể lưu file trên server. Kiểm tra quyền thư mục public/uploads.' },
+      { status: 500 },
+    )
   }
-
-  await writeFile(path.join(uploadDir, name), buffer)
 
   return NextResponse.json({ url: `/uploads/${name}` })
 }
