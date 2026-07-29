@@ -46,7 +46,7 @@ const NAV_LINKS = [
   { label: 'Liên hệ', href: '/#footer' },
 ]
 
-export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
+export function SiteHeader({ overlay = false, dark = false }: { overlay?: boolean; dark?: boolean }) {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -72,7 +72,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           aria-label="Mở menu"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((current) => !current)}
-          className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white/80 p-2 text-slate-900 transition-colors hover:bg-white md:hidden"
+          className={`inline-flex items-center justify-center rounded-lg border p-2 transition-colors md:hidden ${dark ? 'border-white/30 bg-white/10 text-white hover:bg-white/20' : 'border-slate-300 bg-white/80 text-slate-900 hover:bg-white'}`}
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -85,7 +85,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
               <Link
                 href={link.href}
                 aria-current={isActive(link.label) ? 'page' : undefined}
-                className={`inline-flex items-center gap-1.5 py-2 text-sm transition-colors hover:text-[#A31F1A] ${isActive(link.label) ? 'font-medium text-[#A31F1A]' : 'font-light text-slate-700'}`}
+                className={`inline-flex items-center gap-1.5 py-2 text-sm transition-colors ${dark ? 'hover:text-rose-400' : 'hover:text-[#A31F1A]'} ${isActive(link.label) ? `font-medium ${dark ? 'text-rose-400' : 'text-[#A31F1A]'}` : `font-light ${dark ? 'text-white/85' : 'text-slate-700'}`}`}
               >
                 {link.label}
                 {(link.children || link.columns) && (
@@ -128,7 +128,7 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         </nav>
       </div>
 
-      <div className={`${menuOpen ? 'block' : 'hidden'} border-t border-slate-200 bg-white/95 px-5 py-4 md:hidden`}>
+      <div className={`${menuOpen ? 'block' : 'hidden'} px-5 py-4 md:hidden ${dark ? 'border-t border-white/20 bg-slate-900/95 backdrop-blur-xl' : 'border-t border-slate-200 bg-white/95'}`}>
         <nav className="mx-auto flex flex-col gap-3" aria-label="Menu di động">
           {NAV_LINKS.map((link) => (
             <div key={link.label}>
@@ -136,15 +136,15 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
                 href={link.href}
                 onClick={closeMenu}
                 aria-current={isActive(link.label) ? 'page' : undefined}
-                className={`block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 ${isActive(link.label) ? 'font-medium text-[#A31F1A]' : 'font-light text-slate-700'}`}
+                className={`block rounded-lg px-3 py-2 text-sm ${dark ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${isActive(link.label) ? `font-medium ${dark ? 'text-rose-400' : 'text-[#A31F1A]'}` : `font-light ${dark ? 'text-white/85' : 'text-slate-700'}`}`}
               >
                 {link.label}
               </Link>
               {link.children?.map((child) => (
-                <Link key={child.label} href={child.href} onClick={closeMenu} className="ml-4 block rounded-lg border-l border-slate-200 px-4 py-2 text-sm font-light text-slate-500 hover:text-[#A31F1A]">{child.label}</Link>
+                <Link key={child.label} href={child.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light ${dark ? 'border-white/20 text-white/65 hover:text-rose-400' : 'border-slate-200 text-slate-500 hover:text-[#A31F1A]'}`}>{child.label}</Link>
               ))}
               {link.columns?.flatMap((column) => column.items).map((item) => (
-                <Link key={item.label} href={item.href} onClick={closeMenu} className="ml-4 block rounded-lg border-l border-slate-200 px-4 py-2 text-sm font-light text-slate-500 hover:text-[#A31F1A]">{item.label}</Link>
+                <Link key={item.label} href={item.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light ${dark ? 'border-white/20 text-white/65 hover:text-rose-400' : 'border-slate-200 text-slate-500 hover:text-[#A31F1A]'}`}>{item.label}</Link>
               ))}
             </div>
           ))}
