@@ -69,67 +69,67 @@ export type SolutionDef = WingDef
 export const SOLUTIONS: WingDef[] = []
 
 export const WINGS: WingDef[] = [
-  // ── Top triangle — apex points upward ─────────────────────────────────────
+  // ── Top — apex points upward ───────────────────────────────────────────────
   {
     id: 'giai-phap-tich-hop',
     line1: 'GIẢI PHÁP', line2: 'TÍCH HỢP', iconType: 'layers',
     hingePos: [0,  0.4, 0.3],
-    openPos:  [0,  1.4, 0.3],
+    openPos:  [0,  2.2, 0.3],
     rotX: -0.28, rotY: 0, rotZ: 0,
     shapeType: 'triangle',
     order: 1,
   },
 
-  // ── Bottom triangle — apex points downward ─────────────────────────────────
+  // ── Bottom — apex points downward ─────────────────────────────────────────
   {
     id: 'bao-mat-attt',
     line1: 'BẢO MẬT', line2: 'ATTT', iconType: 'lock',
     hingePos: [0, -0.4, 0.3],
-    openPos:  [0, -1.4, 0.3],
+    openPos:  [0, -2.2, 0.3],
     rotX: -0.28, rotY: 0, rotZ: Math.PI,
     shapeType: 'triangle',
     order: 4,
   },
 
-  // ── Upper-left petal — apex points upper-left ──────────────────────────────
+  // ── Upper-left — apex points upper-left ───────────────────────────────────
   {
     id: 'an-ninh-quoc-phong',
     line1: 'AN NINH', line2: 'QUỐC PHÒNG', iconType: 'shield',
     hingePos: [-0.4,  0.4, 0.2],
-    openPos:  [-1.4,  1.4, 0.3],
+    openPos:  [-2.0,  2.0, 0.3],
     rotX: -0.28, rotY: 0, rotZ:  Math.PI / 4,
     shapeType: 'petal',
     order: 0,
   },
 
-  // ── Upper-right petal — apex points upper-right ────────────────────────────
+  // ── Upper-right — apex points upper-right ─────────────────────────────────
   {
     id: 'vien-thong',
     line1: 'VIỄN THÔNG', line2: '', iconType: 'signal',
     hingePos: [ 0.4,  0.4, 0.2],
-    openPos:  [ 1.4,  1.4, 0.3],
+    openPos:  [ 2.0,  2.0, 0.3],
     rotX: -0.28, rotY: 0, rotZ: -Math.PI / 4,
     shapeType: 'petal',
     order: 2,
   },
 
-  // ── Lower-left petal — apex points lower-left ─────────────────────────────
+  // ── Lower-left — apex points lower-left ───────────────────────────────────
   {
     id: 'dien-luc-nang-luong',
     line1: 'ĐIỆN LỰC', line2: 'NĂNG LƯỢNG', iconType: 'bolt',
     hingePos: [-0.4, -0.4, 0.2],
-    openPos:  [-1.4, -1.4, 0.3],
+    openPos:  [-2.0, -2.0, 0.3],
     rotX: -0.28, rotY: 0, rotZ:  Math.PI * 3 / 4,
     shapeType: 'petal',
     order: 3,
   },
 
-  // ── Lower-right petal — apex points lower-right ───────────────────────────
+  // ── Lower-right — apex points lower-right ─────────────────────────────────
   {
     id: 'hang-khong',
     line1: 'HÀNG KHÔNG', line2: '', iconType: 'plane',
     hingePos: [ 0.4, -0.4, 0.2],
-    openPos:  [ 1.4, -1.4, 0.3],
+    openPos:  [ 2.0, -2.0, 0.3],
     rotX: -0.28, rotY: 0, rotZ: -Math.PI * 3 / 4,
     shapeType: 'petal',
     order: 5,

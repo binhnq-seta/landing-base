@@ -57,7 +57,7 @@ export default function SolutionSection({ data }: SolutionSectionProps) {
   // ── Scroll-reveal (GSAP — appropriate here; not inside a hot hover path) ──
   useEffect(() => {
     const cards    = cardRefs.current.filter((el): el is HTMLDivElement => el !== null)
-    const targets  = [crystalRef.current, sectionTitleRef.current, ...cards]
+    const targets  = ([crystalRef.current, sectionTitleRef.current, ...cards] as (Element | null)[])
       .filter((el): el is Element => el !== null)
     const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (noMotion) { gsap.set(targets, { opacity: 1, y: 0 }); return }

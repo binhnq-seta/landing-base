@@ -1,61 +1,27 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import type { WingDef } from './config'
 
-// ─── Shared geometry (module-level singletons) ────────────────────────────────
+// ─── Wing geometry (from GLTF) ────────────────────────────────────────────────
 //
-// Triangle — top and bottom wings.
-//   Narrow and tall so the outer tip is prominent above/below the cube.
-//   Inner base (at y = -H/2) is hidden by the cube through depth occlusion.
+// The GLTF contains TriangleGeometry nodes (Spline.design "Triangle" shape with
+// spikes=5, cornerRadius=40) — a rounded 5-sided polygon used as the wing/petal.
+// All 6 wing nodes are named "Triangle" in the GLTF; useGLTF returns the last
+// traversed one, but they all share the same shape.
 //
-// Petal — four diagonal wings (matching the image reference).
-//   Pentagon: one outer tip → two wide shoulder points → two narrow inner base points.
-//   The inner base (at y = -H_in) sits inside the cube's silhouette and is
-//   depth-occluded by the cube's MeshPhysicalMaterial (which writes depth).
+// GLTF geometry is ~343×299×12 local units.
+// Scale 0.01 → ~3.44×2.99×0.12 scene units — similar to the old hand-drawn petal.
 //
-// All shapes: local +Y = direction toward the outer tip (apex).
-//             rotX = -0.28 tilts the apex toward the viewer (+Z) before rotZ
-//             is applied. Because rotZ only rotates in XY, the Z-lean is
-//             preserved in every wing orientation.
-
-let _triangleGeom: THREE.ShapeGeometry | null = null
-let _petalGeom:    THREE.ShapeGeometry | null = null
-
-function getTriangleGeometry(): THREE.ShapeGeometry {
-  if (_triangleGeom) return _triangleGeom
-  const W = 2.2, H = 5.5
-  const s = new THREE.Shape()
-  s.moveTo(-W / 2, -H / 2)   // base left  (inner — occluded by cube)
-  s.lineTo( W / 2, -H / 2)   // base right
-  s.lineTo( 0,      H / 2)   // apex (outer tip)
-  s.closePath()
-  _triangleGeom = new THREE.ShapeGeometry(s)
-  return _triangleGeom
-}
-
-// Pentagon petal — shaped like the reference image:
-//   outer tip   (0,         TIP_Y )
-//   R shoulder  (SHLD_X,    SHLD_Y)  ← widest point
-//   R base      (BASE_X,   -BASE_Y)  ← inner edge, hidden by cube
-//   L base      (-BASE_X,  -BASE_Y)
-//   L shoulder  (-SHLD_X,   SHLD_Y)
-function getPetalGeometry(): THREE.ShapeGeometry {
-  if (_petalGeom) return _petalGeom
-  const TIP_Y  = 2.0, SHLD_X = 1.3, SHLD_Y = 0.2
-  const BASE_X = 0.5, BASE_Y = 1.0   // BASE_Y is depth below local origin
-  const s = new THREE.Shape()
-  s.moveTo( 0,       TIP_Y )           // outer tip
-  s.lineTo( SHLD_X,  SHLD_Y)           // right shoulder
-  s.lineTo( BASE_X, -BASE_Y)           // right inner base
-  s.lineTo(-BASE_X, -BASE_Y)           // left inner base
-  s.lineTo(-SHLD_X,  SHLD_Y)           // left shoulder
-  s.closePath()
-  _petalGeom = new THREE.ShapeGeometry(s)
-  return _petalGeom
-}
+// Orientation note: the geometry's natural orientation in local space is unknown
+// (Spline.design may create shapes flat in XZ rather than XY). The wing's visual
+// angle is therefore controlled by:
+//   1. An optional geometry pre-rotation below (adjust if wings appear sideways)
+//   2. The Wing group rotation (rotX, rotY, rotZ from config) for each direction
+//
 
 // ─── Icon drawing (canvas fallback) ──────────────────────────────────────────
 
@@ -64,8 +30,8 @@ function drawIcon(
   iconType: string,
   cx: number, cy: number, r: number,
 ) {
-  ctx.strokeStyle = 'rgba(190, 218, 255, 0.92)'
-  ctx.fillStyle   = 'rgba(190, 218, 255, 0.92)'
+  ctx.strokeStyle = 'rgba(255, 220, 120, 0.92)'
+  ctx.fillStyle   = 'rgba(255, 220, 120, 0.92)'
   ctx.lineWidth   = r / 9
   ctx.lineCap     = 'round'
   ctx.lineJoin    = 'round'
@@ -184,21 +150,21 @@ async function buildPanelTexture(def: WingDef): Promise<THREE.CanvasTexture> {
   const ctx = canvas.getContext('2d')!
 
   const bg = ctx.createLinearGradient(0, 0, 0, H)
-  bg.addColorStop(0, 'rgba(215, 232, 255, 0.20)')
-  bg.addColorStop(1, 'rgba(180, 208, 255, 0.10)')
+  bg.addColorStop(0, 'rgba(220, 168, 60, 0.38)')
+  bg.addColorStop(1, 'rgba(175, 120, 25, 0.22)')
   ctx.fillStyle = bg
   roundRectPath(ctx, 6, 6, W - 12, H - 12, 22)
   ctx.fill()
 
-  ctx.strokeStyle = 'rgba(200, 222, 255, 0.55)'
+  ctx.strokeStyle = 'rgba(230, 185, 70, 0.65)'
   ctx.lineWidth   = 1.5
   roundRectPath(ctx, 6, 6, W - 12, H - 12, 22)
   ctx.stroke()
 
   const shimmer = ctx.createLinearGradient(0, 0, W, 0)
-  shimmer.addColorStop(0,   'rgba(180, 210, 255, 0)')
-  shimmer.addColorStop(0.5, 'rgba(210, 232, 255, 0.70)')
-  shimmer.addColorStop(1,   'rgba(180, 210, 255, 0)')
+  shimmer.addColorStop(0,   'rgba(200, 160, 60, 0)')
+  shimmer.addColorStop(0.5, 'rgba(240, 210, 100, 0.70)')
+  shimmer.addColorStop(1,   'rgba(200, 160, 60, 0)')
   ctx.strokeStyle = shimmer
   ctx.lineWidth   = 1.5
   ctx.beginPath(); ctx.moveTo(32, 18); ctx.lineTo(W - 32, 18); ctx.stroke()
@@ -216,14 +182,14 @@ async function buildPanelTexture(def: WingDef): Promise<THREE.CanvasTexture> {
   ctx.font         = `bold 54px "Arial", sans-serif`
   ctx.textAlign    = 'center'
   ctx.textBaseline = 'middle'
-  ctx.fillStyle    = 'rgba(232, 245, 255, 0.98)'
-  ctx.shadowColor  = 'rgba(140, 195, 255, 0.60)'
+  ctx.fillStyle    = 'rgba(255, 248, 210, 0.98)'
+  ctx.shadowColor  = 'rgba(200, 140, 30, 0.65)'
   ctx.shadowBlur   = 12
   ctx.fillText(def.line1, W / 2, def.line2 ? 188 : 210)
 
   if (def.line2) {
     ctx.font      = '43px "Arial", sans-serif'
-    ctx.fillStyle = 'rgba(200, 224, 255, 0.88)'
+    ctx.fillStyle = 'rgba(255, 235, 165, 0.88)'
     ctx.shadowBlur = 7
     ctx.fillText(def.line2, W / 2, 250)
   }
@@ -248,6 +214,41 @@ export function Wing({ def, hoveredIdRef, wingsOpenRef, onHover, onClick }: Wing
   const panelGroupRef  = useRef<THREE.Group>(null!)
   const panelMatRef    = useRef<THREE.MeshBasicMaterial>(null!)
 
+  // GLTF wing geometry — TriangleGeometry (spikes=5 rounded polygon).
+  // Use scene.traverse to find the first Mesh named 'Triangle' — same reason
+  // as RubikCube: multiple nodes share the name, last-write-wins gives a Group.
+  const { scene: gltfScene } = useGLTF('/models/rubik.gltf')
+  const wingGeo = useMemo(() => {
+    // The GLTF contains two distinct Triangle mesh shapes:
+    //   1st Triangle (mesh 4): wider, compact — used for top/bottom wings
+    //   2nd Triangle (mesh 6): taller, elongated — used for diagonal wings
+    // shapeType 'triangle' picks the 1st, 'petal' picks the 2nd.
+    let geo: THREE.BufferGeometry | null = null
+    let count = 0
+    const targetCount = def.shapeType === 'triangle' ? 1 : 2
+    gltfScene.traverse((child) => {
+      if (geo) return
+      if (child instanceof THREE.Mesh && child.name === 'Triangle' && child.geometry) {
+        count++
+        if (count === targetCount) {
+          const cloned = child.geometry.clone()
+          cloned.scale(0.01, 0.01, 0.01)
+          geo = cloned
+        }
+      }
+    })
+    // Fallback: pentagon petal if GLTF node not found
+    if (!geo) {
+      const shape = new THREE.Shape()
+      shape.moveTo(0, 2.0)
+      shape.lineTo(1.3, 0.2); shape.lineTo(0.5, -1.0)
+      shape.lineTo(-0.5, -1.0); shape.lineTo(-1.3, 0.2)
+      shape.closePath()
+      geo = new THREE.ShapeGeometry(shape)
+    }
+    return geo
+  }, [gltfScene, def.shapeType])
+
   const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null)
   const textureRef = useRef<THREE.CanvasTexture | null>(null)
 
@@ -271,7 +272,6 @@ export function Wing({ def, hoveredIdRef, wingsOpenRef, onHover, onClick }: Wing
 
   const hingeVec = new THREE.Vector3(...def.hingePos)
   const openVec  = new THREE.Vector3(...def.openPos)
-  const geometry = def.shapeType === 'triangle' ? getTriangleGeometry() : getPetalGeometry()
 
   useFrame((state) => {
     if (!panelGroupRef.current || !panelMatRef.current) return
@@ -289,7 +289,7 @@ export function Wing({ def, hoveredIdRef, wingsOpenRef, onHover, onClick }: Wing
     const f = currentOpenRef.current
 
     // Position: lerp from hingePos (inside cube) → openPos (extended)
-    const floatAmp = def.shapeType === 'triangle' ? 0.04 : 0.025
+    const floatAmp = 0.03
     const floatY   = Math.sin(t * 0.4 + def.order * 0.7) * floatAmp * Math.min(1, f * 2)
     panelGroupRef.current.position.lerpVectors(hingeVec, openVec, f)
     panelGroupRef.current.position.y += floatY
@@ -327,7 +327,7 @@ export function Wing({ def, hoveredIdRef, wingsOpenRef, onHover, onClick }: Wing
           onClick?.(def.id)
         }}
       >
-        <primitive object={geometry} attach="geometry" />
+        <primitive object={wingGeo} attach="geometry" />
         <meshBasicMaterial
           ref={panelMatRef}
           map={texture ?? undefined}

@@ -252,10 +252,14 @@ export function RubikScene({
         scale controls perceived size; position.x drives the hero ↔ section-2 slide.
       */}
       <group ref={sceneGroupRef}>
-        {/* ── The Rubik — the product, never modified by wings ── */}
+        {/* ── The Rubik ── */}
         <RubikCube ref={cubeRef} isMobile={isMobile} />
 
-        {/* ── Six wings — temporarily hidden ── */}
+        {/* ── Internal orange-red glow — GS logo / core heat effect ── */}
+        <pointLight position={[0,  0,    0.2]} intensity={18} color="#ff5010" distance={3.0} decay={2} />
+        <pointLight position={[0, -0.4,  0  ]} intensity={8}  color="#ff8030" distance={2.8} decay={2} />
+
+        {/* ── Six wings — hidden ── */}
         {/* {WINGS.map((wing) => (
           <Wing
             key={wing.id}
@@ -267,15 +271,15 @@ export function RubikScene({
           />
         ))} */}
 
-        {/* ── Soft contact shadow cast on the background below the cube ── */}
+        {/* ── Soft contact shadow ── */}
         <ContactShadows
           position={[0, -2.0, 0]}
-          opacity={0.40}
+          opacity={0.35}
           scale={6}
-          blur={2.8}
+          blur={3.2}
           far={3.8}
           resolution={256}
-          color="#000820"
+          color="#1a0a00"
         />
       </group>
     </>

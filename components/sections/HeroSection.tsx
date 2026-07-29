@@ -126,7 +126,7 @@ export function HeroSection({ data }: HeroSectionProps) {
   }, [lenisRef])
 
   return (
-    <section ref={containerRef} id="home" className="relative min-h-[200vh] bg-gradient-to-b from-sky-400 via-sky-100 to-slate-50">
+    <section ref={containerRef} id="home" className="relative min-h-[200vh]" style={{ background: `radial-gradient(ellipse 40% 32% at 73% 25%, rgba(255,218,90,0.82) 0%, rgba(255,238,170,0.50) 32%, transparent 68%), #fff5cc` }}>
 
       {/* ── Loading overlay ── */}
       <div
@@ -155,20 +155,9 @@ export function HeroSection({ data }: HeroSectionProps) {
         <SiteHeader overlay />
       </div>
 
-      {/* ── Sky cloud layer ── */}
+      {/* ── Soft haze around sun center (first viewport only) ── */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        {/* Top-left cloud cluster */}
-        <div className="absolute -left-8 top-[4%] h-32 w-80 rounded-full bg-white/80 blur-2xl" />
-        <div className="absolute left-[5%] top-[9%] h-20 w-60 rounded-full bg-white/70 blur-xl" />
-        {/* Top-centre cloud */}
-        <div className="absolute left-[28%] top-[2%] h-36 w-96 rounded-full bg-white/75 blur-2xl" />
-        <div className="absolute left-[34%] top-[8%] h-24 w-72 rounded-full bg-white/65 blur-xl" />
-        {/* Top-right cloud cluster */}
-        <div className="absolute right-[3%] top-[5%] h-28 w-80 rounded-full bg-white/80 blur-2xl" />
-        <div className="absolute right-[9%] top-[11%] h-20 w-56 rounded-full bg-white/70 blur-xl" />
-        {/* Mid scattered */}
-        <div className="absolute left-[14%] top-[20%] h-16 w-48 rounded-full bg-white/50 blur-2xl" />
-        <div className="absolute right-[22%] top-[23%] h-14 w-44 rounded-full bg-white/45 blur-xl" />
+        <div className="absolute left-[73%] top-[25%] h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-200/25 blur-3xl" />
       </div>
 
       {/* ── Three.js Rubik canvas — sticky so it tracks both viewports ── */}
@@ -189,7 +178,7 @@ export function HeroSection({ data }: HeroSectionProps) {
         style={{ opacity: introComplete ? undefined : 0 }}
       >
         <div className="w-full md:w-[clamp(400px,42%,640px)]">
-          <h1 data-hero-heading className="mb-6 text-[clamp(22px,2.5vw,58px)] font-bold text-blue-900">
+          <h1 data-hero-heading className="mb-6 text-[clamp(22px,2.5vw,58px)] font-bold text-slate-900">
             {data?.heading ?? (
               <>KẾT NỐI CÔNG NGHỆ XÂY DỰNG <span className="text-blue-600">TƯƠNG LAI</span></>
             )}
