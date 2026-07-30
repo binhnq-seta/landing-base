@@ -234,7 +234,7 @@ export default function ProjectSection({ data }: ProjectSectionProps) {
                                             <h3 className="max-w-2xl text-xl font-bold leading-snug text-slate-700 sm:text-2xl md:text-3xl">
                                                 {project.title}
                                             </h3>
-                                            <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-700 md:text-base md:leading-8">
+                                            <p className="mt-5 max-w-2xl leading-6 text-slate-700 md:leading-8 text-[clamp(14px,1vw,18px)]">
                                                 {project.description}
                                             </p>
                                             <Link
