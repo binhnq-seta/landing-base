@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+
+  <!-- Block 1: async function -->
+  <text x="8"   y="18"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)">const</text>
+  <text x="42"  y="18"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)"> fetchData</text>
+  <text x="113" y="18"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)">async</text>
+  <text x="147" y="18"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)">() -&gt; {</text>
+
+  <text x="16"  y="32"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)">  const</text>
+  <text x="52"  y="32"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)"> res</text>
+  <text x="72"  y="32"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)"> await</text>
+  <text x="112" y="32"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)"> api()</text>
+
+  <text x="16"  y="46"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)">  return</text>
+  <text x="60"  y="46"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)"> res.data</text>
+
+  <text x="8"   y="60"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)">}</text>
+
+  <!-- Block 2: type definition -->
+  <text x="8"   y="78"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)">type</text>
+  <text x="37"  y="78"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)"> Config = {</text>
+
+  <text x="16"  y="91"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)">  port</text>
+  <text x="48"  y="91"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)">:</text>
+  <text x="54"  y="91"  font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)"> number</text>
+
+  <text x="16"  y="104" font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)">  host</text>
+  <text x="48"  y="104" font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)">:</text>
+  <text x="54"  y="104" font-size="9.5" font-family="Courier New, monospace" fill="rgba(150,220,170,0.62)"> "prod"</text>
+
+  <text x="8"   y="117" font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)">}</text>
+
+  <!-- Block 3: if statement -->
+  <text x="8"   y="134" font-size="9.5" font-family="Courier New, monospace" fill="rgba(130,190,255,0.72)">if</text>
+  <text x="22"  y="134" font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)"> (auth.valid) {</text>
+
+  <text x="16"  y="147" font-size="9.5" font-family="Courier New, monospace" fill="rgba(200,215,255,0.55)">  deploy(</text>
+  <text x="66"  y="147" font-size="9.5" font-family="Courier New, monospace" fill="rgba(150,220,170,0.62)">env</text>
+  <text x="84"  y="147" font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)">)</text>
+
+  <text x="8"   y="160" font-size="9.5" font-family="Courier New, monospace" fill="rgba(210,225,255,0.58)">}</text>
+
+  <!-- Comments + terminal -->
+  <text x="8"   y="176" font-size="8.5" font-family="Courier New, monospace" fill="rgba(140,160,185,0.48)">// build v2.4.1</text>
+  <text x="8"   y="190" font-size="8.5" font-family="Courier New, monospace" fill="rgba(140,160,185,0.48)">$ git push origin main</text>
+  <text x="8"   y="204" font-size="7.5" font-family="Courier New, monospace" fill="rgba(140,160,185,0.45)">0x4A 0xFF 0x2B 0x9C 0x11</text>
+
+  <!-- Git branch graph (right column) -->
+  <line x1="200" y1="10"  x2="200" y2="225" stroke="rgba(100,170,255,0.28)" stroke-width="1.5"/>
+  <line x1="200" y1="55"  x2="225" y2="78"  stroke="rgba(100,170,255,0.22)" stroke-width="1"/>
+  <line x1="225" y1="78"  x2="225" y2="132" stroke="rgba(100,170,255,0.18)" stroke-width="1"/>
+  <line x1="225" y1="132" x2="200" y2="155" stroke="rgba(100,170,255,0.22)" stroke-width="1"/>
+
+  <circle cx="200" cy="28"  r="3"   fill="rgba(120,190,255,0.50)"/>
+  <circle cx="200" cy="55"  r="2.5" fill="rgba(120,190,255,0.45)"/>
+  <circle cx="200" cy="100" r="2.5" fill="rgba(120,190,255,0.40)"/>
+  <circle cx="200" cy="155" r="3"   fill="rgba(120,190,255,0.50)"/>
+  <circle cx="200" cy="198" r="2.5" fill="rgba(120,190,255,0.38)"/>
+
+  <circle cx="225" cy="78"  r="2"   fill="rgba(150,220,170,0.48)"/>
+  <circle cx="225" cy="105" r="2"   fill="rgba(150,220,170,0.38)"/>
+  <circle cx="225" cy="132" r="2"   fill="rgba(150,220,170,0.38)"/>
+
+  <!-- Binary bottom-right -->
+  <text x="155" y="217" font-size="7" font-family="Courier New, monospace" fill="rgba(140,160,185,0.40)">01101001</text>
+  <text x="155" y="228" font-size="7" font-family="Courier New, monospace" fill="rgba(140,160,185,0.35)">10110110</text>
+
+</svg>

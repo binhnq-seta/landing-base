@@ -85,7 +85,7 @@ export function SiteHeader({ overlay = false, dark = false }: { overlay?: boolea
               <Link
                 href={link.href}
                 aria-current={isActive(link.label) ? 'page' : undefined}
-                className={`inline-flex items-center gap-1.5 py-2 text-sm transition-colors ${dark ? 'hover:text-rose-400' : 'hover:text-[#A31F1A]'} ${isActive(link.label) ? `font-medium ${dark ? 'text-rose-400' : 'text-[#A31F1A]'}` : `font-light ${dark ? 'text-white/85' : 'text-slate-700'}`}`}
+                className={`inline-flex items-center gap-1.5 py-2 text-base font-medium tracking-wide transition-colors ${dark ? 'hover:text-[#E3F2FD]' : 'hover:text-[#A31F1A]'} ${isActive(link.label) ? `${dark ? 'text-[#E3F2FD]' : 'text-[#A31F1A]'}` : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
               >
                 {link.label}
                 {(link.children || link.columns) && (
@@ -136,7 +136,7 @@ export function SiteHeader({ overlay = false, dark = false }: { overlay?: boolea
                 href={link.href}
                 onClick={closeMenu}
                 aria-current={isActive(link.label) ? 'page' : undefined}
-                className={`block rounded-lg px-3 py-2 text-sm ${dark ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${isActive(link.label) ? `font-medium ${dark ? 'text-rose-400' : 'text-[#A31F1A]'}` : `font-light ${dark ? 'text-white/85' : 'text-slate-700'}`}`}
+                className={`block rounded-lg px-3 py-2 text-base font-medium ${dark ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${isActive(link.label) ? `${dark ? 'text-[#E3F2FD]' : 'text-[#A31F1A]'}` : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
               >
                 {link.label}
               </Link>

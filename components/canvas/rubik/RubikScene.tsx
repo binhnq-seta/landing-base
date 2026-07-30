@@ -5,7 +5,7 @@ import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { ContactShadows } from '@react-three/drei'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
-import { CUBE_ROT_Y, WINGS } from './config'
+import { CUBE_ROT_X, CUBE_ROT_Y, WINGS } from './config'
 import { RubikCube } from './RubikCube'
 import type { RubikCubeHandle } from './RubikCube'
 import { Wing } from './Wing'
@@ -106,16 +106,55 @@ export function RubikScene({
       // Assembly — assemble() stops drift internally, then GSAP-drives pieces
       await cubeRef.current.assemble()
 
-      await delay(200)
+      await delay(250)
 
-      // Slide cube to hero position (right 2/3)
+      // ── Cinematic roll → hero position ──────────────────────────────────────
+      // Three motions layered on one timeline:
+      //   1. Full 360° Y spin with power3.inOut — builds momentum, decelerates into rest
+      //   2. Subtle X-axis wobble — gives physicality (rolling vs. spinning-in-place)
+      //   3. Rise + spring-land on Y — cube "hops" as it rolls
+      //   4. Diagonal slide to HERO_X — overlaps mid-spin for cinematic flow
+      const cubeGroup = cubeRef.current.groupRef.current!
+
       await new Promise<void>((resolve) => {
-        gsap.to(sceneGroupRef.current!.position, {
+        const tl = gsap.timeline({ onComplete: resolve })
+
+        // Full Y spin — one complete revolution
+        tl.to(cubeGroup.rotation, {
+          y: CUBE_ROT_Y + Math.PI * 2,
+          duration: 1.9,
+          ease: 'power3.inOut',
+        }, 0)
+
+        // X wobble — forward tilt at spin peak, return to rest
+        tl.to(cubeGroup.rotation, {
+          x: CUBE_ROT_X + 0.24,
+          duration: 0.95,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: 1,
+        }, 0.12)
+
+        // Rise at spin start
+        tl.to(sceneGroupRef.current!.position, {
+          y: 0.32,
+          duration: 0.78,
+          ease: 'power2.out',
+        }, 0)
+
+        // Land with spring bounce
+        tl.to(sceneGroupRef.current!.position, {
+          y: HERO_Y,
+          duration: 1.12,
+          ease: 'back.out(2)',
+        }, 0.78)
+
+        // Slide to hero X — starts mid-spin, ends just after spin settles
+        tl.to(sceneGroupRef.current!.position, {
           x: HERO_X,
-          duration: 0.9,
+          duration: 1.25,
           ease: 'power2.inOut',
-          onComplete: resolve,
-        })
+        }, 0.50)
       })
 
       // Hero is ready — hero text entrance fires

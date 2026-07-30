@@ -279,22 +279,22 @@ function useMetallicMaterials(isMobile: boolean) {
   )
 
   return useMemo(() => {
-    const color              = new THREE.Color(0x6dd0f5)
-    const roughness          = isMobile ? 0.18 : 0.10
-    const metalness          = isMobile ? 0.82 : 0.88
-    const clearcoat          = isMobile ? 0.7  : 1.0
-    const clearcoatRoughness = isMobile ? 0.10 : 0.04
-    const envMapIntensity    = isMobile ? 2.0  : 2.8
-    const specularIntensity  = isMobile ? 0.5  : 1.4
-    const specularColor      = new THREE.Color(0xc0e8ff)
+    const color              = new THREE.Color(0x55c8f5)
+    const roughness          = isMobile ? 0.22 : 0.16
+    const metalness          = isMobile ? 0.78 : 0.82
+    const clearcoat          = isMobile ? 0.6  : 0.85
+    const clearcoatRoughness = isMobile ? 0.12 : 0.08
+    const envMapIntensity    = isMobile ? 1.6  : 2.2
+    const specularIntensity  = isMobile ? 0.4  : 0.80
+    const specularColor      = new THREE.Color(0x80d0ff)
 
     const shared = { color, roughness, metalness, clearcoat, clearcoatRoughness,
                      envMapIntensity, specularIntensity, specularColor }
 
     const baseMat = new THREE.MeshPhysicalMaterial({
       ...shared,
-      emissive:          new THREE.Color(0x003850),
-      emissiveIntensity: 0.15,
+      emissive:          new THREE.Color(0x003870),
+      emissiveIntensity: 0.12,
     })
 
     const cornerMats = cornerTextures.map(tex =>
