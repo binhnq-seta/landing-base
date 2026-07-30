@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 
 const AtomicCanvas = dynamic(
@@ -34,6 +34,18 @@ const FALLBACK_CORE_VALUES: CVFeatureItem[] = [
 
 export function CoreValueSection({ data }: FeaturesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: '100px 0px' },
+    )
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -108,7 +120,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
             className="pointer-events-none absolute inset-y-0 right-0"
             style={{ left: '-55%' }}
           >
-            <AtomicCanvas />
+            <AtomicCanvas active={isVisible} />
           </div>
         </div>
 

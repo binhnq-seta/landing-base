@@ -77,17 +77,31 @@ export function RubikCanvas({
   onAssemblyComplete,
 }: RubikCanvasProps) {
   const mouseRef = useRef<[number, number]>([0, 0])
-  const isMobile = useRef(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
 
   // Lazy init: detectWebGL() runs once synchronously on the first client render.
   // The result is stable for the component lifetime — no useEffect needed.
   const [webglOk] = useState(detectWebGL)
 
   useEffect(() => {
-    isMobile.current = window.innerWidth < 768
-    const onResize = () => { isMobile.current = window.innerWidth < 768 }
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    onResize()
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: '100px 0px' },
+    )
+    observer.observe(container)
+    return () => observer.disconnect()
   }, [])
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
@@ -114,12 +128,14 @@ export function RubikCanvas({
 
   return (
     <div
+      ref={containerRef}
       className="absolute inset-0 w-full h-full"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
       <Canvas
-        dpr={[1, isMobile.current ? 1.5 : 2]}
+        frameloop={isVisible ? 'always' : 'never'}
+        dpr={[1, isMobile ? 1.5 : 2]}
         camera={{ fov: 45, near: 0.1, far: 50, position: [0, 0, 6.5] }}
         gl={{
           antialias: true,
@@ -136,7 +152,7 @@ export function RubikCanvas({
             onSolutionHover={onSolutionHover}
             onSceneReady={onSceneReady}
             onAssemblyComplete={onAssemblyComplete}
-            isMobile={isMobile.current}
+            isMobile={isMobile}
             heroSectionId={heroSectionId}
           />
         </Suspense>

@@ -197,8 +197,7 @@ export default function SolutionSection({ data }: SolutionSectionProps) {
                         opacity:    isActive ? 1 : 0.4,
                         filter:     isActive ? 'none' : 'grayscale(100%)',
                         transform:  isActive ? 'scale(1.03)' : 'scale(1)',
-                        transition: `opacity ${DUR} ease, filter ${DUR} ease, transform ${DUR} ease`,
-                        willChange: 'opacity, transform',
+                        transition: `opacity ${DUR} ease, transform ${DUR} ease`,
                       }}
                     />
 
@@ -208,7 +207,6 @@ export default function SolutionSection({ data }: SolutionSectionProps) {
                       style={{
                         opacity:    isActive ? 1 : 0,
                         transition: `opacity ${DUR} ease`,
-                        willChange: 'opacity',
                       }}
                     />
 
@@ -218,7 +216,6 @@ export default function SolutionSection({ data }: SolutionSectionProps) {
                       style={{
                         opacity:    isActive ? 0 : 1,
                         transition: `opacity ${DUR} ease`,
-                        willChange: 'opacity',
                       }}
                     />
 
@@ -230,7 +227,6 @@ export default function SolutionSection({ data }: SolutionSectionProps) {
                         style={{
                           opacity:    isActive ? 1 : 0,
                           transition: 'opacity 0.25s ease',
-                          willChange: 'opacity',
                         }}
                       >
                         <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

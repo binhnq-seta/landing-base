@@ -66,7 +66,7 @@ export function PartnerSection({ data }: PartnerSectionProps) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && document.visibilityState === 'visible') {
           if (revealTween.progress() === 0) revealTween.play()
           marqueeTween?.play()
         } else {
@@ -76,10 +76,20 @@ export function PartnerSection({ data }: PartnerSectionProps) {
       { threshold: 0.2 },
     )
 
+    const handleVisibilityChange = () => {
+      const visible = document.visibilityState === 'visible'
+        && section.getBoundingClientRect().bottom > 0
+        && section.getBoundingClientRect().top < window.innerHeight
+      if (visible) marqueeTween?.play()
+      else marqueeTween?.pause()
+    }
+
     observer.observe(section)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
       observer.disconnect()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
       revealTween.kill()
       marqueeTween?.kill()
     }

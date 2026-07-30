@@ -181,9 +181,10 @@ function AtomicScene() {
 
 // ─── Public export ────────────────────────────────────────────────────────────
 
-export function AtomicCanvas() {
+export function AtomicCanvas({ active = true }: { active?: boolean }) {
   return (
     <Canvas
+      frameloop={active ? 'always' : 'never'}
       camera={{ position: [0, 0, 6.0], fov: 48 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true }}
