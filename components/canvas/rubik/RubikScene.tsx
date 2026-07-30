@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { useThree } from '@react-three/fiber'
+import { useThree, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { ContactShadows } from '@react-three/drei'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
@@ -57,6 +57,7 @@ export function RubikScene({
 
   const cubeRef       = useRef<RubikCubeHandle>(null!)
   const sceneGroupRef = useRef<THREE.Group>(null!)
+  const shadowGroupRef = useRef<THREE.Group>(null!)
 
   // ── Wing control ──────────────────────────────────────────────────────────
   // Single shared ref: 0 = all wings folded, 1 = all wings deployed.
@@ -74,6 +75,14 @@ export function RubikScene({
     camera.position.set(0, 0, 6.5)
     camera.lookAt(0, 0, 0)
   }, [camera])
+
+  // Keep shadow group aligned with cube in world X/Z — Y is fixed at floor level
+  useFrame(() => {
+    if (shadowGroupRef.current && sceneGroupRef.current) {
+      shadowGroupRef.current.position.x = sceneGroupRef.current.position.x
+      shadowGroupRef.current.position.z = sceneGroupRef.current.position.z
+    }
+  })
 
   // ── Main animation sequence ──────────────────────────────────────────────
   //
@@ -310,15 +319,32 @@ export function RubikScene({
           />
         ))} */}
 
-        {/* ── Soft contact shadow ── */}
+      </group>
+
+      {/* ── Shadows: outside sceneGroup so scale doesn't distort distances ── */}
+      {/* shadowGroupRef.position.x tracks sceneGroup in useFrame              */}
+      <group ref={shadowGroupRef}>
+        {/* Sharp close shadow — frames=Infinity re-renders every frame */}
         <ContactShadows
-          position={[0, -2.0, 0]}
-          opacity={0.35}
-          scale={6}
-          blur={3.2}
-          far={3.8}
+          frames={Infinity}
+          position={[0, -1.3, 0]}
+          opacity={0.70}
+          scale={5}
+          blur={1.2}
+          far={3.5}
+          resolution={512}
+          color="#04091a"
+        />
+        {/* Soft wide penumbra */}
+        <ContactShadows
+          frames={Infinity}
+          position={[0, -1.3, 0]}
+          opacity={0.28}
+          scale={10}
+          blur={5}
+          far={5}
           resolution={256}
-          color="#1a0a00"
+          color="#04091a"
         />
       </group>
     </>

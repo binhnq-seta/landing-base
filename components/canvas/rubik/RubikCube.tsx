@@ -2,8 +2,8 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
+import { RoundedBoxGeometry } from 'three-stdlib'
 import { gsap } from '@/lib/gsap'
 import { CUBE_ROT_X, CUBE_ROT_Y, CUBE_STEP, PIECE_SIZE } from './config'
 
@@ -70,33 +70,16 @@ function buildScatterRotations(count: number): THREE.Euler[] {
   })
 }
 
-// ─── Piece geometry (from GLTF) ───────────────────────────────────────────────
+// ─── Piece geometry ───────────────────────────────────────────────────────────
 //
-// The GLTF contains the Rubik cube modelled in Spline.design.
-// Each piece uses SubdivGeometry — a smooth subdivision-surface cube that has
-// softer, more pillowy rounding than drei's RoundedBox.
-// Geometry is 100×100×100 GLTF units; we scale to PIECE_SIZE (0.94 scene units).
+// RoundedBoxGeometry(width, height, depth, segments, radius)
+// radius=0.07 with segments=3 gives clearly visible chamfered corners while
+// keeping the tri count low enough for 27 simultaneous pieces.
 //
-// Why scene.traverse instead of nodes['Cube']:
-//   Multiple nodes are named "Cube" in this GLTF. Drei builds nodes by
-//   traversal with last-write-wins, so nodes['Cube'] could be a Group (no
-//   geometry). Traversal lets us grab the FIRST Mesh named 'Cube' reliably.
-//
+const PIECE_GEO = new RoundedBoxGeometry(PIECE_SIZE, PIECE_SIZE, PIECE_SIZE, 3, 0.07)
+
 function usePieceGeometry(): THREE.BufferGeometry {
-  const { scene } = useGLTF('/models/rubik.gltf')
-  return useMemo(() => {
-    let geo: THREE.BufferGeometry | null = null
-    scene.traverse((child) => {
-      if (geo) return
-      if (child instanceof THREE.Mesh && child.name === 'Cube' && child.geometry) {
-        const cloned = child.geometry.clone()
-        cloned.scale(PIECE_SIZE / 100, PIECE_SIZE / 100, PIECE_SIZE / 100)
-        geo = cloned
-      }
-    })
-    // Fallback: plain box so the scene never crashes
-    return geo ?? new THREE.BoxGeometry(PIECE_SIZE, PIECE_SIZE, PIECE_SIZE)
-  }, [scene])
+  return PIECE_GEO
 }
 
 // ─── Solution icon textures for corner pieces ────────────────────────────────
@@ -280,12 +263,12 @@ function useMetallicMaterials(isMobile: boolean) {
 
   return useMemo(() => {
     const color              = new THREE.Color(0x55c8f5)
-    const roughness          = isMobile ? 0.22 : 0.16
+    const roughness          = isMobile ? 0.18 : 0.11
     const metalness          = isMobile ? 0.78 : 0.82
-    const clearcoat          = isMobile ? 0.6  : 0.85
-    const clearcoatRoughness = isMobile ? 0.12 : 0.08
-    const envMapIntensity    = isMobile ? 1.6  : 2.2
-    const specularIntensity  = isMobile ? 0.4  : 0.80
+    const clearcoat          = isMobile ? 0.75 : 1.0
+    const clearcoatRoughness = isMobile ? 0.08 : 0.03
+    const envMapIntensity    = isMobile ? 2.0  : 3.0
+    const specularIntensity  = isMobile ? 0.5  : 0.90
     const specularColor      = new THREE.Color(0x80d0ff)
 
     const shared = { color, roughness, metalness, clearcoat, clearcoatRoughness,
@@ -551,6 +534,3 @@ export const RubikCube = forwardRef<RubikCubeHandle, RubikCubeProps>(
 )
 
 RubikCube.displayName = 'RubikCube'
-
-// Preload so geometry is ready when the scene mounts
-useGLTF.preload('/models/rubik.gltf')

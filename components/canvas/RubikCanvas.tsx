@@ -40,19 +40,7 @@ function CanvasFallback({
     return () => clearTimeout(t)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return (
-    <div className="absolute inset-0 flex items-center pointer-events-none" aria-hidden="true">
-      <div className="absolute right-[5%] top-1/2 -translate-y-1/2 w-[min(480px,42vw)] aspect-square">
-        {/* Replace /assets/rubik-hero.svg with a screenshot of the actual cube if desired */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/assets/rubik-hero.svg"
-          alt=""
-          className="h-full w-full object-contain opacity-90 drop-shadow-2xl"
-        />
-      </div>
-    </div>
-  )
+  return null
 }
 
 // ── Props ─────────────────────────────────────────────────────────────────────
