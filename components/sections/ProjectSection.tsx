@@ -46,9 +46,11 @@ interface ProjectItem {
 
 interface ProjectSectionProps {
     data?: ProjectItem[]
+    title?: string
+    viewMoreLabel?: string
 }
 
-export default function ProjectSection({ data }: ProjectSectionProps) {
+export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSectionProps) {
     const PROJECTS_DATA = data ?? PROJECTS
     const [activeIndex, setActiveIndex] = useState(0)
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
@@ -159,7 +161,7 @@ export default function ProjectSection({ data }: ProjectSectionProps) {
 
             <div className="relative z-10 w-full">
                 <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(36px,4vw,100px)] font-bold uppercase text-slate-700">
-                    Dự án tiêu biểu
+                    {title ?? 'Dự án tiêu biểu'}
                 </h1>
 
                 <div data-project-reveal>
@@ -241,7 +243,7 @@ export default function ProjectSection({ data }: ProjectSectionProps) {
                                                 href={`/projects/${project.slug}`}
                                                 className="mt-7 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                                             >
-                                                Xem thêm
+                                                {viewMoreLabel ?? 'Xem thêm'}
                                                 <span aria-hidden="true">→</span>
                                             </Link>
                                         </div>

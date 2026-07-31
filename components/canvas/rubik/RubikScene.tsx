@@ -5,7 +5,8 @@ import { useThree, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { ContactShadows } from '@react-three/drei'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
-import { CUBE_ROT_X, CUBE_ROT_Y, WINGS, SHOWCASE_CORNERS } from './config'
+import { CUBE_ROT_X, CUBE_ROT_Y, WINGS, SHOWCASE_CORNERS, type ShowcaseCorner } from './config'
+import type { CMSShowcaseCorner } from '@/lib/admin/content'
 import { RubikCube } from './RubikCube'
 import type { RubikCubeHandle } from './RubikCube'
 import { Wing } from './Wing'
@@ -94,6 +95,8 @@ interface RubikSceneProps {
   mouseRef: React.RefObject<[number, number]>
   onSolutionClick?: (id: string) => void
   onSolutionHover?: (id: string | null) => void
+  /** CMS-sourced display data (label/sublabel/image) keyed by id; overrides config defaults */
+  showcaseCorners?: CMSShowcaseCorner[]
   /** Fires when 3D scene initialises — triggers loading overlay fade */
   onSceneReady?: () => void
   /** Fires after assembly + hero slide — triggers hero text entrance */
@@ -108,12 +111,20 @@ export function RubikScene({
   mouseRef,
   onSolutionClick,
   onSolutionHover,
+  showcaseCorners: cmsCorners,
   onSceneReady,
   onAssemblyComplete,
   onCornerShowcase,
   isMobile,
   heroSectionId,
 }: RubikSceneProps) {
+  // Merge CMS display data into geometry config, matching by id.
+  const showcaseCorners: ShowcaseCorner[] = cmsCorners?.length
+    ? SHOWCASE_CORNERS.map((c) => {
+        const cms = cmsCorners.find((x) => x.id === c.id)
+        return cms ? { ...c, label: cms.label, sublabel: cms.sublabel, image: cms.image } : c
+      })
+    : SHOWCASE_CORNERS
   const { camera } = useThree()
 
   const cubeRef       = useRef<RubikCubeHandle>(null!)
@@ -158,8 +169,12 @@ export function RubikScene({
   useEffect(() => {
     if (!cubeRef.current || !sceneGroupRef.current) return
 
+    // Signals all async sequences to stop on unmount
+    let alive = true
+
     async function run() {
       await delay(200)
+      if (!alive || !cubeRef.current || !sceneGroupRef.current) return
 
       // Set final scale before anything is revealed
       sceneGroupRef.current.scale.setScalar(HERO_SCALE)
@@ -176,11 +191,14 @@ export function RubikScene({
       )
 
       await delay(1200)
+      if (!alive || !cubeRef.current) return
 
       // Assembly — assemble() stops drift internally, then GSAP-drives pieces
       await cubeRef.current.assemble()
+      if (!alive || !cubeRef.current) return
 
       await delay(250)
+      if (!alive || !cubeRef.current) return
 
       // ── Cinematic roll → hero position ──────────────────────────────────────
       // Three motions layered on one timeline:
@@ -230,22 +248,31 @@ export function RubikScene({
           ease: 'power2.inOut',
         }, 0.50)
       })
+      if (!alive || !cubeRef.current) return
 
       // Hero is ready — hero text entrance fires
       onAssemblyComplete?.()
 
       // Wings open outward with a smooth spring-driven animation
       await delay(200)
+      if (!alive || !cubeRef.current) return
       openWings()
 
       await delay(200)
+      if (!alive || !cubeRef.current) return
       cubeRef.current.startIdle()
 
       await delay(2500)
+      if (!alive) return
       runShowcase()
     }
 
     run()
+
+    return () => {
+      alive = false
+      showcaseRunningRef.current = false
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Corner showcase ───────────────────────────────────────────────────────
@@ -258,6 +285,7 @@ export function RubikScene({
       // of each iteration, so on loop 2+ idleRef would still be true here.
       // The idle spring (rotation.x → CUBE_ROT_X) fights bottom-corner tweens
       // (which need rotX ≈ −2.15), so it must be off before any rotation tween.
+      if (!cubeRef.current) break
       cubeRef.current.stopIdle()
 
       // ① Move cube to bottom-right showcase position
@@ -269,10 +297,10 @@ export function RubikScene({
       if (!showcaseRunningRef.current) break
 
       // ② Cycle through all 8 corners
-      for (let i = 0; i < SHOWCASE_CORNERS.length; i++) {
+      for (let i = 0; i < showcaseCorners.length; i++) {
         if (!showcaseRunningRef.current) break outer
 
-        const corner    = SHOWCASE_CORNERS[i]
+        const corner    = showcaseCorners[i]
         const cubeGroup = cubeRef.current?.groupRef?.current
         if (!cubeGroup) break outer
 
@@ -289,12 +317,14 @@ export function RubikScene({
         if (!showcaseRunningRef.current) break outer
 
         // Bloom the corner piece
+        if (!cubeRef.current) break outer
         cubeRef.current.bloomCorner(corner.pieceIndex)
         currentBloomRef.current = corner.pieceIndex
 
         // Project the bloomed corner world position to screen %
         await delay(720)  // wait for bloom GSAP (0.7 s) to settle
         if (!showcaseRunningRef.current) break outer
+        if (!cubeRef.current) break outer
 
         const wp  = cubeRef.current.getCornerWorldPosition(corner.pieceIndex)
         const ndc = wp.project(camera)
@@ -306,6 +336,7 @@ export function RubikScene({
 
         await delay(5500)
         if (!showcaseRunningRef.current) break outer
+        if (!cubeRef.current) break outer
 
         currentBloomRef.current = null
         cubeRef.current.retractCorner(corner.pieceIndex)
@@ -324,6 +355,7 @@ export function RubikScene({
           .to(cubeGroup!.rotation,            { x: CUBE_ROT_X, y: CUBE_ROT_Y, duration: 1.5, ease: 'power2.inOut' }, 0)
       })
       if (!showcaseRunningRef.current) break
+      if (!cubeRef.current) break
 
       cubeRef.current.startIdle()
 

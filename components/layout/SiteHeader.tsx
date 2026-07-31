@@ -5,7 +5,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
-const SOLUTIONS = [
+type NavItem = { label: string; href: string }
+type NavColumn = { label: string; href: string; items: NavItem[] }
+type NavLink = NavItem & { children?: NavItem[]; columns?: NavColumn[] }
+
+const SOLUTIONS_VI: NavItem[] = [
   { label: 'Giải pháp tích hợp', href: '/solutions/giai-phap-tich-hop' },
   { label: 'An ninh - Quốc phòng', href: '/solutions/an-ninh-quoc-phong' },
   { label: 'Bảo mật - ATTT', href: '/solutions/bao-mat-attt' },
@@ -14,13 +18,28 @@ const SOLUTIONS = [
   { label: 'Hàng không', href: '/solutions/hang-khong' },
 ]
 
-const PROJECTS = [
+const SOLUTIONS_EN: NavItem[] = [
+  { label: 'Integration Solutions', href: '/solutions/giai-phap-tich-hop' },
+  { label: 'Defense & Security', href: '/solutions/an-ninh-quoc-phong' },
+  { label: 'Cybersecurity', href: '/solutions/bao-mat-attt' },
+  { label: 'Power & Energy', href: '/solutions/dien-luc-nang-luong' },
+  { label: 'Telecommunications', href: '/solutions/vien-thong' },
+  { label: 'Aviation', href: '/solutions/hang-khong' },
+]
+
+const PROJECTS_VI: NavItem[] = [
   { label: 'Hệ thống GSM cơ động', href: '/projects/he-thong-gsm-co-dong' },
   { label: 'Phần mềm phân bay (AVES)', href: '/projects/phan-mem-phan-bay-aves' },
   { label: 'Hệ thống An toàn Thông tin', href: '/projects/he-thong-an-toan-thong-tin' },
 ]
 
-const NAV_LINKS = [
+const PROJECTS_EN: NavItem[] = [
+  { label: 'Mobile GSM System', href: '/projects/he-thong-gsm-co-dong' },
+  { label: 'Flight Management (AVES)', href: '/projects/phan-mem-phan-bay-aves' },
+  { label: 'Information Security System', href: '/projects/he-thong-an-toan-thong-tin' },
+]
+
+const NAV_VI: NavLink[] = [
   { label: 'Trang chủ', href: '/#home' },
   {
     label: 'Về chúng tôi',
@@ -35,30 +54,115 @@ const NAV_LINKS = [
     label: 'Giải pháp',
     href: '/#solutions',
     columns: [
-      { label: 'Giải pháp', href: '/#solutions', items: SOLUTIONS },
-      {
-        label: 'Dự án tiêu biểu',
-        href: '/#projects',
-        items: PROJECTS,
-      },
+      { label: 'Giải pháp', href: '/#solutions', items: SOLUTIONS_VI },
+      { label: 'Dự án tiêu biểu', href: '/#projects', items: PROJECTS_VI },
     ],
   },
   { label: 'Liên hệ', href: '/#footer' },
 ]
 
-export function SiteHeader({ overlay = false, dark = false }: { overlay?: boolean; dark?: boolean }) {
+const NAV_EN: NavLink[] = [
+  { label: 'Home', href: '/#home' },
+  {
+    label: 'About Us',
+    href: '/#about',
+    children: [
+      { label: 'About GS Group', href: '/#home' },
+      { label: 'Vision & Mission', href: '/#features' },
+      { label: 'Core Values', href: '/#core-values' },
+    ],
+  },
+  {
+    label: 'Solutions',
+    href: '/#solutions',
+    columns: [
+      { label: 'Solutions', href: '/#solutions', items: SOLUTIONS_EN },
+      { label: 'Notable Projects', href: '/#projects', items: PROJECTS_EN },
+    ],
+  },
+  { label: 'Contact', href: '/#footer' },
+]
+
+function localeHref(pathname: string, target: 'vi' | 'en'): string {
+  if (pathname.startsWith('/vi')) return '/' + target + pathname.slice(3) || '/' + target
+  if (pathname.startsWith('/en')) return '/' + target + pathname.slice(3) || '/' + target
+  return '/' + target
+}
+
+function VietnamFlag() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" className="h-full w-full" aria-hidden>
+      <rect width="300" height="200" fill="#DA251D" />
+      <polygon fill="#FFFF00" points="150,40 164,81 207,82 173,107 185,149 150,124 115,149 127,107 93,82 136,81" />
+    </svg>
+  )
+}
+
+function UKFlag() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" className="h-full w-full" aria-hidden>
+      <rect width="60" height="30" fill="#012169" />
+      <path d="M0,0 L60,30 M0,30 L60,0" stroke="#FFFFFF" strokeWidth="10" />
+      <path d="M0,0 L60,30 M0,30 L60,0" stroke="#C8102E" strokeWidth="6" />
+      <rect x="0" y="11" width="60" height="8" fill="#FFFFFF" />
+      <rect x="26" y="0" width="8" height="30" fill="#FFFFFF" />
+      <rect x="0" y="12.5" width="60" height="5" fill="#C8102E" />
+      <rect x="27.5" y="0" width="5" height="30" fill="#C8102E" />
+    </svg>
+  )
+}
+
+interface SiteHeaderProps {
+  overlay?: boolean
+  dark?: boolean
+  /** Override URL-based locale detection (used on detail pages where URL has no locale prefix) */
+  locale?: 'vi' | 'en'
+}
+
+export function SiteHeader({ overlay = false, dark = false, locale: localeProp }: SiteHeaderProps) {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const locale = localeProp ?? (pathname.startsWith('/en') ? 'en' : 'vi')
+  const NAV_LINKS = locale === 'en' ? NAV_EN : NAV_VI
+  const viHref = localeHref(pathname, 'vi')
+  const enHref = localeHref(pathname, 'en')
+  const activeRing = dark
+    ? '0 0 0 2px rgba(255,255,255,0.75)'
+    : '0 0 0 2px rgba(100,116,139,0.65)'
+
   const isActive = (label: string) => {
-    if (label === 'Giải pháp') {
+    if (label === 'Giải pháp' || label === 'Solutions') {
       return pathname.startsWith('/solutions') || pathname.startsWith('/projects')
     }
-    if (label === 'Trang chủ') return pathname === '/'
+    if (label === 'Trang chủ' || label === 'Home') {
+      return pathname === '/' || pathname === '/vi' || pathname === '/en'
+    }
     return false
   }
 
   const closeMenu = () => setMenuOpen(false)
+
+  const flagSwitcher = (
+    <div className="flex items-center gap-1.5">
+      <Link
+        href={viHref}
+        title="Tiếng Việt"
+        className={`block h-[18px] w-[27px] overflow-hidden rounded-[2px] transition-all duration-200 ${locale === 'vi' ? '' : 'opacity-40 hover:opacity-75'}`}
+        style={locale === 'vi' ? { boxShadow: activeRing } : undefined}
+      >
+        <VietnamFlag />
+      </Link>
+      <Link
+        href={enHref}
+        title="English"
+        className={`block h-[18px] w-[27px] overflow-hidden rounded-[2px] transition-all duration-200 ${locale === 'en' ? '' : 'opacity-40 hover:opacity-75'}`}
+        style={locale === 'en' ? { boxShadow: activeRing } : undefined}
+      >
+        <UKFlag />
+      </Link>
+    </div>
+  )
 
   return (
     <header className={`${overlay ? 'absolute' : 'sticky border-b border-slate-200/70 bg-white/90 backdrop-blur-xl'} top-0 z-50 w-full`}>
@@ -125,6 +229,10 @@ export function SiteHeader({ overlay = false, dark = false }: { overlay?: boolea
               )}
             </div>
           ))}
+
+          <div className={`ml-2 border-l pl-4 ${dark ? 'border-white/20' : 'border-slate-200'}`}>
+            {flagSwitcher}
+          </div>
         </nav>
       </div>
 
@@ -148,6 +256,10 @@ export function SiteHeader({ overlay = false, dark = false }: { overlay?: boolea
               ))}
             </div>
           ))}
+
+          <div className={`flex items-center gap-3 border-t pt-3 ${dark ? 'border-white/20' : 'border-slate-200'}`}>
+            {flagSwitcher}
+          </div>
         </nav>
       </div>
     </header>

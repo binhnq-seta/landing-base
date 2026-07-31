@@ -1,10 +1,24 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { detailPages } from '@/lib/detail-pages'
+import type { CMSDetailPage } from '@/lib/admin/content'
 import { PageHeader } from '@/components/admin/shared'
 
 export default function DetailPagesListPage() {
+  const [cmsPages, setCmsPages] = useState<CMSDetailPage[]>([])
+
+  useEffect(() => {
+    fetch('/api/admin/content?locale=vi')
+      .then((r) => r.json())
+      .then((data: { detailPages?: CMSDetailPage[] }) => setCmsPages(data.detailPages ?? []))
+  }, [])
+
+  function getTitle(type: string, slug: string, fallback: string) {
+    return cmsPages.find((p) => p.type === type && p.slug === slug)?.title ?? fallback
+  }
+
   return (
     <div className="p-8">
       <PageHeader
@@ -25,7 +39,7 @@ export default function DetailPagesListPage() {
                 <span className="mb-1 inline-block rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-600">
                   {typeLabel}
                 </span>
-                <p className="font-medium text-slate-800">{page.title}</p>
+                <p className="font-medium text-slate-800">{getTitle(page.type, page.slug, page.title)}</p>
                 <p className="text-xs text-slate-400">{page.slug}</p>
               </div>
               <svg className="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

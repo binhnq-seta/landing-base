@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { DetailScrollAnimations } from '@/components/detail/DetailScrollAnimations'
 import { DetailSpline } from '@/components/detail/DetailSpline'
@@ -7,7 +8,7 @@ import { SiteFooter } from '@/components/layout/Footer'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { detailPages, getDetailPage } from '@/lib/detail-pages'
 import { getContent } from '@/lib/admin/content'
-import type { CMSDetailSection } from '@/lib/admin/content'
+import type { CMSDetailSection, SupportedLocale } from '@/lib/admin/content'
 
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
@@ -20,9 +21,16 @@ export function generateStaticParams() {
   return detailPages.map(({ type, slug }) => ({ type, slug }))
 }
 
+async function detectLocale(): Promise<SupportedLocale> {
+  const cookieStore = await cookies()
+  const raw = cookieStore.get('locale')?.value
+  return raw === 'en' ? 'en' : 'vi'
+}
+
 export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
   const { type, slug } = await params
-  const content = getContent()
+  const locale = await detectLocale()
+  const content = getContent(locale)
   const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
   const page = cmsPage ?? getDetailPage(type, slug)
   if (!page) return {}
@@ -49,8 +57,9 @@ function sectionImageOrder(section: CMSDetailSection, index: number): boolean {
 
 export default async function DetailPage({ params }: DetailPageProps) {
   const { type, slug } = await params
+  const locale = await detectLocale()
 
-  const content = getContent()
+  const content = getContent(locale)
   const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
 
   type PageData = { type: string; slug: string; eyebrow: string; title: string; summary: string; heroImage: string; heroImageAlt: string; sections: CMSDetailSection[] }
@@ -74,7 +83,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
 
   return (
     <>
-      <SiteHeader overlay />
+      <SiteHeader overlay locale={locale} />
       <main className="relative overflow-hidden text-slate-900">
         <div
           className="pointer-events-none absolute left-[-40vw] top-[40vh] z-0 h-screen w-screen"
@@ -159,7 +168,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
           </div>
         </article>
       </main>
-      <SiteFooter />
+      <SiteFooter locale={locale} />
     </>
   )
 }

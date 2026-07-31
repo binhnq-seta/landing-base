@@ -5,6 +5,8 @@ import { usePathname, useRouter } from 'next/navigation'
 
 const NAV = [
   { href: '/admin/hero', label: 'Hero' },
+  { href: '/admin/showcase', label: 'Showcase Corners' },
+  { href: '/admin/features', label: 'Vì sao chọn chúng tôi' },
   { href: '/admin/core-values', label: 'Giá trị cốt lõi' },
   { href: '/admin/solutions', label: 'Giải pháp' },
   { href: '/admin/projects', label: 'Dự án' },

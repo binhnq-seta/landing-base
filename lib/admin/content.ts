@@ -1,7 +1,18 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs'
 import path from 'node:path'
 
-const CONTENT_PATH = path.join(process.cwd(), 'data', 'content.json')
+// ─── Locale helpers ───────────────────────────────────────────────────────────
+
+const SUPPORTED_LOCALES = ['vi', 'en'] as const
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
+
+function contentPath(locale: SupportedLocale): string {
+  // Vietnamese uses the original file for backward-compatibility
+  const file = locale === 'vi' ? 'content.json' : `content.${locale}.json`
+  return path.join(process.cwd(), 'data', file)
+}
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface CMSHero {
   heading: string
@@ -66,22 +77,64 @@ export interface CMSDetailPage {
   sections: CMSDetailSection[]
 }
 
+/** A single corner in the Rubik showcase — display data only (geometry lives in config.ts) */
+export interface CMSShowcaseCorner {
+  /** Matches ShowcaseGeometry.id in config.ts — used to join with 3D geometry */
+  id: string
+  label: string
+  sublabel: string
+  image: string
+}
+
+export interface CMSFeatureItem {
+  id: string
+  title: string
+  description: string
+}
+
+export interface CMSFeatures {
+  heading: string
+  items: CMSFeatureItem[]
+}
+
+export interface CMSSectionLabels {
+  solutions: string
+  projects: string
+  viewMore: string
+  partners: string
+}
+
 export interface CMSContent {
   hero: CMSHero
+  features: CMSFeatures
   coreValues: CMSCoreValues
   solutions: CMSSolution[]
   projects: CMSProject[]
   partners: CMSPartner[]
+  sectionLabels: CMSSectionLabels
   detailPages: CMSDetailPage[]
+  /** Rubik cube showcase corners — display data editable per locale */
+  showcaseCorners: CMSShowcaseCorner[]
 }
 
-const DEFAULT: CMSContent = {
+// ─── Vietnamese defaults ──────────────────────────────────────────────────────
+
+const DEFAULT_VI: CMSContent = {
   hero: {
     heading: 'KẾT NỐI CÔNG NGHỆ XÂY DỰNG TƯƠNG LAI',
     description:
       'General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.',
     ctaLabel: 'Khám Phá Giải Pháp',
     ctaHref: '#solutions',
+  },
+  features: {
+    heading: 'VÌ SAO CHỌN GENERAL SYSTEMS?',
+    items: [
+      { id: '01', title: 'Giải pháp toàn diện', description: 'Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp.' },
+      { id: '02', title: 'Công nghệ tiên tiến', description: 'Ứng dụng công nghệ mới nhất tối ưu hiệu quả và nâng cao năng lực cạnh tranh.' },
+      { id: '03', title: 'Đội ngũ chuyên gia', description: 'Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình.' },
+      { id: '04', title: 'Cam kết chất lượng', description: 'Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp.' },
+    ],
   },
   coreValues: {
     heading: 'GIÁ TRỊ CỐT LÕI',
@@ -116,6 +169,22 @@ const DEFAULT: CMSContent = {
     { src: '/image/partner-logo/image%2032-3.png', alt: 'Đối tác General Systems 5' },
     { src: '/image/partner-logo/image%2032-4.png', alt: 'Đối tác General Systems 6' },
   ],
+  sectionLabels: {
+    solutions: 'GIẢI PHÁP',
+    projects: 'Dự án tiêu biểu',
+    viewMore: 'Xem thêm',
+    partners: 'ĐỐI TÁC CỦA CHÚNG TÔI',
+  },
+  showcaseCorners: [
+    { id: 'integration',  label: 'GIẢI PHÁP',  sublabel: 'TÍCH HỢP',    image: '/image/solution/integration.jpg' },
+    { id: 'security',     label: 'BẢO MẬT',    sublabel: 'ATTT',         image: '/image/solution/security.jpg'    },
+    { id: 'digital',      label: 'CÔNG NGHỆ',  sublabel: 'SỐ',           image: '/image/solution/integration.jpg' },
+    { id: 'network',      label: 'HẠ TẦNG',    sublabel: 'MẠNG',         image: '/image/solution/tele.jpg'        },
+    { id: 'military',     label: 'AN NINH',     sublabel: 'QUỐC PHÒNG',   image: '/image/solution/military.jpg'    },
+    { id: 'telecom',      label: 'VIỄN THÔNG',  sublabel: '',             image: '/image/solution/tele.jpg'        },
+    { id: 'aviation',     label: 'HÀNG KHÔNG',  sublabel: '',             image: '/image/solution/air.jpg'         },
+    { id: 'energy',       label: 'ĐIỆN LỰC',    sublabel: 'NĂNG LƯỢNG',   image: '/image/solution/energy.jpg'      },
+  ],
   detailPages: [
     {
       type: 'solutions', slug: 'giai-phap-tich-hop', eyebrow: 'Giải pháp',
@@ -149,18 +218,100 @@ const DEFAULT: CMSContent = {
   ],
 }
 
-export function getContent(): CMSContent {
+// ─── English defaults ─────────────────────────────────────────────────────────
+
+const DEFAULT_EN: CMSContent = {
+  hero: {
+    heading: 'CONNECTING TECHNOLOGY TO BUILD THE FUTURE',
+    description:
+      'General Systems provides comprehensive technology solutions that help businesses optimise performance and efficiency in the digital era.',
+    ctaLabel: 'Explore Solutions',
+    ctaHref: '#solutions',
+  },
+  features: {
+    heading: 'WHY CHOOSE GENERAL SYSTEMS?',
+    items: [
+      { id: '01', title: 'Comprehensive Solutions', description: 'Providing end-to-end solutions tailored to every business need.' },
+      { id: '02', title: 'Advanced Technology', description: 'Applying the latest technology to optimise efficiency and competitive advantage.' },
+      { id: '03', title: 'Expert Team', description: 'An experienced team committed to accompanying clients on every journey.' },
+      { id: '04', title: 'Quality Commitment', description: 'Committed to quality, security and long-term support for every solution.' },
+    ],
+  },
+  coreValues: {
+    heading: 'CORE VALUES',
+    items: [
+      { id: '01', title: 'Value and Trust Above All', description: 'Providing end-to-end solutions tailored to every business need.' },
+      { id: '02', title: 'Respect for Individual Worth', description: 'Applying the latest technology to optimise performance and competitiveness.' },
+      { id: '03', title: 'Systems Thinking – Global Mindset', description: 'An experienced team committed to accompanying clients on every journey.' },
+      { id: '04', title: 'Continuous Learning – Constant Innovation', description: 'Committed to quality, security and long-term support for every solution.' },
+      { id: '05', title: 'One Company – One Family', description: 'Committed to quality, security and long-term support for every solution.' },
+    ],
+  },
+  solutions: [
+    { slug: 'giai-phap-tich-hop', title: 'Integration Solutions', src: '/image/solution/integration.jpg', alt: 'Integration Solutions', desc: 'GS GROUP delivers full-package Data Centre, video conferencing and professional broadcast equipment solutions.' },
+    { slug: 'an-ninh-quoc-phong', title: 'Security & Defence', src: '/image/solution/military.jpg', alt: 'Security & Defence', desc: 'GS GROUP provides an External Threat Management platform and solutions tailored for critical infrastructure.' },
+    { slug: 'bao-mat-attt', title: 'Cybersecurity – ISEC', src: '/image/solution/security.jpg', alt: 'Cybersecurity – ISEC', desc: 'GS GROUP provides an External Threat Management platform and solutions tailored for critical infrastructure.' },
+    { slug: 'dien-luc-nang-luong', title: 'Power & Energy', src: '/image/solution/energy.jpg', alt: 'Power & Energy', desc: 'GS GROUP delivers equipment management, maintenance, technical data collection and remote monitoring solutions.' },
+    { slug: 'vien-thong', title: 'Telecommunications', src: '/image/solution/tele.jpg', alt: 'Telecommunications', desc: 'GS GROUP provides next-generation advanced mobile communications solutions with comprehensive privacy control.' },
+    { slug: 'hang-khong', title: 'Aviation', src: '/image/solution/air.jpg', alt: 'Aviation', desc: 'GS GROUP provides flight scheduling and operations management solutions supporting crew and cabin crew assignment.' },
+  ],
+  projects: [
+    { id: '01', slug: 'phan-mem-phan-bay-aves', category: 'VIETNAM AIRLINES', title: 'Flight Scheduling Software (AVES)', img: '/image/project/aves.jpg', description: 'In 2018, we were selected by VNA to provide the AVES pilot and cabin crew scheduling software solution.' },
+    { id: '02', slug: 'he-thong-gsm-co-dong', category: 'DEPT OF TECHNICAL CRIMES – MPS', title: 'Mobile GSM System', img: '/image/project/gms.jpg', description: 'In 2017, we were selected to deploy the Mobile GSM System and Radio Signal Analysis System for the Ministry of Public Security.' },
+    { id: '03', slug: 'he-thong-an-toan-thong-tin', category: 'NATIONAL POWER TRANSMISSION CORP', title: 'Information Security System', img: '/image/project/sec.jpg', description: 'A project to equip the National Power Transmission Corporation with a comprehensive information security infrastructure.' },
+  ],
+  partners: [
+    { src: '/image/partner-logo/petro.png', alt: 'PetroVietnam' },
+    { src: '/image/partner-logo/evn.png', alt: 'EVN' },
+    { src: '/image/partner-logo/image%2033.png', alt: 'General Systems Partner 1' },
+    { src: '/image/partner-logo/image%2032.png', alt: 'General Systems Partner 2' },
+    { src: '/image/partner-logo/image%2032-1.png', alt: 'General Systems Partner 3' },
+    { src: '/image/partner-logo/image%2032-2.png', alt: 'General Systems Partner 4' },
+    { src: '/image/partner-logo/image%2032-3.png', alt: 'General Systems Partner 5' },
+    { src: '/image/partner-logo/image%2032-4.png', alt: 'General Systems Partner 6' },
+  ],
+  sectionLabels: {
+    solutions: 'SOLUTIONS',
+    projects: 'Featured Projects',
+    viewMore: 'Read more',
+    partners: 'OUR PARTNERS',
+  },
+  showcaseCorners: [
+    { id: 'integration',  label: 'SOLUTIONS',       sublabel: 'INTEGRATION',  image: '/image/solution/integration.jpg' },
+    { id: 'security',     label: 'CYBERSECURITY',   sublabel: 'ISEC',          image: '/image/solution/security.jpg'    },
+    { id: 'digital',      label: 'TECHNOLOGY',      sublabel: 'DIGITAL',       image: '/image/solution/integration.jpg' },
+    { id: 'network',      label: 'INFRASTRUCTURE',  sublabel: 'NETWORK',       image: '/image/solution/tele.jpg'        },
+    { id: 'military',     label: 'SECURITY',         sublabel: 'DEFENCE',       image: '/image/solution/military.jpg'    },
+    { id: 'telecom',      label: 'TELECOM',          sublabel: '',              image: '/image/solution/tele.jpg'        },
+    { id: 'aviation',     label: 'AVIATION',         sublabel: '',              image: '/image/solution/air.jpg'         },
+    { id: 'energy',       label: 'POWER',            sublabel: 'ENERGY',        image: '/image/solution/energy.jpg'      },
+  ],
+  detailPages: [],
+}
+
+const DEFAULTS: Record<SupportedLocale, CMSContent> = {
+  vi: DEFAULT_VI,
+  en: DEFAULT_EN,
+}
+
+// ─── Public API ───────────────────────────────────────────────────────────────
+
+export function getContent(locale: SupportedLocale = 'vi'): CMSContent {
+  const filePath = contentPath(locale)
+  const defaults = DEFAULTS[locale]
   try {
-    if (!existsSync(CONTENT_PATH)) return DEFAULT
-    const stored = JSON.parse(readFileSync(CONTENT_PATH, 'utf-8')) as Partial<CMSContent>
-    return { ...DEFAULT, ...stored }
+    if (!existsSync(filePath)) return defaults
+    const stored = JSON.parse(readFileSync(filePath, 'utf-8')) as Partial<CMSContent>
+    // Merge top-level keys; showcaseCorners uses stored array if present
+    return { ...defaults, ...stored }
   } catch {
-    return DEFAULT
+    return defaults
   }
 }
 
-export function setContent(content: CMSContent): void {
-  const dir = path.dirname(CONTENT_PATH)
+export function setContent(content: CMSContent, locale: SupportedLocale = 'vi'): void {
+  const filePath = contentPath(locale)
+  const dir = path.dirname(filePath)
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
-  writeFileSync(CONTENT_PATH, JSON.stringify(content, null, 2), 'utf-8')
+  writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf-8')
 }

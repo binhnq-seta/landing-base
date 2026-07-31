@@ -1,6 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import type { SupportedLocale } from '@/lib/admin/content'
 
 export type SaveStatus = 'idle' | 'saving' | 'ok' | 'error'
 
@@ -37,6 +38,33 @@ export function SaveBar({ status }: { status: SaveStatus }) {
       </button>
       {status === 'ok' && <span className="text-sm font-medium text-green-600">✓ Đã lưu</span>}
       {status === 'error' && <span className="text-sm font-medium text-red-600">✗ Lưu thất bại</span>}
+    </div>
+  )
+}
+
+export function LocaleTabs({
+  value,
+  onChange,
+}: {
+  value: SupportedLocale
+  onChange: (l: SupportedLocale) => void
+}) {
+  return (
+    <div className="mt-5 flex gap-1 rounded-lg border border-slate-200 bg-slate-100 p-1 w-fit">
+      {(['vi', 'en'] as SupportedLocale[]).map((l) => (
+        <button
+          key={l}
+          type="button"
+          onClick={() => onChange(l)}
+          className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+            value === l
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          {l === 'vi' ? '🇻🇳 Tiếng Việt' : '🇬🇧 English'}
+        </button>
+      ))}
     </div>
   )
 }

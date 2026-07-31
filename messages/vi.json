@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "stats": [
+      { "value": "200+", "label": "Khách hàng" },
+      { "value": "350+", "label": "Dự án thành công" },
+      { "value": "10+", "label": "Năm kinh nghiệm" }
+    ],
+    "defaultHeading": "KẾT NỐI CÔNG NGHỆ XÂY DỰNG TƯƠNG LAI",
+    "defaultDescription": "General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.",
+    "defaultCta": "Khám Phá Giải Pháp"
+  },
+  "nav": {
+    "home": "Trang chủ",
+    "about": "Về chúng tôi",
+    "solutions": "Giải pháp",
+    "projects": "Dự án",
+    "partners": "Đối tác",
+    "contact": "Liên hệ",
+    "viewSite": "Xem trang web",
+    "aboutMenu": {
+      "gsGroup": "Về GS Group",
+      "vision": "Tầm nhìn & sứ mệnh",
+      "coreValues": "Giá trị cốt lõi"
+    },
+    "solutionsMenu": {
+      "groupSolutions": "Giải pháp",
+      "groupProjects": "Dự án tiêu biểu",
+      "integration": "Giải pháp tích hợp",
+      "defense": "An ninh - Quốc phòng",
+      "security": "Bảo mật - ATTT",
+      "power": "Điện lực - Năng lượng",
+      "telecom": "Viễn thông",
+      "aviation": "Hàng không",
+      "gsm": "Hệ thống GSM cơ động",
+      "aves": "Phần mềm phân bay (AVES)",
+      "infosec": "Hệ thống An toàn Thông tin"
+    }
+  },
+  "footer": {
+    "rights": "Bản quyền thuộc về General Systems.",
+    "address": "Hà Nội, Việt Nam"
+  },
+  "common": {
+    "learnMore": "Tìm hiểu thêm",
+    "viewAll": "Xem tất cả",
+    "loading": "Đang tải…"
+  },
+  "locale": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "switchTo": "Chuyển ngôn ngữ"
+  }
+}

@@ -1,27 +1,27 @@
 'use client'
 
 import { useState, useEffect, type FormEvent } from 'react'
-import type { CMSCoreValues, CMSCoreValue, SupportedLocale } from '@/lib/admin/content'
+import type { CMSFeatures, CMSFeatureItem, SupportedLocale } from '@/lib/admin/content'
 import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
 
-const BLANK: CMSCoreValue = { id: '', title: '', description: '' }
+const BLANK: CMSFeatureItem = { id: '', title: '', description: '' }
 
-export default function CoreValuesEditorPage() {
+export default function FeaturesEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [heading, setHeading] = useState('')
-  const [items, setItems] = useState<CMSCoreValue[]>([])
+  const [items, setItems] = useState<CMSFeatureItem[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((data: { coreValues: CMSCoreValues }) => {
-        setHeading(data.coreValues.heading)
-        setItems(data.coreValues.items)
+      .then((data: { features: CMSFeatures }) => {
+        setHeading(data.features.heading)
+        setItems(data.features.items)
       })
   }, [locale])
 
-  function updateItem(index: number, key: keyof CMSCoreValue, value: string) {
+  function updateItem(index: number, key: keyof CMSFeatureItem, value: string) {
     setItems((prev) => prev.map((item, i) => (i === index ? { ...item, [key]: value } : item)))
   }
 
@@ -43,7 +43,7 @@ export default function CoreValuesEditorPage() {
       const res = await fetch(`/api/admin/content?locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coreValues: { heading, items } }),
+        body: JSON.stringify({ features: { heading, items } }),
       })
       setStatus(res.ok ? 'ok' : 'error')
     } catch {
@@ -55,7 +55,7 @@ export default function CoreValuesEditorPage() {
 
   return (
     <div className="p-8">
-      <PageHeader title="Giá trị cốt lõi" description="Tiêu đề section và danh sách các giá trị." />
+      <PageHeader title="Vì sao chọn chúng tôi" description="Tiêu đề section và 4 điểm nổi bật của công ty." />
       <LocaleTabs value={locale} onChange={setLocale} />
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-6">
@@ -70,7 +70,7 @@ export default function CoreValuesEditorPage() {
 
         <div>
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-sm font-medium text-slate-700">Danh sách giá trị</span>
+            <span className="text-sm font-medium text-slate-700">Danh sách điểm nổi bật</span>
             <button
               type="button"
               onClick={addItem}

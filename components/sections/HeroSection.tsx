@@ -1,7 +1,8 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
@@ -9,6 +10,7 @@ import { useSmoothScroll } from '@/context/SmoothScrollProvider'
 import { gsap } from '@/lib/gsap'
 import { HERO_INTRO_COMPLETE_EVENT } from '@/lib/intro'
 import { SHOWCASE_CORNERS } from '@/components/canvas/rubik/config'
+import type { CMSShowcaseCorner } from '@/lib/admin/content'
 import type { HeroSection as HeroData } from '@/types/strapi'
 
 // Three.js canvas — client-only, no SSR
@@ -16,12 +18,6 @@ const RubikCanvas = dynamic(
   () => import('@/components/canvas/RubikCanvas').then((m) => m.RubikCanvas),
   { ssr: false },
 )
-
-const STATS = [
-  { value: '200+', label: 'Khách hàng' },
-  { value: '350+', label: 'Dự án thành công' },
-  { value: '10+', label: 'Năm kinh nghiệm' },
-]
 
 // Maps solution slug → index in SolutionSection cards
 const SOLUTION_ID_TO_INDEX: Record<string, number> = {
@@ -36,9 +32,20 @@ const SOLUTION_ID_TO_INDEX: Record<string, number> = {
 interface HeroSectionProps {
   data?: HeroData
   siteName?: string
+  showcaseCorners?: CMSShowcaseCorner[]
 }
 
-export function HeroSection({ data }: HeroSectionProps) {
+export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionProps) {
+  const t = useTranslations('hero')
+
+  // Merge CMS display data into geometry config, matching by id
+  const corners = useMemo(() => {
+    if (!cmsCorners?.length) return SHOWCASE_CORNERS
+    return SHOWCASE_CORNERS.map((c) => {
+      const cms = cmsCorners.find((x) => x.id === c.id)
+      return cms ? { ...c, label: cms.label, sublabel: cms.sublabel, image: cms.image } : c
+    })
+  }, [cmsCorners])
   const { lenisRef } = useSmoothScroll()
   const containerRef = useRef<HTMLElement>(null)
 
@@ -328,6 +335,7 @@ export function HeroSection({ data }: HeroSectionProps) {
         <div className="sticky top-0 h-screen w-full overflow-hidden">
           <RubikCanvas
             heroSectionId="home"
+            showcaseCorners={cmsCorners}
             onSolutionClick={handleSolutionClick}
             onSceneReady={handleSceneReady}
             onAssemblyComplete={handleAssemblyComplete}
@@ -478,9 +486,9 @@ export function HeroSection({ data }: HeroSectionProps) {
         aria-hidden="true"
       >
         {displayCorner !== null && (() => {
-          const c = SHOWCASE_CORNERS[displayCorner]
+          const c = corners[displayCorner]
           const idx = displayCorner + 1
-          const total = SHOWCASE_CORNERS.length
+          const total = corners.length
           return (
               <div
                 className="relative h-full w-full overflow-hidden"
@@ -578,7 +586,7 @@ export function HeroSection({ data }: HeroSectionProps) {
             </a>
           </div>
           <div ref={statsRef} className="mx-auto grid max-w-5xl grid-cols-2 gap-8 pt-20 md:grid-cols-3">
-            {STATS.map((stat) => (
+            {(t.raw('stats') as { value: string; label: string }[]).map((stat) => (
               <div key={stat.label} data-stat className="text-center">
                 <p className="text-4xl font-medium text-white">{stat.value}</p>
                 <p className="mt-1 pt-5 text-sm font-light text-[#E3F2FD]/65">{stat.label}</p>

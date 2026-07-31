@@ -2,6 +2,7 @@
 
 import type { FeaturesSection as FeaturesData } from '@/types/strapi'
 import { useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { gsap } from '@/lib/gsap'
 
 interface FeaturesSectionProps {
@@ -23,15 +24,24 @@ const ICONS = [
   </svg>
 ]
 
-const FALLBACK_FEATURES = [
+const FALLBACK_FEATURES_VI = [
   { id: 1, title: 'Giải pháp toàn diện', description: 'Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp.' },
   { id: 2, title: 'Công nghệ tiên tiến', description: 'Ứng dụng công nghệ mới nhất tối ưu hiệu quả và năng cao năng lực cạnh tranh.' },
   { id: 3, title: 'Đội ngũ chuyên gia', description: 'Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình.' },
   { id: 4, title: 'Cam kết chất lượng', description: 'Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp.' },
 ]
 
+const FALLBACK_FEATURES_EN = [
+  { id: 1, title: 'Comprehensive Solutions', description: 'Providing end-to-end solutions tailored to every business need.' },
+  { id: 2, title: 'Advanced Technology', description: 'Applying the latest technology to optimise efficiency and competitive advantage.' },
+  { id: 3, title: 'Expert Team', description: 'An experienced team committed to accompanying clients on every journey.' },
+  { id: 4, title: 'Quality Commitment', description: 'Committed to quality, security and long-term support for every solution.' },
+]
+
 export function FeaturesSection({ data }: FeaturesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null)
+  const pathname = usePathname()
+  const locale = pathname.startsWith('/en') ? 'en' : 'vi'
 
   useEffect(() => {
     const section = sectionRef.current
@@ -99,7 +109,12 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
     }
   }, [])
 
-  const features = data?.features?.length ? data.features : FALLBACK_FEATURES
+  const fallback = locale === 'en' ? FALLBACK_FEATURES_EN : FALLBACK_FEATURES_VI
+  const features = data?.features?.length ? data.features : fallback
+
+  const headingFallback = locale === 'en'
+    ? <><span>WHY CHOOSE</span> <p><span className="text-[#A31F1A]">GENERAL SYSTEMS</span>?</p></>
+    : <>VÌ SAO CHỌN <p><span className="text-[#A31F1A]">GENERAL SYSTEMS</span>?</p></>
 
   return (
     <section ref={sectionRef} id="features" className="relative min-h-screen bg-white">
@@ -111,11 +126,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
         <div className="relative flex flex-col px-5 md:px-0 mr-0 md:mr-5 justify-center max-w-[800px] min-h-screen py-14 md:py-24">
           <div data-feature-reveal className="text-start">
             <h1 className="mb-4 text-[clamp(30px,2.5vw,60px)] font-semibold text-slate-700 text-start bottom-0">
-              {data?.heading ?? (
-                <>
-                  VÌ SAO CHỌN <p><span className="text-[#A31F1A]">GENERAL SYSTEMS</span>?</p>
-                </>
-              )}
+              {data?.heading ?? headingFallback}
             </h1>
           </div>
 

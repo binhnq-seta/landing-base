@@ -6,7 +6,8 @@ import Link from 'next/link'
 import type { CMSDetailPage, CMSDetailSection } from '@/lib/admin/content'
 import { detailPages } from '@/lib/detail-pages'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { inputCls, Field, SaveBar, type SaveStatus } from '@/components/admin/shared'
+import type { SupportedLocale } from '@/lib/admin/content'
+import { inputCls, Field, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
 import { DetailPagePreview } from '@/components/admin/DetailPagePreview'
 
 const EMPTY_SECTION: CMSDetailSection = {
@@ -32,15 +33,17 @@ export default function DetailPageEditor() {
   const [rawType, slug] = id.split('--')
   const type = rawType as 'solutions' | 'projects'
 
+  const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [page, setPage] = useState<CMSDetailPage | null>(null)
   const [allPages, setAllPages] = useState<CMSDetailPage[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
   const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
-    const hardcoded = detailPages.find((p) => p.type === type && p.slug === slug)
+    setPage(null)
+    const hardcoded = locale === 'vi' ? detailPages.find((p) => p.type === type && p.slug === slug) : undefined
 
-    fetch('/api/admin/content')
+    fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
       .then((data: { detailPages?: CMSDetailPage[] }) => {
         const cmsPages = data.detailPages ?? []
@@ -66,9 +69,20 @@ export default function DetailPageEditor() {
               imageStyle: 'cover' as const,
             })),
           })
+        } else {
+          setPage({
+            type,
+            slug,
+            eyebrow: '',
+            title: '',
+            summary: '',
+            heroImage: '',
+            heroImageAlt: '',
+            sections: [],
+          })
         }
       })
-  }, [type, slug])
+  }, [type, slug, locale])
 
   function updatePage<K extends keyof CMSDetailPage>(key: K, value: CMSDetailPage[K]) {
     setPage((prev) => (prev ? { ...prev, [key]: value } : prev))
@@ -138,7 +152,7 @@ export default function DetailPageEditor() {
       const idx = allPages.findIndex((p) => p.type === page.type && p.slug === page.slug)
       const updatedPages =
         idx >= 0 ? allPages.map((p, i) => (i === idx ? page : p)) : [...allPages, page]
-      const res = await fetch('/api/admin/content', {
+      const res = await fetch(`/api/admin/content?locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ detailPages: updatedPages }),
@@ -152,31 +166,28 @@ export default function DetailPageEditor() {
     }
   }
 
-  if (!page) {
-    return <div className="p-8 text-sm text-slate-500">Đang tải…</div>
-  }
-
   return (
     <>
-      {showPreview && (
+      {showPreview && page && (
         <DetailPagePreview page={page} onClose={() => setShowPreview(false)} />
       )}
 
     <div className="p-8">
-      <div className="mb-6 flex items-start justify-between gap-4">
+      <div className="mb-4 flex items-start justify-between gap-4">
         <div>
           <Link href="/admin/detail-pages" className="text-sm text-blue-600 hover:underline">
             ← Trang chi tiết
           </Link>
-          <h1 className="mt-2 text-xl font-bold text-slate-800">{page.title}</h1>
+          <h1 className="mt-2 text-xl font-bold text-slate-800">{page?.title ?? '…'}</h1>
           <p className="mt-0.5 text-xs text-slate-400">
-            {page.type} / {page.slug}
+            {type} / {slug}
           </p>
         </div>
         <button
           type="button"
           onClick={() => setShowPreview(true)}
-          className="flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-300 hover:text-blue-600"
+          disabled={!page}
+          className="flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-300 hover:text-blue-600 disabled:opacity-40"
         >
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 10C3.732 5.943 6.524 3 10 3s6.268 2.943 7.542 7c-1.274 4.057-4.066 7-7.542 7S3.732 14.057 2.458 10z" />
@@ -186,7 +197,12 @@ export default function DetailPageEditor() {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
+      <LocaleTabs value={locale} onChange={setLocale} />
+
+      {!page ? (
+        <div className="mt-6 text-sm text-slate-500">Đang tải…</div>
+      ) : (
+      <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-6">
         {/* General info */}
         <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
           <h2 className="text-xs font-bold uppercase tracking-wide text-slate-500">
@@ -390,6 +406,7 @@ export default function DetailPageEditor() {
 
         <SaveBar status={status} />
       </form>
+      )}
     </div>
     </>
   )

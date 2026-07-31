@@ -35,11 +35,11 @@ const T    = (prop: string) => `${prop} ${DUR} ${EASE}`
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface SolutionItem { slug: string; title: string; src: string; alt: string; desc: string }
-interface SolutionSectionProps { data?: SolutionItem[] }
+interface SolutionSectionProps { data?: SolutionItem[]; title?: string }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export default function SolutionSection({ data }: SolutionSectionProps) {
+export default function SolutionSection({ data, title }: SolutionSectionProps) {
   const solutions = data ?? SOLUTION_IMAGE.map((item, i) => ({ ...item, slug: SOLUTION_SLUGS[i] }))
   const router = useRouter()
 
@@ -144,7 +144,7 @@ export default function SolutionSection({ data }: SolutionSectionProps) {
 
         <div className="flex h-full items-end justify-center">
           <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(60px,4vw,100px)] z-1 font-semibold tracking-wider text-slate-700">
-            GIẢI <br /> PHÁP
+            {title ?? (<>GIẢI <br /> PHÁP</>)}
           </h1>
         </div>
 

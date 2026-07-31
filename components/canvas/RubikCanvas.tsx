@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Suspense } from 'react'
 import { RubikScene } from './rubik/RubikScene'
+import type { CMSShowcaseCorner } from '@/lib/admin/content'
 
 // ── WebGL detection ───────────────────────────────────────────────────────────
 //
@@ -55,6 +56,8 @@ interface RubikCanvasProps {
   onAssemblyComplete?: () => void
   /** Fires with corner index + screen % coords of bloomed corner when active, null when retracted */
   onCornerShowcase?: (idx: number | null, lineFrom?: { x: number; y: number }) => void
+  /** CMS-sourced display data (label/sublabel/image) for showcase corners */
+  showcaseCorners?: CMSShowcaseCorner[]
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -66,6 +69,7 @@ export function RubikCanvas({
   onSceneReady,
   onAssemblyComplete,
   onCornerShowcase,
+  showcaseCorners,
 }: RubikCanvasProps) {
   const mouseRef = useRef<[number, number]>([0, 0])
   const containerRef = useRef<HTMLDivElement>(null)
@@ -141,6 +145,7 @@ export function RubikCanvas({
             mouseRef={mouseRef as React.RefObject<[number, number]>}
             onSolutionClick={onSolutionClick}
             onSolutionHover={onSolutionHover}
+            showcaseCorners={showcaseCorners}
             onSceneReady={onSceneReady}
             onAssemblyComplete={onAssemblyComplete}
             onCornerShowcase={onCornerShowcase}
