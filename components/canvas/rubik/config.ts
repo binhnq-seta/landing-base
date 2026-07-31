@@ -68,6 +68,33 @@ export type SolutionDef = WingDef
 /** @deprecated Use WINGS */
 export const SOLUTIONS: WingDef[] = []
 
+export interface ShowcaseCorner {
+  pieceIndex: number
+  dir: [number, number, number]
+  rotX: number
+  rotY: number
+  label: string
+  sublabel: string
+  image: string
+}
+
+const _iso  = Math.atan2( 1, Math.SQRT2)
+const _isoN = Math.atan2(-1, Math.SQRT2)
+const N = 1 / Math.sqrt(3)
+
+export const SHOWCASE_CORNERS: ShowcaseCorner[] = [
+  // Top corners first (bloom upward from bottom-right Rubik toward panel)
+  { pieceIndex: 20, dir: [-N, N, N], rotX: _iso,  rotY: Math.atan2( 1, 1), label: 'GIẢI PHÁP', sublabel: 'TÍCH HỢP',    image: '/image/solution/integration.jpg'},
+  { pieceIndex: 18, dir: [-N, N,-N], rotX: _iso,  rotY: Math.atan2( 1,-1), label: 'BẢO MẬT',   sublabel: 'ATTT',         image: '/image/solution/security.jpg' },
+  { pieceIndex: 26, dir: [ N, N, N], rotX: _iso,  rotY: Math.atan2(-1, 1), label: 'CÔNG NGHỆ', sublabel: 'SỐ',           image: '/image/solution/integration.jpg'},
+  { pieceIndex: 24, dir: [ N, N,-N], rotX: _iso,  rotY: Math.atan2(-1,-1), label: 'HẠ TẦNG',   sublabel: 'MẠNG',         image: '/image/solution/tele.jpg'     },
+  // Bottom corners
+  { pieceIndex: 0,  dir: [-N,-N,-N], rotX: _isoN, rotY: Math.atan2( 1,-1), label: 'AN NINH',   sublabel: 'QUỐC PHÒNG',  image: '/image/solution/military.jpg' },
+  { pieceIndex: 2,  dir: [-N,-N, N], rotX: _isoN, rotY: Math.atan2( 1, 1), label: 'VIỄN THÔNG',sublabel: '',             image: '/image/solution/tele.jpg'     },
+  { pieceIndex: 8,  dir: [ N,-N, N], rotX: _isoN, rotY: Math.atan2(-1, 1), label: 'HÀNG KHÔNG',sublabel: '',             image: '/image/solution/air.jpg'      },
+  { pieceIndex: 6,  dir: [ N,-N,-N], rotX: _isoN, rotY: Math.atan2(-1,-1), label: 'ĐIỆN LỰC',  sublabel: 'NĂNG LƯỢNG',  image: '/image/solution/energy.jpg'   },
+]
+
 export const WINGS: WingDef[] = [
   // ── Top — apex points upward ───────────────────────────────────────────────
   {

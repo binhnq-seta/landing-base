@@ -16,10 +16,18 @@ export interface RubikCubeHandle {
   startDrift(): void
   /** Start idle breathing loop */
   startIdle(): void
+  /** Stop idle breathing loop without changing any other mode */
+  stopIdle(): void
   /** Begin section-2 mode */
   startSection2(): void
   /** Scroll-driven layer separation: t=0→together, t=1→fully apart, reversible */
   setLayerScroll(t: number): void
+  /** Bloom a corner piece outward along its diagonal */
+  bloomCorner(pieceIndex: number): void
+  /** Retract a corner piece back to its final position */
+  retractCorner(pieceIndex: number): void
+  /** Return the current world-space position of a piece (useful for screen projection) */
+  getCornerWorldPosition(pieceIndex: number): THREE.Vector3
   groupRef: React.RefObject<THREE.Group>
   layerRefs: [
     React.RefObject<THREE.Group>,
@@ -402,6 +410,10 @@ export const RubikCube = forwardRef<RubikCubeHandle, RubikCubeProps>(
         }
       },
 
+      stopIdle() {
+        idleRef.current = false
+      },
+
       startSection2() {
         driftRef.current        = false
         idleRef.current         = false
@@ -413,6 +425,29 @@ export const RubikCube = forwardRef<RubikCubeHandle, RubikCubeProps>(
 
       setLayerScroll(t: number) {
         layerScrollTRef.current = t
+      },
+
+      bloomCorner(pieceIndex: number) {
+        const mesh = pieceRefs.current[pieceIndex]
+        if (!mesh) return
+        const fp = FINAL_POS[pieceIndex]
+        const dir = fp.clone().normalize()
+        gsap.to(mesh.position, { x: fp.x + dir.x * 0.65, y: fp.y + dir.y * 0.65, z: fp.z + dir.z * 0.65, duration: 0.7, ease: 'back.out(1.4)' })
+      },
+
+      retractCorner(pieceIndex: number) {
+        const mesh = pieceRefs.current[pieceIndex]
+        if (!mesh) return
+        const fp = FINAL_POS[pieceIndex]
+        gsap.to(mesh.position, { x: fp.x, y: fp.y, z: fp.z, duration: 0.5, ease: 'power2.inOut' })
+      },
+
+      getCornerWorldPosition(pieceIndex: number) {
+        const mesh = pieceRefs.current[pieceIndex]
+        if (!mesh) return new THREE.Vector3()
+        const wp = new THREE.Vector3()
+        mesh.getWorldPosition(wp)
+        return wp
       },
     }))
 

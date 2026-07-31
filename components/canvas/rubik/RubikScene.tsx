@@ -5,7 +5,7 @@ import { useThree, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { ContactShadows } from '@react-three/drei'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
-import { CUBE_ROT_X, CUBE_ROT_Y, WINGS } from './config'
+import { CUBE_ROT_X, CUBE_ROT_Y, WINGS, SHOWCASE_CORNERS } from './config'
 import { RubikCube } from './RubikCube'
 import type { RubikCubeHandle } from './RubikCube'
 import { Wing } from './Wing'
@@ -17,17 +17,75 @@ import { CameraRig } from './CameraRig'
 //
 // All positions below are in sceneGroup local space.
 // World position = sceneGroup.position.x + local_x × sceneGroup.scale
-const HERO_X     = 2.3    // right-of-centre on page 1  (+1/12 screen from 1.5)
-const HERO_Y     = 0      // vertical position on page 1
-const SECTION2_X = -2.5   // left-of-centre on page 2   (−1/12 screen from −1.7)
-const SECTION2_Y = 0.4    // cube rises slightly as it slides left → diagonal path
-const HERO_SCALE = 0.63   // 1.5× original hero size
-const SEC2_SCALE = 0.65   // 1.3× original page-2 size
+const HERO_X       = 2.3    // right-of-centre on page 1
+const HERO_Y       = 0
+const SECTION2_X   = -2.5
+const SECTION2_Y   = 0.4
+const HERO_SCALE   = 0.63
+const SEC2_SCALE   = 0.65
+const SHOWCASE_X     = 3.6    // right-aligned with ~20 px margin
+const SHOWCASE_Y     = -1.5   // lower half of viewport
+const SHOWCASE_SCALE = 0.33   // noticeably smaller than hero
 
 // ─── Easing ───────────────────────────────────────────────────────────────────
 
 function cubicInOut(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
+// ─── Upper-left bloom rotation ────────────────────────────────────────────────
+//
+// THREE.Object3D.rotation uses 'XYZ' Euler order: R = Rx(rx) · Ry(ry).
+// We solve (rx, ry) with no Z-roll such that R · dir = UL_TARGET,
+// where UL_TARGET is the world direction of corner 20 at the default viewing
+// angle — the cube's visual upper-left position.
+//
+const _UL_TARGET: THREE.Vector3 = new THREE.Vector3(-1, 1, -0.5)
+  .normalize()
+  .applyEuler(new THREE.Euler(CUBE_ROT_X, CUBE_ROT_Y, 0))  // 'XYZ' default
+
+function cornerToUpperLeft(dir: [number, number, number]): [number, number] {
+  const [dx, dy, dz] = dir
+  const { x: tx, y: ty, z: tz } = _UL_TARGET
+
+  // With 'XYZ' R = Rx·Ry, the x-row depends only on ry:
+  //   dx·cos(ry) + dz·sin(ry) = tx  → solve ry first
+  const Cxz = Math.sqrt(dx * dx + dz * dz)
+  if (Cxz < 1e-6) return [CUBE_ROT_X, CUBE_ROT_Y]
+
+  const phi   = Math.atan2(dz, dx)
+  const arg   = Math.max(-1, Math.min(1, tx / Cxz))
+  const alpha = Math.acos(arg)
+
+  const norm = (a: number) => {
+    while (a >  Math.PI) a -= 2 * Math.PI
+    while (a < -Math.PI) a += 2 * Math.PI
+    return a
+  }
+
+  // Then rx from: dy·cos(rx) − bz·sin(rx) = ty  AND  dy·sin(rx) + bz·cos(rx) = tz
+  const getRx = (ry: number): number => {
+    const bz = -dx * Math.sin(ry) + dz * Math.cos(ry)  // z-component after Ry
+    return Math.atan2(-bz * ty + dy * tz, dy * ty + bz * tz)
+  }
+
+  const ry1 = norm(phi + alpha)
+  const ry2 = norm(phi - alpha)
+  const rx1 = getRx(ry1)
+  const rx2 = getRx(ry2)
+
+  // Pick the solution with smaller combined rotation (more natural appearance).
+  // For bottom corners (dy < 0) the correct flip is BACKWARD (rx < 0 — top tilts
+  // away from camera). Any positive rx for a bottom corner is a forward over-flip
+  // that makes the piece appear from below, so penalise it heavily.
+  const cost = (rx: number, ry: number) => {
+    const ryPart = Math.abs(ry)
+    const rxPart = dy < 0
+      ? (rx > 0 ? rx + 4 * Math.PI : Math.abs(rx))   // bottom: hard-prefer rx < 0
+      : Math.abs(rx) + (rx > Math.PI / 2 ? 2 * Math.PI : 0)
+    return rxPart + ryPart
+  }
+  return cost(rx1, ry1) <= cost(rx2, ry2) ? [rx1, ry1] : [rx2, ry2]
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -40,6 +98,8 @@ interface RubikSceneProps {
   onSceneReady?: () => void
   /** Fires after assembly + hero slide — triggers hero text entrance */
   onAssemblyComplete?: () => void
+  /** Fires with corner index + bloomed corner screen % coords when active, null when retracted */
+  onCornerShowcase?: (idx: number | null, lineFrom?: { x: number; y: number }) => void
   isMobile: boolean
   heroSectionId: string
 }
@@ -50,6 +110,7 @@ export function RubikScene({
   onSolutionHover,
   onSceneReady,
   onAssemblyComplete,
+  onCornerShowcase,
   isMobile,
   heroSectionId,
 }: RubikSceneProps) {
@@ -67,6 +128,10 @@ export function RubikScene({
   const wingsRevealedRef = useRef(false)  // true once initial open animation ends
 
   const section2StartedRef = useRef(false)
+  const showcaseRunningRef = useRef(false)
+  const currentBloomRef    = useRef<number | null>(null)  // pieceIndex currently bloomed, null if none
+  const needsRestartRef    = useRef(false)                 // true after scroll interrupts showcase
+  const restartTimerRef    = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Shared hover ref — Wing reads this in useFrame (no re-renders)
   const hoveredIdRef = useRef<string | null>(null)
@@ -175,10 +240,97 @@ export function RubikScene({
 
       await delay(200)
       cubeRef.current.startIdle()
+
+      await delay(2500)
+      runShowcase()
     }
 
     run()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Corner showcase ───────────────────────────────────────────────────────
+  async function runShowcase() {
+    if (showcaseRunningRef.current) return
+    showcaseRunningRef.current = true
+
+    outer: while (showcaseRunningRef.current) {
+      // Stop idle at the start of every cycle — startIdle() is called at the end
+      // of each iteration, so on loop 2+ idleRef would still be true here.
+      // The idle spring (rotation.x → CUBE_ROT_X) fights bottom-corner tweens
+      // (which need rotX ≈ −2.15), so it must be off before any rotation tween.
+      cubeRef.current.stopIdle()
+
+      // ① Move cube to bottom-right showcase position
+      await new Promise<void>((resolve) => {
+        gsap.timeline({ onComplete: resolve })
+          .to(sceneGroupRef.current.position, { x: SHOWCASE_X, y: SHOWCASE_Y, duration: 1.2, ease: 'power2.inOut' }, 0)
+          .to(sceneGroupRef.current.scale,    { x: SHOWCASE_SCALE, y: SHOWCASE_SCALE, z: SHOWCASE_SCALE, duration: 1.2, ease: 'power2.inOut' }, 0)
+      })
+      if (!showcaseRunningRef.current) break
+
+      // ② Cycle through all 8 corners
+      for (let i = 0; i < SHOWCASE_CORNERS.length; i++) {
+        if (!showcaseRunningRef.current) break outer
+
+        const corner    = SHOWCASE_CORNERS[i]
+        const cubeGroup = cubeRef.current?.groupRef?.current
+        if (!cubeGroup) break outer
+
+        // Rotate cube so this corner appears at the upper-left visual position.
+        // Normalize targetRy to the shortest angular path from current rotation.y
+        // so GSAP never spins 270° when 90° is shorter (which happens when
+        // consecutive canonical ry values cross the ±π boundary).
+        const [rotX, rotY] = cornerToUpperLeft(corner.dir)
+        const fromRy = cubeGroup.rotation.y
+        const ryDelta = ((rotY - fromRy) % (2 * Math.PI) + 3 * Math.PI) % (2 * Math.PI) - Math.PI
+        await new Promise<void>((resolve) =>
+          gsap.to(cubeGroup.rotation, { x: rotX, y: fromRy + ryDelta, z: 0, duration: 1.0, ease: 'power2.inOut', onComplete: resolve })
+        )
+        if (!showcaseRunningRef.current) break outer
+
+        // Bloom the corner piece
+        cubeRef.current.bloomCorner(corner.pieceIndex)
+        currentBloomRef.current = corner.pieceIndex
+
+        // Project the bloomed corner world position to screen %
+        await delay(720)  // wait for bloom GSAP (0.7 s) to settle
+        if (!showcaseRunningRef.current) break outer
+
+        const wp  = cubeRef.current.getCornerWorldPosition(corner.pieceIndex)
+        const ndc = wp.project(camera)
+        const lineFrom = {
+          x: ((ndc.x + 1) / 2) * 100,
+          y: ((1 - ndc.y) / 2) * 100,
+        }
+        onCornerShowcase?.(i, lineFrom)
+
+        await delay(5500)
+        if (!showcaseRunningRef.current) break outer
+
+        currentBloomRef.current = null
+        cubeRef.current.retractCorner(corner.pieceIndex)
+        onCornerShowcase?.(null)
+        await delay(700)
+      }
+
+      if (!showcaseRunningRef.current) break
+
+      // ③ Return cube to hero position
+      const cubeGroup = cubeRef.current?.groupRef?.current
+      await new Promise<void>((resolve) => {
+        gsap.timeline({ onComplete: resolve })
+          .to(sceneGroupRef.current.position, { x: HERO_X, y: HERO_Y, duration: 1.5, ease: 'power2.inOut' }, 0)
+          .to(sceneGroupRef.current.scale,    { x: HERO_SCALE, y: HERO_SCALE, z: HERO_SCALE, duration: 1.5, ease: 'power2.inOut' }, 0)
+          .to(cubeGroup!.rotation,            { x: CUBE_ROT_X, y: CUBE_ROT_Y, duration: 1.5, ease: 'power2.inOut' }, 0)
+      })
+      if (!showcaseRunningRef.current) break
+
+      cubeRef.current.startIdle()
+
+      // ④ Pause before repeating
+      await delay(8000)
+    }
+  }
 
   // ── Open wings ────────────────────────────────────────────────────────────
   function openWings() {
@@ -219,6 +371,52 @@ export function RubikScene({
         scrub: 1.5,
         onUpdate: (self) => {
           const p = self.progress
+
+          // Stop showcase when user scrolls off the hero
+          if (p > 0.08 && showcaseRunningRef.current) {
+            showcaseRunningRef.current = false
+            needsRestartRef.current    = true
+            onCornerShowcase?.(null)
+
+            // Retract any currently bloomed corner immediately
+            if (currentBloomRef.current !== null) {
+              cubeRef.current?.retractCorner(currentBloomRef.current)
+              currentBloomRef.current = null
+            }
+
+            // Kill all showcase-owned tweens
+            const cg = cubeRef.current?.groupRef?.current
+            gsap.killTweensOf(sceneGroupRef.current.position)
+            gsap.killTweensOf(sceneGroupRef.current.scale)
+            if (cg) gsap.killTweensOf(cg.rotation)
+
+            // Reset scale + rotation immediately so scroll handler takes over cleanly
+            sceneGroupRef.current.scale.setScalar(HERO_SCALE)
+            if (cg) cg.rotation.set(CUBE_ROT_X, CUBE_ROT_Y, 0)
+
+            cubeRef.current?.startIdle()
+            // Position is NOT snapped here — scroll handler writes it directly
+            // on the very next frame (slideT=0 at p≈0.08 → x=HERO_X, y=HERO_Y)
+          }
+
+          // Schedule showcase restart when user scrolls back to hero
+          if (p < 0.04 && needsRestartRef.current && !restartTimerRef.current) {
+            restartTimerRef.current = setTimeout(() => {
+              restartTimerRef.current = null
+              if (needsRestartRef.current && !showcaseRunningRef.current) {
+                needsRestartRef.current = false
+                runShowcase()
+              }
+            }, 2500)
+          }
+          // Cancel the pending restart if user scrolls away again before it fires
+          if (p >= 0.04 && restartTimerRef.current) {
+            clearTimeout(restartTimerRef.current)
+            restartTimerRef.current = null
+          }
+
+          // While showcase is running, it owns position / scale / cube rotation
+          if (showcaseRunningRef.current) return
 
           // ── Mode transitions (must run before setLayerScroll) ─────────────
           // Section-2 starts as soon as layers are reunited (p=0.40) + a small
@@ -273,11 +471,18 @@ export function RubikScene({
           sceneGroup.scale.setScalar(targetScale)
 
           // ── Cube rotation ─────────────────────────────────────────────────
+          cubeGroup.rotation.x = CUBE_ROT_X
           cubeGroup.rotation.y = CUBE_ROT_Y + p * 0.18
         },
       })
 
-      return () => { st.kill() }
+      return () => {
+        st.kill()
+        if (restartTimerRef.current) {
+          clearTimeout(restartTimerRef.current)
+          restartTimerRef.current = null
+        }
+      }
     }
 
     const id = setTimeout(waitAndBind, 0)

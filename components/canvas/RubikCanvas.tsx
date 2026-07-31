@@ -53,6 +53,8 @@ interface RubikCanvasProps {
   onSceneReady?: () => void
   /** Fires after assembly + hero slide — triggers hero text entrance */
   onAssemblyComplete?: () => void
+  /** Fires with corner index + screen % coords of bloomed corner when active, null when retracted */
+  onCornerShowcase?: (idx: number | null, lineFrom?: { x: number; y: number }) => void
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -63,6 +65,7 @@ export function RubikCanvas({
   onSolutionHover,
   onSceneReady,
   onAssemblyComplete,
+  onCornerShowcase,
 }: RubikCanvasProps) {
   const mouseRef = useRef<[number, number]>([0, 0])
   const containerRef = useRef<HTMLDivElement>(null)
@@ -140,6 +143,7 @@ export function RubikCanvas({
             onSolutionHover={onSolutionHover}
             onSceneReady={onSceneReady}
             onAssemblyComplete={onAssemblyComplete}
+            onCornerShowcase={onCornerShowcase}
             isMobile={isMobile}
             heroSectionId={heroSectionId}
           />
