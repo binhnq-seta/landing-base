@@ -1,8 +1,6 @@
-import type { Metadata } from 'next'
 import localFont from 'next/font/local'
-import { SmoothScrollProvider } from '@/context/SmoothScrollProvider'
-import { InitialLoadingScreen } from '@/components/layout/InitialLoadingScreen'
 import './globals.css'
+import { LocaleSync } from '@/components/LocaleSync'
 
 const gilroy = localFont({
   src: [
@@ -25,21 +23,15 @@ const scienceGothic = localFont({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  title: 'General Systems',
-  description: 'Built with Next.js + Strapi + Three.js + GSAP',
-}
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+// Root layout — provides html/body and font CSS variables for all routes.
+// Locale-specific providers (NextIntlClientProvider, SmoothScrollProvider) live in
+// app/(locale)/[locale]/layout.tsx; the HtmlLang component sets <html lang> dynamically.
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" suppressHydrationWarning>
-      <body className={`${gilroy.variable} ${scienceGothic.variable} antialiased`}>
-        {/* <InitialLoadingScreen /> */}
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+    <html suppressHydrationWarning>
+      <body className={`${gilroy.variable} ${scienceGothic.variable} antialiased`} suppressHydrationWarning>
+        <LocaleSync />
+        {children}
       </body>
     </html>
   )

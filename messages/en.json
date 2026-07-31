@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "stats": [
+      { "value": "200+", "label": "Clients" },
+      { "value": "350+", "label": "Successful Projects" },
+      { "value": "10+", "label": "Years of Experience" }
+    ],
+    "defaultHeading": "CONNECTING TECHNOLOGY TO BUILD THE FUTURE",
+    "defaultDescription": "General Systems provides comprehensive technology solutions that help businesses optimise performance and efficiency in the digital era.",
+    "defaultCta": "Explore Solutions"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "solutions": "Solutions",
+    "projects": "Projects",
+    "partners": "Partners",
+    "contact": "Contact",
+    "viewSite": "View website",
+    "aboutMenu": {
+      "gsGroup": "About GS Group",
+      "vision": "Vision & Mission",
+      "coreValues": "Core Values"
+    },
+    "solutionsMenu": {
+      "groupSolutions": "Solutions",
+      "groupProjects": "Notable Projects",
+      "integration": "Integration Solutions",
+      "defense": "Defense & Security",
+      "security": "Cybersecurity",
+      "power": "Power & Energy",
+      "telecom": "Telecommunications",
+      "aviation": "Aviation",
+      "gsm": "Mobile GSM System",
+      "aves": "Flight Management (AVES)",
+      "infosec": "Information Security System"
+    }
+  },
+  "footer": {
+    "rights": "All rights reserved by General Systems.",
+    "address": "Hanoi, Vietnam"
+  },
+  "common": {
+    "learnMore": "Learn more",
+    "viewAll": "View all",
+    "loading": "Loading…"
+  },
+  "locale": {
+    "vi": "Tiếng Việt",
+    "en": "English",
+    "switchTo": "Switch language"
+  }
+}

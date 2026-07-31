@@ -1,19 +1,26 @@
 'use client'
 
 import { useState, useEffect, type FormEvent } from 'react'
-import type { CMSPartner } from '@/lib/admin/content'
+import type { CMSPartner, CMSSectionLabels, SupportedLocale } from '@/lib/admin/content'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { Field, PageHeader, SaveBar, type SaveStatus } from '@/components/admin/shared'
+import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
 
 export default function PartnersEditorPage() {
+  const [locale, setLocale] = useState<SupportedLocale>('vi')
+  const [heading, setHeading] = useState('')
+  const [sectionLabels, setSectionLabels] = useState<CMSSectionLabels>({ solutions: '', projects: '', viewMore: '', partners: '' })
   const [items, setItems] = useState<CMSPartner[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
 
   useEffect(() => {
-    fetch('/api/admin/content')
+    fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((data: { partners: CMSPartner[] }) => setItems(data.partners))
-  }, [])
+      .then((data: { partners: CMSPartner[]; sectionLabels: CMSSectionLabels }) => {
+        setItems(data.partners)
+        setSectionLabels(data.sectionLabels)
+        setHeading(data.sectionLabels.partners)
+      })
+  }, [locale])
 
   function update(i: number, key: keyof CMSPartner, value: string) {
     setItems((prev) => prev.map((item, idx) => (idx === i ? { ...item, [key]: value } : item)))
@@ -31,10 +38,10 @@ export default function PartnersEditorPage() {
     e.preventDefault()
     setStatus('saving')
     try {
-      const res = await fetch('/api/admin/content', {
+      const res = await fetch(`/api/admin/content?locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ partners: items }),
+        body: JSON.stringify({ partners: items, sectionLabels: { ...sectionLabels, partners: heading } }),
       })
       setStatus(res.ok ? 'ok' : 'error')
     } catch {
@@ -50,8 +57,13 @@ export default function PartnersEditorPage() {
         title="Đối tác"
         description="Logo đối tác trong marquee. Upload logo rồi điền alt text."
       />
+      <LocaleTabs value={locale} onChange={setLocale} />
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-2xl space-y-3">
+        <Field label="Tiêu đề section">
+          <input className={inputCls} value={heading} onChange={(e) => setHeading(e.target.value)} required />
+        </Field>
+
         {items.map((item, i) => (
           <div key={i} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="mb-3 flex items-center justify-between">

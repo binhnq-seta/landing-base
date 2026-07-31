@@ -1,21 +1,28 @@
 'use client'
 
 import { useState, useEffect, type FormEvent } from 'react'
-import type { CMSSolution } from '@/lib/admin/content'
+import type { CMSSolution, CMSSectionLabels, SupportedLocale } from '@/lib/admin/content'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { inputCls, Field, PageHeader, SaveBar, type SaveStatus } from '@/components/admin/shared'
+import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
 
 const BLANK: CMSSolution = { slug: '', title: '', src: '', alt: '', desc: '' }
 
 export default function SolutionsEditorPage() {
+  const [locale, setLocale] = useState<SupportedLocale>('vi')
+  const [sectionTitle, setSectionTitle] = useState('')
+  const [sectionLabels, setSectionLabels] = useState<CMSSectionLabels>({ solutions: '', projects: '', viewMore: '', partners: '' })
   const [items, setItems] = useState<CMSSolution[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
 
   useEffect(() => {
-    fetch('/api/admin/content')
+    fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((data: { solutions: CMSSolution[] }) => setItems(data.solutions))
-  }, [])
+      .then((data: { solutions: CMSSolution[]; sectionLabels: CMSSectionLabels }) => {
+        setItems(data.solutions)
+        setSectionLabels(data.sectionLabels)
+        setSectionTitle(data.sectionLabels.solutions)
+      })
+  }, [locale])
 
   function update(i: number, key: keyof CMSSolution, value: string) {
     setItems((prev) => prev.map((item, idx) => (idx === i ? { ...item, [key]: value } : item)))
@@ -33,10 +40,10 @@ export default function SolutionsEditorPage() {
     e.preventDefault()
     setStatus('saving')
     try {
-      const res = await fetch('/api/admin/content', {
+      const res = await fetch(`/api/admin/content?locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ solutions: items }),
+        body: JSON.stringify({ solutions: items, sectionLabels: { ...sectionLabels, solutions: sectionTitle } }),
       })
       setStatus(res.ok ? 'ok' : 'error')
     } catch {
@@ -52,8 +59,18 @@ export default function SolutionsEditorPage() {
         title="Giải pháp"
         description="Danh sách 6 giải pháp trong grid. Slug dùng cho URL trang chi tiết."
       />
+      <LocaleTabs value={locale} onChange={setLocale} />
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-4">
+        <Field label="Tiêu đề section">
+          <input
+            className={inputCls}
+            value={sectionTitle}
+            onChange={(e) => setSectionTitle(e.target.value)}
+            required
+          />
+        </Field>
+
         {items.map((item, i) => (
           <div key={i} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between">

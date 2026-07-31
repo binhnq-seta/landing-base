@@ -69,6 +69,8 @@ export type SolutionDef = WingDef
 export const SOLUTIONS: WingDef[] = []
 
 export interface ShowcaseCorner {
+  /** Stable identifier — matched against CMSShowcaseCorner.id to overlay CMS data */
+  id?: string
   pieceIndex: number
   dir: [number, number, number]
   rotX: number
@@ -84,15 +86,15 @@ const N = 1 / Math.sqrt(3)
 
 export const SHOWCASE_CORNERS: ShowcaseCorner[] = [
   // Top corners first (bloom upward from bottom-right Rubik toward panel)
-  { pieceIndex: 20, dir: [-N, N, N], rotX: _iso,  rotY: Math.atan2( 1, 1), label: 'GIẢI PHÁP', sublabel: 'TÍCH HỢP',    image: '/image/solution/integration.jpg'},
-  { pieceIndex: 18, dir: [-N, N,-N], rotX: _iso,  rotY: Math.atan2( 1,-1), label: 'BẢO MẬT',   sublabel: 'ATTT',         image: '/image/solution/security.jpg' },
-  { pieceIndex: 26, dir: [ N, N, N], rotX: _iso,  rotY: Math.atan2(-1, 1), label: 'CÔNG NGHỆ', sublabel: 'SỐ',           image: '/image/solution/integration.jpg'},
-  { pieceIndex: 24, dir: [ N, N,-N], rotX: _iso,  rotY: Math.atan2(-1,-1), label: 'HẠ TẦNG',   sublabel: 'MẠNG',         image: '/image/solution/tele.jpg'     },
+  { id: 'integration', pieceIndex: 20, dir: [-N, N, N], rotX: _iso,  rotY: Math.atan2( 1, 1), label: 'GIẢI PHÁP', sublabel: 'TÍCH HỢP',   image: '/image/solution/integration.jpg'},
+  { id: 'security',    pieceIndex: 18, dir: [-N, N,-N], rotX: _iso,  rotY: Math.atan2( 1,-1), label: 'BẢO MẬT',   sublabel: 'ATTT',        image: '/image/solution/security.jpg'   },
+  { id: 'digital',     pieceIndex: 26, dir: [ N, N, N], rotX: _iso,  rotY: Math.atan2(-1, 1), label: 'CÔNG NGHỆ', sublabel: 'SỐ',          image: '/image/solution/integration.jpg'},
+  { id: 'network',     pieceIndex: 24, dir: [ N, N,-N], rotX: _iso,  rotY: Math.atan2(-1,-1), label: 'HẠ TẦNG',   sublabel: 'MẠNG',        image: '/image/solution/tele.jpg'       },
   // Bottom corners
-  { pieceIndex: 0,  dir: [-N,-N,-N], rotX: _isoN, rotY: Math.atan2( 1,-1), label: 'AN NINH',   sublabel: 'QUỐC PHÒNG',  image: '/image/solution/military.jpg' },
-  { pieceIndex: 2,  dir: [-N,-N, N], rotX: _isoN, rotY: Math.atan2( 1, 1), label: 'VIỄN THÔNG',sublabel: '',             image: '/image/solution/tele.jpg'     },
-  { pieceIndex: 8,  dir: [ N,-N, N], rotX: _isoN, rotY: Math.atan2(-1, 1), label: 'HÀNG KHÔNG',sublabel: '',             image: '/image/solution/air.jpg'      },
-  { pieceIndex: 6,  dir: [ N,-N,-N], rotX: _isoN, rotY: Math.atan2(-1,-1), label: 'ĐIỆN LỰC',  sublabel: 'NĂNG LƯỢNG',  image: '/image/solution/energy.jpg'   },
+  { id: 'military',    pieceIndex: 0,  dir: [-N,-N,-N], rotX: _isoN, rotY: Math.atan2( 1,-1), label: 'AN NINH',   sublabel: 'QUỐC PHÒNG', image: '/image/solution/military.jpg'   },
+  { id: 'telecom',     pieceIndex: 2,  dir: [-N,-N, N], rotX: _isoN, rotY: Math.atan2( 1, 1), label: 'VIỄN THÔNG',sublabel: '',            image: '/image/solution/tele.jpg'       },
+  { id: 'aviation',    pieceIndex: 8,  dir: [ N,-N, N], rotX: _isoN, rotY: Math.atan2(-1, 1), label: 'HÀNG KHÔNG',sublabel: '',            image: '/image/solution/air.jpg'        },
+  { id: 'energy',      pieceIndex: 6,  dir: [ N,-N,-N], rotX: _isoN, rotY: Math.atan2(-1,-1), label: 'ĐIỆN LỰC',  sublabel: 'NĂNG LƯỢNG', image: '/image/solution/energy.jpg'     },
 ]
 
 export const WINGS: WingDef[] = [

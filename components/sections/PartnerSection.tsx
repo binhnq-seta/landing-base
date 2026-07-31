@@ -22,9 +22,10 @@ interface PartnerLogo {
 
 interface PartnerSectionProps {
   data?: PartnerLogo[]
+  heading?: string
 }
 
-export function PartnerSection({ data }: PartnerSectionProps) {
+export function PartnerSection({ data, heading }: PartnerSectionProps) {
   const logos = data ?? PARTNER_LOGOS
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -111,7 +112,7 @@ export function PartnerSection({ data }: PartnerSectionProps) {
           data-partner-reveal
           className="mb-16 px-6 text-center text-[clamp(32px,4vw,100px)] font-bold uppercase text-slate-700"
         >
-          Đối tác của chúng tôi
+          {heading ?? 'ĐỐI TÁC CỦA CHÚNG TÔI'}
         </h1>
 
         <div
