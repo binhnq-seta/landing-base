@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { DetailScrollAnimations } from '@/components/detail/DetailScrollAnimations'
@@ -8,7 +9,7 @@ import { SiteFooter } from '@/components/layout/Footer'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { detailPages, getDetailPage } from '@/lib/detail-pages'
 import { getContent } from '@/lib/admin/content'
-import type { CMSDetailSection, SupportedLocale } from '@/lib/admin/content'
+import type { CMSDetailSection, CMSDetailPage, SupportedLocale } from '@/lib/admin/content'
 
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
@@ -40,20 +41,221 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
   }
 }
 
-function sectionImageClasses(section: CMSDetailSection): string {
-  const style = section.imageStyle ?? 'cover'
-  const aspect =
-    style === 'portrait' ? 'aspect-[3/4]' : style === 'wide' ? 'aspect-[16/9]' : 'aspect-[4/3]'
-  const objectFit = style === 'contain' ? 'object-contain bg-slate-100' : 'object-cover'
-  return `${aspect} ${objectFit}`
+// ─── Shared helpers ───────────────────────────────────────────────────────────
+
+function SectionButton({ href, locale, variant = 'dark' }: { href?: string; locale: SupportedLocale; variant?: 'dark' | 'light' }) {
+  if (!href) return null
+  const label = locale === 'en' ? 'See more' : 'Xem thêm'
+  // Ensure absolute path from root regardless of how it was stored
+  const safeHref = href.startsWith('/') || href.startsWith('http') ? href : `/${href}`
+  return (
+    <Link
+      href={safeHref}
+      className={`group mt-8 inline-flex items-center gap-3 rounded-full border-2 px-6 py-2.5 text-sm font-semibold transition-all duration-200 ${
+        variant === 'light'
+          ? 'border-white text-white hover:bg-white hover:text-[#00162F]'
+          : 'border-[#00162F] text-[#00162F] hover:bg-[#00162F] hover:text-white'
+      }`}
+    >
+      {label}
+      <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true">
+        <path fillRule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clipRule="evenodd" />
+      </svg>
+    </Link>
+  )
 }
 
-function sectionImageOrder(section: CMSDetailSection, index: number): boolean {
-  const pos = section.imagePosition ?? 'auto'
-  if (pos === 'right') return true
-  if (pos === 'left') return false
-  return index % 2 === 1
+function imgAspect(style?: string) {
+  if (style === 'portrait') return 'aspect-[3/4]'
+  if (style === 'wide') return 'aspect-[16/9]'
+  return 'aspect-[4/3]'
 }
+
+// ─── Content sections (always alternating split) ───────────────────────────────
+
+function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; locale: SupportedLocale }) {
+  if (sections.length === 0) return null
+  return (
+    <div className="mx-auto w-full max-w-[1400px] space-y-12 px-5 py-12 md:space-y-20 md:px-12 md:py-20 lg:px-16">
+      {sections.map((section, i) => {
+        const pos = section.imagePosition ?? 'auto'
+        const imgRight = pos === 'right' || (pos === 'auto' && i % 2 === 1)
+        const style = section.imageStyle ?? 'cover'
+        return (
+          <section key={section.title + i} className="grid items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
+            <div
+              data-detail-reveal
+              className={`relative overflow-hidden rounded-[1.5rem] bg-slate-200 md:rounded-[2rem] ${imgAspect(style)} ${style === 'contain' ? 'object-contain bg-slate-100' : ''} ${imgRight ? 'md:order-2' : ''}`}
+            >
+              {section.image && (
+                <Image
+                  src={section.image}
+                  alt={section.imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className={`transition-transform duration-700 hover:scale-[1.03] ${style === 'contain' ? 'object-contain' : 'object-cover'}`}
+                />
+              )}
+            </div>
+            <div className={imgRight ? 'md:order-1' : ''}>
+              <h2 data-detail-reveal data-detail-delay="0.08" className="max-w-xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]">
+                {section.title}
+              </h2>
+              <p data-detail-reveal data-detail-delay="0.16" className="mt-4 max-w-xl text-base font-light leading-8 text-slate-600 md:text-lg">
+                {section.description}
+              </p>
+              <SectionButton href={section.buttonHref} locale={locale} />
+            </div>
+          </section>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Page-level layout heroes ─────────────────────────────────────────────────
+
+type PageHeroProps = { page: CMSDetailPage }
+
+/** Two-column: title left, large image right with floating summary card */
+function HeroHeadline({ page }: PageHeroProps) {
+  return (
+    <div className="grid min-h-screen items-center md:grid-cols-2">
+      <header className="px-5 pb-8 pt-32 md:px-12 md:pb-20 md:pt-40 lg:px-16">
+        {page.eyebrow && (
+          <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]">
+            {page.eyebrow}
+          </p>
+        )}
+        <h1 data-detail-reveal data-detail-hero className="text-[clamp(2rem,4vw,4.5rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+          {page.title}
+        </h1>
+        <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mt-6 max-w-lg text-base font-light leading-8 text-slate-600 md:text-lg">
+          {page.summary}
+        </p>
+      </header>
+      <div className="relative self-stretch px-5 pb-12 pt-8 md:px-8 md:py-12">
+        <div data-detail-reveal data-detail-hero className="relative h-full min-h-[420px] overflow-hidden rounded-[1.5rem] bg-slate-200 md:min-h-[580px] md:rounded-[2rem]">
+          <Image
+            src={page.heroImage}
+            alt={page.heroImageAlt}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/40" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Full-width image on top, title + summary centered below */
+function HeroMagazine({ page }: PageHeroProps) {
+  return (
+    <div className="pt-28 md:pt-36">
+      <div className="relative aspect-[16/9] max-h-[80vh] overflow-hidden bg-slate-200">
+        <Image
+          src={page.heroImage}
+          alt={page.heroImageAlt}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#00162F]/20" />
+      </div>
+      <div className="mx-auto max-w-[1400px] px-5 pb-8 pt-10 md:px-12 md:pb-12 md:pt-14 lg:px-16">
+        <div className="grid md:grid-cols-[1fr_2fr] md:gap-16 items-start">
+          <div>
+            {page.eyebrow && (
+              <p data-detail-reveal data-detail-hero className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]">
+                {page.eyebrow}
+              </p>
+            )}
+            <h1 data-detail-reveal data-detail-hero className="text-[clamp(2rem,3.5vw,3.5rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+              {page.title}
+            </h1>
+          </div>
+          <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mt-4 text-base font-light leading-8 text-slate-500 md:mt-1 md:text-lg md:pt-2">
+            {page.summary}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Full-bleed image with title + summary overlaid at bottom */
+function HeroImmersive({ page }: PageHeroProps) {
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-slate-900">
+      <Image
+        src={page.heroImage}
+        alt={page.heroImageAlt}
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover opacity-55"
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#00162F]/20 via-transparent to-[#00162F]/85" />
+      <div className="absolute bottom-0 left-0 right-0 px-5 pb-14 md:px-12 md:pb-20 lg:px-16">
+        <div className="mx-auto max-w-[1400px]">
+          {page.eyebrow && (
+            <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/70">
+              {page.eyebrow}
+            </p>
+          )}
+          <h1 data-detail-reveal data-detail-hero className="max-w-3xl text-[clamp(2.5rem,5vw,5rem)] font-semibold leading-tight tracking-[-0.03em] text-white">
+            {page.title}
+          </h1>
+          <p data-detail-reveal data-detail-hero data-detail-delay="0.12" className="mt-5 max-w-xl text-base font-light leading-8 text-white/75 md:text-lg">
+            {page.summary}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/** Centered intro text, then full-width image below */
+function HeroEditorial({ page }: PageHeroProps) {
+  return (
+    <div className="pt-32 pb-0 md:pt-40">
+      <div className="mx-auto max-w-[1400px] px-5 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-3xl text-center">
+          {page.eyebrow && (
+            <p data-detail-reveal data-detail-hero className="mb-5 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]">
+              {page.eyebrow}
+            </p>
+          )}
+          <h1 data-detail-reveal data-detail-hero className="text-[clamp(2.5rem,5vw,5rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+            {page.title}
+          </h1>
+          <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mx-auto mt-6 max-w-2xl text-base font-light leading-8 text-slate-600 md:text-lg">
+            {page.summary}
+          </p>
+        </div>
+      </div>
+      <div data-detail-reveal data-detail-hero data-detail-delay="0.18" className="mx-auto mt-10 max-w-[1600px] px-5 md:px-8">
+        <div className="relative aspect-[21/9] min-h-[260px] overflow-hidden rounded-[1.5rem] bg-slate-200 md:rounded-[2rem]">
+          <Image
+            src={page.heroImage}
+            alt={page.heroImageAlt}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 95vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/25" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Page ────────────────────────────────────────────────────────────────────
 
 export default async function DetailPage({ params }: DetailPageProps) {
   const { type, slug } = await params
@@ -62,9 +264,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
   const content = getContent(locale)
   const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
 
-  type PageData = { type: string; slug: string; eyebrow: string; title: string; summary: string; heroImage: string; heroImageAlt: string; sections: CMSDetailSection[] }
-
-  let page: PageData
+  let page: CMSDetailPage
 
   if (cmsPage) {
     page = cmsPage
@@ -73,6 +273,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
     if (!fallback) notFound()
     page = {
       ...fallback,
+      layout: 'headline',
       sections: fallback.sections.map((s) => ({
         ...s,
         imagePosition: 'auto' as const,
@@ -80,6 +281,8 @@ export default async function DetailPage({ params }: DetailPageProps) {
       })),
     }
   }
+
+  const layout = page.layout ?? 'headline'
 
   return (
     <>
@@ -93,79 +296,13 @@ export default async function DetailPage({ params }: DetailPageProps) {
         </div>
         <article data-detail-page className="relative z-10">
           <DetailScrollAnimations />
-          <div className="flex flex-cols-2 min-h-screen items-center">
-            <header className="relative isolate mx-auto w-full max-w-[1600px] px-5 pb-16 pt-16 md:px-12 md:pb-24 md:pt-24 lg:px-40">
-              <h1 data-detail-reveal data-detail-hero className="relative max-w-3xl -translate-y-20 text-[clamp(1rem,3.5vw,5rem)] font-semibold text-[#00162F]">
-                {page.title}
-              </h1>
-            </header>
-            <div className="mx-auto w-full max-w-[1800px] px-5 md:px-12 lg:px-20">
-              <div className="relative pb-28 md:pb-0">
-                <div data-detail-reveal data-detail-hero className="relative aspect-[1/1] min-h-[360px] overflow-hidden rounded-[1.5rem] bg-slate-200 md:rounded-[2.5rem]">
-                  <Image
-                    src={page.heroImage}
-                    alt={page.heroImageAlt}
-                    fill
-                    priority
-                    sizes="(max-width: 768px) 100vw, 90vw"
-                    className="object-cover grayscale"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-gray-200/25 to-blue-700/80" />
-                </div>
-                <div data-detail-reveal data-detail-hero data-detail-delay="0.1" className="absolute right-0 top-0 z-10 rounded-bl-[2rem] bg-[#f8fafc] pb-3 pl-3 before:absolute before:-left-6 before:top-0 before:h-6 before:w-6 before:rounded-tr-[1.5rem] before:shadow-[8px_-8px_0_8px_#f8fafc] after:absolute after:-bottom-6 after:right-0 after:h-6 after:w-6 after:bg-[radial-gradient(circle_at_bottom_left,transparent_0,transparent_1.5rem,#f8fafc_1.55rem)] md:pb-4 md:pl-4">
-                  <div className="relative grid size-20 place-items-center rounded-2xl bg-[#EEF4FE] text-[#00162F] shadow-[0_12px_32px_rgba(15,23,42,0.14)] md:size-28 md:rounded-3xl">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      aria-hidden="true"
-                      className="size-6 md:size-8"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M3 12h18M5.64 5.64l12.72 12.72M18.36 5.64 5.64 18.36" />
-                    </svg>
-                  </div>
-                </div>
-                <p data-detail-reveal data-detail-hero data-detail-delay="0.18" className="absolute bottom-0 left-1/2 z-10 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 rounded-2xl border border-slate-200/80 bg-white/95 px-6 py-5 text-base font-light leading-7 text-slate-600 shadow-[0_16px_40px_rgba(15,23,42,0.14)] backdrop-blur-sm md:bottom-auto md:left-0 md:top-[60%] md:w-full md:-translate-x-1/2 md:-translate-y-1/5 md:rounded-3xl md:px-8 md:py-7 md:text-lg md:leading-8">
-                  {page.summary}
-                </p>
-              </div>
-            </div>
-          </div>
 
-          <div className="mx-auto w-full max-w-[1600px] space-y-24 px-5 py-24 md:space-y-36 md:px-12 md:py-36 lg:px-20">
-            {page.sections.map((section, index) => {
-              const imgRight = sectionImageOrder(section, index)
-              return (
-                <section
-                  key={section.title}
-                  className="grid items-center gap-10 md:grid-cols-2 md:gap-16 lg:gap-24"
-                >
-                  <div
-                    data-detail-reveal
-                    className={`relative overflow-hidden rounded-[1.5rem] bg-slate-200 md:rounded-[2rem] ${sectionImageClasses(section)} ${imgRight ? 'md:order-2' : ''}`}
-                  >
-                    <Image
-                      src={section.image}
-                      alt={section.imageAlt}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 45vw"
-                      className={`transition-transform duration-700 hover:scale-[1.03] ${(section.imageStyle ?? 'cover') === 'contain' ? 'object-contain' : 'object-cover'}`}
-                    />
-                  </div>
+          {layout === 'headline'   && <HeroHeadline  page={page} />}
+          {layout === 'magazine'   && <HeroMagazine  page={page} />}
+          {layout === 'immersive'  && <HeroImmersive page={page} />}
+          {layout === 'editorial'  && <HeroEditorial page={page} />}
 
-                  <div className={imgRight ? 'md:order-1' : ''}>
-                    <h2 data-detail-reveal data-detail-delay="0.08" className="max-w-xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-5xl">
-                      {section.title}
-                    </h2>
-                    <p data-detail-reveal data-detail-delay="0.16" className="mt-6 max-w-xl text-base font-light leading-8 text-slate-600 md:text-lg">
-                      {section.description}
-                    </p>
-                  </div>
-                </section>
-              )
-            })}
-          </div>
+          <ContentSections sections={page.sections} locale={locale} />
         </article>
       </main>
       <SiteFooter locale={locale} />

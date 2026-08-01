@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect, type FormEvent } from 'react'
+import React, { useState, useEffect, type FormEvent } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import type { CMSDetailPage, CMSDetailSection } from '@/lib/admin/content'
+import type { CMSDetailPage, CMSDetailSection, DetailPageLayout } from '@/lib/admin/content'
 import { detailPages } from '@/lib/detail-pages'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 import type { SupportedLocale } from '@/lib/admin/content'
@@ -17,7 +17,83 @@ const EMPTY_SECTION: CMSDetailSection = {
   imageAlt: '',
   imagePosition: 'auto',
   imageStyle: 'cover',
+  buttonHref: '',
 }
+
+type PageLayoutOption = { value: DetailPageLayout; label: string; desc: string; icon: React.ReactNode }
+
+const PAGE_LAYOUT_OPTIONS: PageLayoutOption[] = [
+  {
+    value: 'headline',
+    label: 'Headline',
+    desc: 'Tiêu đề trái, ảnh phải',
+    icon: (
+      <svg viewBox="0 0 80 52" className="w-full" aria-hidden="true">
+        {/* left col: eyebrow + title + summary */}
+        <rect x="2" y="12" width="18" height="3" rx="1" fill="#fca5a5"/>
+        <rect x="2" y="18" width="32" height="6" rx="1.5" fill="#94a3b8"/>
+        <rect x="2" y="27" width="28" height="2.5" rx="1" fill="#e2e8f0"/>
+        <rect x="2" y="31" width="24" height="2.5" rx="1" fill="#e2e8f0"/>
+        <rect x="2" y="35" width="26" height="2.5" rx="1" fill="#e2e8f0"/>
+        {/* right col: image */}
+        <rect x="42" y="2" width="36" height="48" rx="3" fill="#cbd5e1"/>
+        <rect x="42" y="36" width="36" height="14" rx="0" fill="url(#g1)"/>
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="transparent"/><stop offset="100%" stopColor="#64748b" stopOpacity="0.4"/></linearGradient></defs>
+      </svg>
+    ),
+  },
+  {
+    value: 'magazine',
+    label: 'Magazine',
+    desc: 'Ảnh trên, tiêu đề + tóm tắt bên dưới',
+    icon: (
+      <svg viewBox="0 0 80 52" className="w-full" aria-hidden="true">
+        {/* top: full image */}
+        <rect x="2" y="2" width="76" height="24" rx="2" fill="#cbd5e1"/>
+        {/* below: left title + right summary */}
+        <rect x="2" y="30" width="10" height="2.5" rx="1" fill="#fca5a5"/>
+        <rect x="2" y="35" width="30" height="5" rx="1.5" fill="#94a3b8"/>
+        <rect x="42" y="30" width="36" height="2.5" rx="1" fill="#e2e8f0"/>
+        <rect x="42" y="35" width="32" height="2.5" rx="1" fill="#e2e8f0"/>
+        <rect x="42" y="40" width="34" height="2.5" rx="1" fill="#e2e8f0"/>
+        <rect x="42" y="45" width="28" height="2.5" rx="1" fill="#e2e8f0"/>
+      </svg>
+    ),
+  },
+  {
+    value: 'immersive',
+    label: 'Immersive',
+    desc: 'Ảnh full màn hình, chữ phủ bên dưới',
+    icon: (
+      <svg viewBox="0 0 80 52" className="w-full" aria-hidden="true">
+        {/* full bleed image */}
+        <rect x="0" y="0" width="80" height="52" rx="3" fill="#94a3b8"/>
+        {/* overlay gradient at bottom */}
+        <rect x="0" y="26" width="80" height="26" rx="0" fill="#1e3a5f" opacity="0.75"/>
+        {/* text */}
+        <rect x="6" y="29" width="14" height="2" rx="1" fill="rgba(255,255,255,0.5)"/>
+        <rect x="6" y="34" width="46" height="6" rx="1.5" fill="#fff"/>
+        <rect x="6" y="43" width="38" height="2.5" rx="1" fill="rgba(255,255,255,0.55)"/>
+      </svg>
+    ),
+  },
+  {
+    value: 'editorial',
+    label: 'Editorial',
+    desc: 'Chữ căn giữa trên, ảnh panorama bên dưới',
+    icon: (
+      <svg viewBox="0 0 80 52" className="w-full" aria-hidden="true">
+        {/* centered title area */}
+        <rect x="22" y="4" width="12" height="2.5" rx="1" fill="#fca5a5"/>
+        <rect x="14" y="9" width="52" height="6" rx="1.5" fill="#94a3b8"/>
+        <rect x="10" y="18" width="60" height="2.5" rx="1" fill="#e2e8f0"/>
+        <rect x="14" y="23" width="52" height="2.5" rx="1" fill="#e2e8f0"/>
+        {/* wide panoramic image below */}
+        <rect x="2" y="30" width="76" height="20" rx="2" fill="#cbd5e1"/>
+      </svg>
+    ),
+  },
+]
 
 const TEMPLATES = [
   { label: '1 ảnh', count: 1 },
@@ -149,6 +225,7 @@ export default function DetailPageEditor() {
     if (!page) return
     setStatus('saving')
     try {
+      // 1. Save current locale
       const idx = allPages.findIndex((p) => p.type === page.type && p.slug === page.slug)
       const updatedPages =
         idx >= 0 ? allPages.map((p, i) => (i === idx ? page : p)) : [...allPages, page]
@@ -157,8 +234,44 @@ export default function DetailPageEditor() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ detailPages: updatedPages }),
       })
-      if (res.ok) setAllPages(updatedPages)
-      setStatus(res.ok ? 'ok' : 'error')
+      if (!res.ok) { setStatus('error'); return }
+      setAllPages(updatedPages)
+
+      // 2. Sync locale-independent fields (layout, buttonHref, imagePosition, imageStyle)
+      //    to the other locale so they stay in sync without manual re-editing
+      const otherLocale = locale === 'vi' ? 'en' : 'vi'
+      const otherData: { detailPages?: CMSDetailPage[] } = await fetch(
+        `/api/admin/content?locale=${otherLocale}`
+      ).then((r) => r.json())
+      const otherPages = otherData.detailPages ?? []
+      const otherIdx = otherPages.findIndex(
+        (p) => p.type === page.type && p.slug === page.slug
+      )
+      if (otherIdx >= 0) {
+        const other = otherPages[otherIdx]
+        const synced: CMSDetailPage = {
+          ...other,
+          layout: page.layout,
+          sections: other.sections.map((s, i) => {
+            const src = page.sections[i]
+            if (!src) return s
+            return {
+              ...s,
+              buttonHref: src.buttonHref,
+              imagePosition: src.imagePosition,
+              imageStyle: src.imageStyle,
+            }
+          }),
+        }
+        const updatedOther = otherPages.map((p, i) => (i === otherIdx ? synced : p))
+        await fetch(`/api/admin/content?locale=${otherLocale}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ detailPages: updatedOther }),
+        })
+      }
+
+      setStatus('ok')
     } catch {
       setStatus('error')
     } finally {
@@ -169,7 +282,7 @@ export default function DetailPageEditor() {
   return (
     <>
       {showPreview && page && (
-        <DetailPagePreview page={page} onClose={() => setShowPreview(false)} />
+        <DetailPagePreview page={page} locale={locale} onClose={() => setShowPreview(false)} />
       )}
 
     <div className="p-8">
@@ -208,6 +321,33 @@ export default function DetailPageEditor() {
           <h2 className="text-xs font-bold uppercase tracking-wide text-slate-500">
             Thông tin chung
           </h2>
+
+          {/* Page layout picker */}
+          <div>
+            <p className="mb-2 text-xs font-medium text-slate-500">Bố cục trang</p>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {PAGE_LAYOUT_OPTIONS.map((opt) => {
+                const active = (page.layout ?? 'headline') === opt.value
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => updatePage('layout', opt.value)}
+                    className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3 text-left transition-colors ${
+                      active ? 'border-blue-400 bg-blue-50' : 'border-slate-200 bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="w-full">{opt.icon}</div>
+                    <div>
+                      <p className={`text-xs font-semibold ${active ? 'text-blue-600' : 'text-slate-700'}`}>{opt.label}</p>
+                      <p className="text-[10px] text-slate-400 leading-tight mt-0.5">{opt.desc}</p>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
           <Field label="Eyebrow (nhãn nhỏ phía trên tiêu đề)">
             <input
               className={inputCls}
@@ -352,18 +492,52 @@ export default function DetailPageEditor() {
                 onChange={(e) => updateSection(i, 'description', e.target.value)}
               />
             </Field>
+
+            {/* Button link toggle */}
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+              <label className="flex cursor-pointer items-center gap-3">
+                <div className="relative flex-none">
+                  <input
+                    type="checkbox"
+                    className="peer sr-only"
+                    checked={!!section.buttonHref}
+                    onChange={(e) => updateSection(i, 'buttonHref', e.target.checked ? `/${type}/` : '')}
+                  />
+                  <div className="h-5 w-9 rounded-full bg-slate-300 transition-colors peer-checked:bg-blue-500" />
+                  <div className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-4" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-slate-700">
+                    Thêm nút &ldquo;Xem thêm&rdquo;
+                  </span>
+                  <p className="mt-0.5 text-[10px] text-slate-400">
+                    Nhãn tự động dịch · URL đồng bộ cả 2 ngôn ngữ khi lưu
+                  </p>
+                </div>
+              </label>
+              {!!section.buttonHref && (
+                <div className="mt-3 space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="shrink-0 font-mono text-[10px] text-slate-400">URL</span>
+                    <input
+                      className={`${inputCls} flex-1 font-mono text-xs`}
+                      placeholder={`/${type}/ten-trang-con`}
+                      value={section.buttonHref}
+                      onChange={(e) => updateSection(i, 'buttonHref', e.target.value)}
+                    />
+                  </div>
+                  <p className="pl-8 text-[10px] text-slate-400">
+                    Ví dụ: <span className="font-mono">/{type}/{slug}/sub-page</span> hoặc <span className="font-mono">/{type === 'solutions' ? 'projects' : 'solutions'}/ten-khac</span>
+                  </p>
+                </div>
+              )}
+            </div>
+
             <ImageUploader
               label="Ảnh mục"
               value={section.image}
               onChange={(url) => updateSection(i, 'image', url)}
             />
-            <Field label="Alt text ảnh">
-              <input
-                className={inputCls}
-                value={section.imageAlt}
-                onChange={(e) => updateSection(i, 'imageAlt', e.target.value)}
-              />
-            </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field label="Vị trí ảnh">
                 <select
@@ -389,6 +563,13 @@ export default function DetailPageEditor() {
                 </select>
               </Field>
             </div>
+            <Field label="Alt text ảnh">
+              <input
+                className={inputCls}
+                value={section.imageAlt}
+                onChange={(e) => updateSection(i, 'imageAlt', e.target.value)}
+              />
+            </Field>
           </div>
         ))}
 
