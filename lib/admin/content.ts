@@ -56,6 +56,7 @@ export interface CMSPartner {
 
 export type DetailImageStyle = 'cover' | 'contain' | 'portrait' | 'wide'
 export type DetailImagePosition = 'auto' | 'left' | 'right'
+export type DetailPageLayout = 'headline' | 'magazine' | 'immersive' | 'editorial'
 
 export interface CMSDetailSection {
   title: string
@@ -64,6 +65,7 @@ export interface CMSDetailSection {
   imageAlt: string
   imagePosition?: DetailImagePosition
   imageStyle?: DetailImageStyle
+  buttonHref?: string
 }
 
 export interface CMSDetailPage {
@@ -74,6 +76,7 @@ export interface CMSDetailPage {
   summary: string
   heroImage: string
   heroImageAlt: string
+  layout?: DetailPageLayout
   sections: CMSDetailSection[]
 }
 

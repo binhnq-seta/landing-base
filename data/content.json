@@ -5,6 +5,31 @@
     "ctaLabel": "Khám Phá Giải Pháp",
     "ctaHref": "#solutions"
   },
+  "features": {
+    "heading": "VÌ SAO CHỌN GENERAL SYSTEMS?",
+    "items": [
+      {
+        "id": "01",
+        "title": "Giải pháp toàn diện",
+        "description": "Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp."
+      },
+      {
+        "id": "02",
+        "title": "Công nghệ tiên tiến",
+        "description": "Ứng dụng công nghệ mới nhất tối ưu hiệu quả và nâng cao năng lực cạnh tranh."
+      },
+      {
+        "id": "03",
+        "title": "Đội ngũ chuyên gia",
+        "description": "Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình."
+      },
+      {
+        "id": "04",
+        "title": "Cam kết chất lượng",
+        "description": "Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp."
+      }
+    ]
+  },
   "coreValues": {
     "heading": "GIÁ TRỊ CỐT LÕI",
     "items": [
@@ -139,6 +164,62 @@
       "alt": "Đối tác General Systems 6"
     }
   ],
+  "sectionLabels": {
+    "solutions": "GIẢI PHÁP",
+    "projects": "Dự án tiêu biểu",
+    "viewMore": "Xem thêm",
+    "partners": "ĐỐI TÁC CỦA CHÚNG TÔI"
+  },
+  "showcaseCorners": [
+    {
+      "id": "integration",
+      "label": "GIẢI PHÁP",
+      "sublabel": "TÍCH HỢP",
+      "image": "/image/solution/integration.jpg"
+    },
+    {
+      "id": "security",
+      "label": "BẢO MẬT",
+      "sublabel": "ATTT",
+      "image": "/image/solution/security.jpg"
+    },
+    {
+      "id": "digital",
+      "label": "CÔNG NGHỆ",
+      "sublabel": "SỐ",
+      "image": "/image/solution/integration.jpg"
+    },
+    {
+      "id": "network",
+      "label": "HẠ TẦNG",
+      "sublabel": "MẠNG",
+      "image": "/image/solution/tele.jpg"
+    },
+    {
+      "id": "military",
+      "label": "AN NINH",
+      "sublabel": "QUỐC PHÒNG",
+      "image": "/image/solution/military.jpg"
+    },
+    {
+      "id": "telecom",
+      "label": "VIỄN THÔNG",
+      "sublabel": "",
+      "image": "/image/solution/tele.jpg"
+    },
+    {
+      "id": "aviation",
+      "label": "HÀNG KHÔNG",
+      "sublabel": "",
+      "image": "/image/solution/air.jpg"
+    },
+    {
+      "id": "energy",
+      "label": "ĐIỆN LỰC",
+      "sublabel": "NĂNG LƯỢNG",
+      "image": "/image/solution/energy.jpg"
+    }
+  ],
   "detailPages": [
     {
       "type": "solutions",
@@ -154,15 +235,16 @@
           "description": "Mỗi giải pháp bắt đầu bằng việc khảo sát hiện trạng, xác định mục tiêu vận hành và xây dựng kiến trúc phù hợp với nguồn lực của khách hàng.",
           "image": "/image/solution/security.jpg",
           "imageAlt": "Chuyên gia phân tích hệ thống bảo mật",
-          "imagePosition": "auto",
-          "imageStyle": "cover"
+          "imagePosition": "left",
+          "imageStyle": "cover",
+          "buttonHref": "projects/he-thong-gsm-co-dong"
         },
         {
           "title": "Triển khai đồng bộ, kiểm soát chặt chẽ",
           "description": "Quy trình triển khai được chuẩn hóa từ tích hợp thiết bị, phần mềm đến kiểm thử, chuyển giao và đào tạo đội ngũ vận hành.",
           "image": "/image/solution/tele.jpg",
           "imageAlt": "Hệ thống viễn thông được tích hợp đồng bộ",
-          "imagePosition": "auto",
+          "imagePosition": "left",
           "imageStyle": "cover"
         },
         {
@@ -170,10 +252,11 @@
           "description": "Dịch vụ giám sát, bảo trì và nâng cấp giúp hệ thống luôn ổn định, bảo mật và thích ứng với những yêu cầu mới.",
           "image": "/image/solution/energy.jpg",
           "imageAlt": "Hệ thống năng lượng và trung tâm vận hành",
-          "imagePosition": "auto",
+          "imagePosition": "left",
           "imageStyle": "cover"
         }
-      ]
+      ],
+      "layout": "immersive"
     },
     {
       "type": "projects",
