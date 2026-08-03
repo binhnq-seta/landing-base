@@ -113,6 +113,80 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
   )
 }
 
+const RELATED_PAGE_TEXT = {
+  vi: {
+    heading: 'Khám phá thêm',
+    contact: 'Bạn đang tìm giải pháp?',
+    button: 'Liên hệ chuyên gia',
+  },
+  en: {
+    heading: 'Explore more',
+    contact: 'Looking for a solution?',
+    button: 'Contact an expert',
+  },
+} satisfies Record<SupportedLocale, { heading: string; contact: string; button: string }>
+
+function RelatedPages({
+  pages,
+  locale,
+}: {
+  pages: CMSDetailPage[]
+  locale: SupportedLocale
+}) {
+  if (pages.length === 0) return null
+
+  const copy = RELATED_PAGE_TEXT[locale]
+
+  return (
+    <section className="bg-white px-5 py-12 text-[#00162F] md:px-12 md:py-16 lg:px-16">
+      <div className="mx-auto max-w-[1120px]">
+        <h2 data-detail-reveal className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">
+          {copy.heading}
+        </h2>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {pages.map((item, index) => (
+            <Link
+              key={`${item.type}-${item.slug}`}
+              href={`/${item.type}/${item.slug}`}
+              data-detail-reveal
+              data-detail-delay={`${index * 0.08}`}
+              className="group overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-slate-800">
+                <Image
+                  src={item.heroImage}
+                  alt={item.heroImageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#00162F]/60 to-transparent" />
+              </div>
+              <div className="flex items-end justify-between gap-4 p-4 md:p-5">
+                <h3 className="text-lg font-medium leading-snug">{item.title}</h3>
+                <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                  <path fillRule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div data-detail-reveal className="mt-10 flex flex-wrap items-center justify-start gap-6 border-t border-slate-200 pt-10 text-left">
+          <p className="text-2xl font-medium md:text-3xl">{copy.contact}</p>
+          <Link
+            href="#footer"
+            className="inline-flex min-h-14 w-fit items-center justify-center rounded-full bg-[#A31F1A] px-10 py-4 text-base font-semibold text-white shadow-lg shadow-[#A31F1A]/20 transition-all hover:scale-105 hover:bg-[#c12a24]"
+          >
+            {copy.button}
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ─── Page-level layout heroes ─────────────────────────────────────────────────
 
 type PageHeroProps = { page: CMSDetailPage }
@@ -283,6 +357,9 @@ export default async function DetailPage({ params }: DetailPageProps) {
   }
 
   const layout = page.layout ?? 'headline'
+  const relatedPages = content.detailPages
+    .filter((item) => item.type === type && item.slug !== slug)
+    .slice(0, 3)
 
   return (
     <>
@@ -303,6 +380,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
           {layout === 'editorial'  && <HeroEditorial page={page} />}
 
           <ContentSections sections={page.sections} locale={locale} />
+          <RelatedPages pages={relatedPages} locale={locale} />
         </article>
       </main>
       <SiteFooter locale={locale} />
