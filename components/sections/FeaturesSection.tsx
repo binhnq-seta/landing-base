@@ -113,7 +113,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
   const features = data?.features?.length ? data.features : fallback
 
   const headingFallback = locale === 'en'
-    ? <><span>WHY CHOOSE</span> <p><span className="text-[#30549B]">GENERAL SYSTEMS</span>?</p></>
+    ? <><span>WHY CHOOSE</span> <p><span className="text-[#D62828]">GENERAL SYSTEMS</span>?</p></>
     : <>VÌ SAO CHỌN <p><span className="text-[#D62828]">GENERAL SYSTEMS</span>?</p></>
 
   return (
@@ -125,7 +125,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
         </div>
         <div className="relative flex flex-col px-5 md:px-0 mr-0 md:mr-5 justify-center max-w-[800px] min-h-screen py-14 md:py-24">
           <div data-feature-reveal className="text-start">
-            <h1 className="mb-4 text-[clamp(30px,2.5vw,60px)] font-semibold text-[#30549B] text-start bottom-0">
+            <h1 className="mb-4 text-[clamp(30px,2.5vw,60px)] font-extrabold text-[#30549B] text-start bottom-0">
               {data?.heading ?? headingFallback}
             </h1>
           </div>

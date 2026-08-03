@@ -54,9 +54,9 @@ export function PartnerSection({ data, heading }: PartnerSectionProps) {
       ? null
       : gsap.fromTo(
         track,
-        { xPercent: -50 },
+        { xPercent: 0 },
         {
-          xPercent: 0,
+          xPercent: -50,
           duration: 28,
           ease: 'none',
           repeat: -1,
@@ -65,11 +65,31 @@ export function PartnerSection({ data, heading }: PartnerSectionProps) {
         },
       )
 
+    let isHovered = false
+
+    const canPlayMarquee = () => {
+      const bounds = section.getBoundingClientRect()
+      return !isHovered
+        && document.visibilityState === 'visible'
+        && bounds.bottom > 0
+        && bounds.top < window.innerHeight
+    }
+
+    const handleMouseEnter = () => {
+      isHovered = true
+      marqueeTween?.pause()
+    }
+
+    const handleMouseLeave = () => {
+      isHovered = false
+      if (canPlayMarquee()) marqueeTween?.play()
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && document.visibilityState === 'visible') {
           if (revealTween.progress() === 0) revealTween.play()
-          marqueeTween?.play()
+          if (!isHovered) marqueeTween?.play()
         } else {
           marqueeTween?.pause()
         }
@@ -78,18 +98,19 @@ export function PartnerSection({ data, heading }: PartnerSectionProps) {
     )
 
     const handleVisibilityChange = () => {
-      const visible = document.visibilityState === 'visible'
-        && section.getBoundingClientRect().bottom > 0
-        && section.getBoundingClientRect().top < window.innerHeight
-      if (visible) marqueeTween?.play()
+      if (canPlayMarquee()) marqueeTween?.play()
       else marqueeTween?.pause()
     }
 
     observer.observe(section)
+    section.addEventListener('mouseenter', handleMouseEnter)
+    section.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
     return () => {
       observer.disconnect()
+      section.removeEventListener('mouseenter', handleMouseEnter)
+      section.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       revealTween.kill()
       marqueeTween?.kill()
@@ -110,10 +131,17 @@ export function PartnerSection({ data, heading }: PartnerSectionProps) {
       <div className="relative z-10 w-full">
         <h1
           data-partner-reveal
-          className="mb-16 px-6 text-center text-[clamp(32px,4vw,100px)] font-bold uppercase text-slate-700"
+          className="mb-4 px-6 text-center text-[clamp(32px,4vw,100px)] font-extrabold uppercase text-slate-700"
         >
           {heading ?? 'ĐỐI TÁC CỦA CHÚNG TÔI'}
         </h1>
+
+        <p
+          data-partner-reveal
+          className="mx-auto mb-12 max-w-3xl px-6 text-center font-sans text-base leading-relaxed text-slate-600 md:text-lg"
+        >
+          GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.
+        </p>
 
         <div
           data-partner-reveal

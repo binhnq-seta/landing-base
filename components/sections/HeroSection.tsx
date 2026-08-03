@@ -416,7 +416,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
         style={{ opacity: introComplete ? undefined : 0 }}
       >
         <div className="w-full md:w-[clamp(400px,42%,640px)]">
-          <h1 data-hero-heading className="mb-6 text-[clamp(22px,2.5vw,58px)] font-bold text-white">
+          <h1 data-hero-heading className="mb-6 text-[clamp(22px,2.5vw,58px)] font-extrabold text-white">
             {data?.heading ?? (
               <>KẾT NỐI CÔNG NGHỆ XÂY DỰNG <span className="text-[#A31F1A]">TƯƠNG LAI</span></>
             )}

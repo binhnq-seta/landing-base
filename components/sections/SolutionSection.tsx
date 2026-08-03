@@ -109,7 +109,7 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
 
       {/* Mobile layout */}
       <div className="block md:hidden px-5 py-14">
-        <h1 className="mb-8 text-[clamp(36px,6vw,60px)] font-semibold tracking-wider text-slate-700">
+        <h1 className="mb-8 text-[clamp(36px,6vw,60px)] font-extrabold tracking-wider text-slate-700">
           GIẢI <br /> PHÁP
         </h1>
         <div className="grid grid-cols-2 gap-3">
@@ -143,7 +143,7 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
         />
 
         <div className="flex h-full items-end justify-center">
-          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(60px,4vw,100px)] z-1 font-semibold tracking-wider text-slate-700">
+          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(60px,4vw,100px)] z-1 font-extrabold tracking-wider text-slate-700">
             {title ?? (<>GIẢI <br /> PHÁP</>)}
           </h1>
         </div>
