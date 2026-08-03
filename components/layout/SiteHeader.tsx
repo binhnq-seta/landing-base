@@ -168,7 +168,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
     <header className={`${overlay ? 'absolute' : 'sticky border-b border-slate-200/70 bg-white/90 backdrop-blur-xl'} top-0 z-50 w-full`}>
       <div className="mx-auto flex w-full items-center justify-between px-5 py-4 md:px-20">
         <Link href="/" className="inline-flex items-center pt-1" aria-label="General Systems">
-          <Image src="/image/logoLg.png" alt="General Systems" width={300} height={90} preload className="h-auto w-[220px] md:w-[300px]" />
+          <Image src="/image/logoWhite.png" alt="General Systems" width={300} height={90} preload className="h-auto w-[220px] md:w-[300px]" />
         </Link>
 
         <button
@@ -189,7 +189,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
               <Link
                 href={link.href}
                 aria-current={isActive(link.label) ? 'page' : undefined}
-                className={`inline-flex items-center gap-1.5 py-2 text-base font-medium tracking-wide transition-colors ${dark ? 'hover:text-[#E3F2FD]' : 'hover:text-[#A31F1A]'} ${isActive(link.label) ? `${dark ? 'text-[#E3F2FD]' : 'text-[#A31F1A]'}` : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
+                className={`inline-flex items-center gap-1.5 py-2 text-base font-medium tracking-wide transition-colors hover:text-[#F5383B] ${isActive(link.label) ? 'text-[#F5383B]' : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
               >
                 {link.label}
                 {(link.children || link.columns) && (
@@ -203,7 +203,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
                 <div className="invisible absolute left-1/2 top-full w-56 -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                   <div className="rounded-xl border border-white/40 bg-white/95 p-2 shadow-xl backdrop-blur-xl">
                     {link.children.map((child) => (
-                      <Link key={child.label} href={child.href} className="block rounded-lg px-4 py-2.5 text-sm font-light text-slate-700 hover:text-[#A31F1A]">
+                      <Link key={child.label} href={child.href} className="block rounded-lg px-4 py-2.5 text-sm font-light text-slate-700 hover:text-[#F5383B]">
                         {child.label}
                       </Link>
                     ))}
@@ -216,10 +216,10 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
                   <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/40 bg-white/95 p-3 shadow-xl backdrop-blur-xl">
                     {link.columns.map((column) => (
                       <div key={column.label} className="rounded-lg p-2">
-                        <Link href={column.href} className="mb-2 block px-2 text-sm font-medium text-slate-800 hover:text-[#A31F1A]">{column.label}</Link>
+                        <Link href={column.href} className="mb-2 block px-2 text-sm font-medium text-slate-800 hover:text-[#F5383B]">{column.label}</Link>
                         <div className="space-y-1">
                           {column.items.map((item) => (
-                            <Link key={item.label} href={item.href} className="block rounded-lg px-2 py-2 text-sm font-light text-slate-600 hover:text-[#A31F1A]">{item.label}</Link>
+                            <Link key={item.label} href={item.href} className="block rounded-lg px-2 py-2 text-sm font-light text-slate-600 hover:text-[#F5383B]">{item.label}</Link>
                           ))}
                         </div>
                       </div>
@@ -244,15 +244,15 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
                 href={link.href}
                 onClick={closeMenu}
                 aria-current={isActive(link.label) ? 'page' : undefined}
-                className={`block rounded-lg px-3 py-2 text-base font-medium ${dark ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${isActive(link.label) ? `${dark ? 'text-[#E3F2FD]' : 'text-[#A31F1A]'}` : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
+                className={`block rounded-lg px-3 py-2 text-base font-medium transition-colors hover:text-[#F5383B] ${dark ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${isActive(link.label) ? 'text-[#F5383B]' : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
               >
                 {link.label}
               </Link>
               {link.children?.map((child) => (
-                <Link key={child.label} href={child.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light ${dark ? 'border-white/20 text-white/65 hover:text-rose-400' : 'border-slate-200 text-slate-500 hover:text-[#A31F1A]'}`}>{child.label}</Link>
+                <Link key={child.label} href={child.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light transition-colors hover:text-[#F5383B] ${dark ? 'border-white/20 text-white/65' : 'border-slate-200 text-slate-500'}`}>{child.label}</Link>
               ))}
               {link.columns?.flatMap((column) => column.items).map((item) => (
-                <Link key={item.label} href={item.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light ${dark ? 'border-white/20 text-white/65 hover:text-rose-400' : 'border-slate-200 text-slate-500 hover:text-[#A31F1A]'}`}>{item.label}</Link>
+                <Link key={item.label} href={item.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light transition-colors hover:text-[#F5383B] ${dark ? 'border-white/20 text-white/65' : 'border-slate-200 text-slate-500'}`}>{item.label}</Link>
               ))}
             </div>
           ))}
