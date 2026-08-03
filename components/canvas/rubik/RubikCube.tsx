@@ -101,16 +101,25 @@ function usePieceGeometry(): THREE.BufferGeometry {
 //
 
 type CornerIcon = 'shield' | 'signal' | 'bolt' | 'plane' | 'lock' | 'layers' | 'gear' | 'satellite'
+type CornerIconAsset =
+  | 'airplane'
+  | 'bars'
+  | 'cloud'
+  | 'earth'
+  | 'gear'
+  | 'guage'
+  | 'monitor'
+  | 'shield'
 
-const CORNER_ICON_MAP: Array<[number, CornerIcon]> = [
-  [0,  'shield'],
-  [2,  'signal'],
-  [6,  'bolt'],
-  [8,  'plane'],
-  [18, 'lock'],
-  [20, 'layers'],
-  [24, 'gear'],
-  [26, 'satellite'],
+const CORNER_ICON_MAP: Array<[number, CornerIconAsset, CornerIcon]> = [
+  [0,  'shield',   'shield'],
+  [2,  'earth',    'signal'],
+  [6,  'guage',    'bolt'],
+  [8,  'airplane', 'plane'],
+  [18, 'monitor',  'lock'],
+  [20, 'bars',     'layers'],
+  [24, 'cloud',    'gear'],
+  [26, 'gear',     'satellite'],
 ]
 const CORNER_MAT_INDEX = new Map(CORNER_ICON_MAP.map(([idx], matIdx) => [idx, matIdx]))
 
@@ -238,7 +247,7 @@ function drawSolutionIcon(
   }
 }
 
-function buildSolutionIconTexture(type: CornerIcon): THREE.CanvasTexture {
+function buildFallbackIconTexture(type: CornerIcon): THREE.CanvasTexture {
   const S = 256
   const canvas = document.createElement('canvas')
   canvas.width = S; canvas.height = S
@@ -262,10 +271,47 @@ function buildSolutionIconTexture(type: CornerIcon): THREE.CanvasTexture {
   return tex
 }
 
+function buildSolutionIconTexture(asset: CornerIconAsset, fallback: CornerIcon): THREE.CanvasTexture {
+  const size = 256
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const ctx = canvas.getContext('2d')!
+  const texture = new THREE.CanvasTexture(canvas)
+  texture.colorSpace = THREE.SRGBColorSpace
+
+  const image = new Image()
+  image.onload = () => {
+    const iconSize = 174
+    const offset = (size - iconSize) / 2
+
+    ctx.clearRect(0, 0, size, size)
+    ctx.drawImage(image, offset, offset, iconSize, iconSize)
+
+    // The source SVGs are black. Recolor their non-transparent pixels white so
+    // they contribute to the material's emissive map instead of disappearing.
+    ctx.globalCompositeOperation = 'source-in'
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.96)'
+    ctx.fillRect(0, 0, size, size)
+    ctx.globalCompositeOperation = 'source-over'
+    texture.needsUpdate = true
+  }
+  image.onerror = () => {
+    const fallbackTexture = buildFallbackIconTexture(fallback)
+    ctx.clearRect(0, 0, size, size)
+    ctx.drawImage(fallbackTexture.image, 0, 0)
+    fallbackTexture.dispose()
+    texture.needsUpdate = true
+  }
+  image.src = `/assets/icon/${asset}.svg`
+
+  return texture
+}
+
 // ─── Sky-azure metallic materials ─────────────────────────────────────────────
 function useMetallicMaterials(isMobile: boolean) {
   const cornerTextures = useMemo(
-    () => CORNER_ICON_MAP.map(([, icon]) => buildSolutionIconTexture(icon)),
+    () => CORNER_ICON_MAP.map(([, asset, fallback]) => buildSolutionIconTexture(asset, fallback)),
     [],
   )
 
