@@ -113,6 +113,19 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
   )
 }
 
+const RELATED_PAGE_TEXT = {
+  vi: {
+    heading: 'Khám phá thêm',
+    contact: 'Bạn đang tìm giải pháp?',
+    button: 'Liên hệ chuyên gia',
+  },
+  en: {
+    heading: 'Explore more',
+    contact: 'Looking for a solution?',
+    button: 'Contact an expert',
+  },
+} satisfies Record<SupportedLocale, { heading: string; contact: string; button: string }>
+
 function RelatedPages({
   pages,
   locale,
@@ -122,9 +135,7 @@ function RelatedPages({
 }) {
   if (pages.length === 0) return null
 
-  const copy = locale === 'en'
-    ? { heading: 'Explore more', contact: 'Looking for a solution?', button: 'Contact an expert' }
-    : { heading: 'Khám phá thêm', contact: 'Bạn đang tìm giải pháp?', button: 'Liên hệ chuyên gia' }
+  const copy = RELATED_PAGE_TEXT[locale]
 
   return (
     <section className="bg-white px-5 py-12 text-[#00162F] md:px-12 md:py-16 lg:px-16">
