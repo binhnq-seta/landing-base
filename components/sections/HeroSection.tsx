@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { SiteHeader } from '@/components/layout/SiteHeader'
+import { InitialLoadingScreen } from '@/components/layout/InitialLoadingScreen'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { useSmoothScroll } from '@/context/SmoothScrollProvider'
@@ -37,6 +38,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionProps) {
   const t = useTranslations('hero')
+  const loadingT = useTranslations('loading')
 
   // Merge CMS display data into geometry config, matching by id
   const corners = useMemo(() => {
@@ -50,7 +52,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
   const containerRef = useRef<HTMLElement>(null)
 
   // Phase 1: Three.js scene initialised → fade loading overlay to reveal particles
-  const [overlayFading, setOverlayFading] = useState(false)
+  const [rubikLoading, setRubikLoading] = useState(true)
   // Phase 2: Rubik cube assembled + in hero position → animate text, unlock scroll
   const [introComplete, setIntroComplete] = useState(false)
   // Visibility toggle — drives opacity transition
@@ -115,7 +117,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
 
   // Three.js scene is ready → start fading the loading overlay
   const handleSceneReady = useCallback(() => {
-    requestAnimationFrame(() => setOverlayFading(true))
+    requestAnimationFrame(() => setRubikLoading(false))
   }, [])
 
   // Rubik cube fully assembled in hero position → complete intro
@@ -161,27 +163,12 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
       }}
     >
 
-      {/* ── Loading overlay ── */}
-      <div
-        aria-hidden={introComplete}
-        className={`fixed inset-0 z-[999] flex flex-col items-center justify-center gap-8 bg-slate-900 transition-opacity duration-500 ease-in-out ${overlayFading ? 'pointer-events-none opacity-0' : 'opacity-100'}`}
-      >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(30,58,120,0.45),transparent_60%)]" />
-        <div className="relative z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/image/logoLg.png" alt="General Systems" className="h-auto w-[200px] brightness-200 invert" />
-        </div>
-        <div className="relative z-10 flex flex-col items-center gap-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-300/70">
-            Đang khởi tạo
-          </p>
-          <div className="flex items-center gap-2" aria-hidden="true">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-blue-400 [animation-delay:-0.3s]" />
-            <span className="h-2 w-2 animate-pulse rounded-full bg-sky-300 [animation-delay:-0.15s]" />
-            <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-200" />
-          </div>
-        </div>
-      </div>
+      <InitialLoadingScreen
+        isLoading={rubikLoading}
+        eyebrow={loadingT('eyebrow')}
+        title={loadingT('rubikTitle')}
+        description={loadingT('rubikDescription')}
+      />
 
       {/* ── Header — starts hidden, GSAP reveals on introComplete ── */}
       <div data-hero-header className="relative z-50 -translate-y-4 opacity-0">

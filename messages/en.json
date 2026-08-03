@@ -45,6 +45,13 @@
     "viewAll": "View all",
     "loading": "Loading…"
   },
+  "loading": {
+    "eyebrow": "Initializing",
+    "title": "Preparing the page",
+    "description": "Loading the interface and content for a smooth experience.",
+    "rubikTitle": "Preparing the 3D experience",
+    "rubikDescription": "Loading the Rubik model, motion effects, and the first frame."
+  },
   "locale": {
     "vi": "Tiếng Việt",
     "en": "English",

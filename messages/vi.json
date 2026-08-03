@@ -45,6 +45,13 @@
     "viewAll": "Xem tất cả",
     "loading": "Đang tải…"
   },
+  "loading": {
+    "eyebrow": "Đang khởi tạo",
+    "title": "Đang chuẩn bị trang",
+    "description": "Đang tải giao diện và nội dung để mang lại trải nghiệm mượt mà.",
+    "rubikTitle": "Đang chuẩn bị không gian 3D",
+    "rubikDescription": "Đang tải mô hình Rubik, hiệu ứng chuyển động và khung hình đầu tiên."
+  },
   "locale": {
     "vi": "Tiếng Việt",
     "en": "English",
