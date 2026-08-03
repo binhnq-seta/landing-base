@@ -103,7 +103,7 @@ function usePieceGeometry(): THREE.BufferGeometry {
 type CornerIcon = 'shield' | 'signal' | 'bolt' | 'plane' | 'lock' | 'layers' | 'gear' | 'satellite'
 type CornerIconAsset =
   | 'airplane'
-  | 'bars'
+  | 'lightbulb'
   | 'cloud'
   | 'earth'
   | 'gear'
@@ -117,7 +117,7 @@ const CORNER_ICON_MAP: Array<[number, CornerIconAsset, CornerIcon]> = [
   [6,  'guage',    'bolt'],
   [8,  'airplane', 'plane'],
   [18, 'monitor',  'lock'],
-  [20, 'bars',     'layers'],
+  [20, 'lightbulb',     'layers'],
   [24, 'cloud',    'gear'],
   [26, 'gear',     'satellite'],
 ]
@@ -338,7 +338,7 @@ function useMetallicMaterials(isMobile: boolean) {
       new THREE.MeshPhysicalMaterial({
         ...shared,
         emissive:          new THREE.Color(0xffffff),
-        emissiveIntensity: 0.55,
+        emissiveIntensity: 0.15,
         emissiveMap:       tex,
       })
     )
