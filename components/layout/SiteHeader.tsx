@@ -89,6 +89,10 @@ function localeHref(pathname: string, target: 'vi' | 'en'): string {
   return '/' + target
 }
 
+function sectionHref(href: string, locale: 'vi' | 'en'): string {
+  return href.startsWith('/#') ? `/${locale}${href.slice(1)}` : href
+}
+
 function VietnamFlag() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" className="h-full w-full" aria-hidden>
@@ -194,7 +198,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
           {NAV_LINKS.map((link) => (
             <div key={link.label} className="group relative">
               <Link
-                href={link.href}
+                href={sectionHref(link.href, locale)}
                 aria-current={isActive(link.label) ? 'page' : undefined}
                 className={`inline-flex items-center gap-1.5 py-2 text-base font-medium tracking-wide transition-colors hover:text-[#F5383B] ${isActive(link.label) ? 'text-[#F5383B]' : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
               >
@@ -210,7 +214,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
                 <div className="invisible absolute left-1/2 top-full w-56 -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
                   <div className="rounded-xl border border-white/40 bg-white/95 p-2 shadow-xl backdrop-blur-xl">
                     {link.children.map((child) => (
-                      <Link key={child.label} href={child.href} className="block rounded-lg px-4 py-2.5 text-sm font-light text-slate-700 hover:text-[#F5383B]">
+                      <Link key={child.label} href={sectionHref(child.href, locale)} className="block rounded-lg px-4 py-2.5 text-sm font-light text-slate-700 hover:text-[#F5383B]">
                         {child.label}
                       </Link>
                     ))}
@@ -223,7 +227,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
                   <div className="grid grid-cols-2 gap-2 rounded-xl border border-white/40 bg-white/95 p-3 shadow-xl backdrop-blur-xl">
                     {link.columns.map((column) => (
                       <div key={column.label} className="rounded-lg p-2">
-                        <Link href={column.href} className="mb-2 block px-2 text-sm font-medium text-slate-800 hover:text-[#F5383B]">{column.label}</Link>
+                        <Link href={sectionHref(column.href, locale)} className="mb-2 block px-2 text-sm font-medium text-slate-800 hover:text-[#F5383B]">{column.label}</Link>
                         <div className="space-y-1">
                           {column.items.map((item) => (
                             <Link key={item.label} href={item.href} className="block rounded-lg px-2 py-2 text-sm font-light text-slate-600 hover:text-[#F5383B]">{item.label}</Link>
@@ -248,7 +252,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
           {NAV_LINKS.map((link) => (
             <div key={link.label}>
               <Link
-                href={link.href}
+                href={sectionHref(link.href, locale)}
                 onClick={closeMenu}
                 aria-current={isActive(link.label) ? 'page' : undefined}
                 className={`block rounded-lg px-3 py-2 text-base font-medium transition-colors hover:text-[#F5383B] ${dark ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${isActive(link.label) ? 'text-[#F5383B]' : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
@@ -256,7 +260,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
                 {link.label}
               </Link>
               {link.children?.map((child) => (
-                <Link key={child.label} href={child.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light transition-colors hover:text-[#F5383B] ${dark ? 'border-white/20 text-white/65' : 'border-slate-200 text-slate-500'}`}>{child.label}</Link>
+                <Link key={child.label} href={sectionHref(child.href, locale)} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light transition-colors hover:text-[#F5383B] ${dark ? 'border-white/20 text-white/65' : 'border-slate-200 text-slate-500'}`}>{child.label}</Link>
               ))}
               {link.columns?.flatMap((column) => column.items).map((item) => (
                 <Link key={item.label} href={item.href} onClick={closeMenu} className={`ml-4 block rounded-lg border-l px-4 py-2 text-sm font-light transition-colors hover:text-[#F5383B] ${dark ? 'border-white/20 text-white/65' : 'border-slate-200 text-slate-500'}`}>{item.label}</Link>
