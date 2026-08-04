@@ -3,7 +3,8 @@ type Locale = 'vi' | 'en'
 const FOOTER_TEXT = {
   vi: {
     companyName: 'CÔNG TY CỔ PHẦN TẬP ĐOÀN PHÁT TRIỂN CÔNG NGHỆ VÀ ĐẦU TƯ - GS GROUP',
-    address: 'Số 2 lô F1 Nguyễn Cảnh Dị, Định Công, Hà Nội · Phòng 809, Deaha Business Centre, 360 Kim Mã, Giảng Võ, Hà Nội',
+    address1: 'Số 2 lô F1 Nguyễn Cảnh Dị, Định Công, Hà Nội',
+    address2: 'Phòng 809, Deaha Business Centre, 360 Kim Mã, Giảng Võ, Hà Nội',
     colSolutions: 'Giải pháp',
     colProjects: 'Dự án tiêu biểu',
     colContact: 'Liên hệ',
@@ -13,7 +14,8 @@ const FOOTER_TEXT = {
   },
   en: {
     companyName: 'GS GROUP TECHNOLOGY DEVELOPMENT AND INVESTMENT JOINT STOCK COMPANY',
-    address: 'No. 2, F1 Lot, Nguyen Canh Di, Dinh Cong, Hanoi · Room 809, Deaha Business Centre, 360 Kim Ma, Giang Vo, Hanoi',
+    address1: 'No. 2, F1 Lot, Nguyen Canh Di, Dinh Cong, Hanoi',
+    address2: 'Room 809, Deaha Business Centre, 360 Kim Ma, Giang Vo, Hanoi',
     colSolutions: 'Solutions',
     colProjects: 'Notable Projects',
     colContact: 'Contact',
@@ -49,7 +51,14 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" />
                   <circle cx="12" cy="9" r="2.5" />
                 </svg>
-                <span>{t.address}</span>
+                <span>{t.address1}</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={CONTACT_ICON_CLASS}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" />
+                  <circle cx="12" cy="9" r="2.5" />
+                </svg>
+                <span>{t.address2}</span>
               </li>
               <li className="flex items-start gap-3">
                 <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={CONTACT_ICON_CLASS}>

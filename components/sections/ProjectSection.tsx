@@ -217,17 +217,43 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                             type="button"
                             onClick={showPrevious}
                             aria-label="Dự án trước"
-                            className="absolute left-[1.5%] top-1/2 z-20 inline-flex size-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-blue-200 bg-white text--[#30549B] shadow-lg transition duration-300 hover:-translate-y-[54%] hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:size-16 md:left-[16%]"
+                            className="absolute left-[1.5%] top-1/2 z-20 inline-flex size-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-blue-200 bg-white text-[#30549B] shadow-lg transition duration-300 hover:-translate-y-[54%] hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:size-16 md:left-[16%]"
                         >
-                            <span aria-hidden="true" className="text-3xl leading-none">&lt;</span>
+                            <svg
+                                aria-hidden="true"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                className="size-7 -translate-x-px"
+                            >
+                                <path
+                                    d="m15 18-6-6 6-6"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
                         </button>
                         <button
                             type="button"
                             onClick={showNext}
                             aria-label="Dự án tiếp theo"
-                            className="absolute right-[1.5%] top-1/2 z-20 inline-flex size-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-blue-200 bg-white text--[#30549B] shadow-lg transition duration-300 hover:-translate-y-[54%] hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:size-16 md:right-[16%]"
+                            className="absolute right-[1.5%] top-1/2 z-20 inline-flex size-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-blue-200 bg-white text-[#30549B] shadow-lg transition duration-300 hover:-translate-y-[54%] hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:size-16 md:right-[16%]"
                         >
-                            <span aria-hidden="true" className="text-3xl leading-none">&gt;</span>
+                            <svg
+                                aria-hidden="true"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                className="size-7 translate-x-px"
+                            >
+                                <path
+                                    d="m9 18 6-6-6-6"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
                         </button>
                     </div>
 

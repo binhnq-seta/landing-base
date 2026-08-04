@@ -363,7 +363,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
 
   return (
     <>
-      <SiteHeader overlay locale={locale} />
+      <SiteHeader overlay dark={layout === 'immersive'} locale={locale} />
       <main className="relative overflow-hidden text-slate-900">
         <div
           className="pointer-events-none absolute left-[-40vw] top-[40vh] z-0 h-screen w-screen"
