@@ -378,7 +378,9 @@
           "image": "/image/solution/integration.jpg",
           "imageAlt": "System survey and analysis",
           "imagePosition": "auto",
-          "imageStyle": "cover"
+          "imageStyle": "cover",
+          "buttonHref": "",
+          "kind": "heading"
         },
         {
           "title": "Design and Deployment",
@@ -386,7 +388,9 @@
           "image": "/image/solution/tele.jpg",
           "imageAlt": "Solution design and deployment",
           "imagePosition": "auto",
-          "imageStyle": "cover"
+          "imageStyle": "cover",
+          "buttonHref": "",
+          "kind": "content"
         },
         {
           "title": "Operations and Partnership",
@@ -394,9 +398,12 @@
           "image": "/image/solution/security.jpg",
           "imageAlt": "System monitoring and operations",
           "imagePosition": "auto",
-          "imageStyle": "cover"
+          "imageStyle": "cover",
+          "buttonHref": "",
+          "kind": "heading"
         }
-      ]
+      ],
+      "layout": "immersive"
     },
     {
       "type": "solutions",

@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect, type FormEvent } from 'react'
+import React, { useState, useEffect, useRef, type FormEvent } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import type { CMSDetailPage, CMSDetailSection, DetailPageLayout } from '@/lib/admin/content'
+import type { CMSDetailPage, CMSDetailPoint, CMSDetailSection, DetailPageLayout, DetailSectionKind } from '@/lib/admin/content'
 import { detailPages } from '@/lib/detail-pages'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 import type { SupportedLocale } from '@/lib/admin/content'
@@ -11,6 +11,7 @@ import { inputCls, Field, SaveBar, LocaleTabs, type SaveStatus } from '@/compone
 import { DetailPagePreview } from '@/components/admin/DetailPagePreview'
 
 const EMPTY_SECTION: CMSDetailSection = {
+  kind: 'content',
   title: '',
   description: '',
   image: '',
@@ -103,6 +104,107 @@ const TEMPLATES = [
   { label: '5 ảnh', count: 5 },
 ]
 
+function sanitizeEditorHtml(html: string) {
+  return html
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+    .replace(/\son\w+="[^"]*"/gi, '')
+    .replace(/\son\w+='[^']*'/gi, '')
+    .replace(/javascript:/gi, '')
+    .trim()
+}
+
+function RichTextEditor({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const editorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = editorRef.current
+    if (!el) return
+    if (el.innerHTML !== value) {
+      el.innerHTML = value
+    }
+  }, [value])
+
+  function runCommand(command: string, commandValue?: string) {
+    document.execCommand(command, false, commandValue)
+    const html = editorRef.current?.innerHTML ?? ''
+    onChange(sanitizeEditorHtml(html))
+  }
+
+  function onInput() {
+    const html = editorRef.current?.innerHTML ?? ''
+    onChange(sanitizeEditorHtml(html))
+  }
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+      <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-slate-50 p-2">
+        <button type="button" onClick={() => runCommand('bold')} className="rounded px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-200" title="Bold">
+          B
+        </button>
+        <button type="button" onClick={() => runCommand('italic')} className="rounded px-2 py-1 text-xs italic text-slate-600 hover:bg-slate-200" title="Italic">
+          I
+        </button>
+        <button type="button" onClick={() => runCommand('underline')} className="rounded px-2 py-1 text-xs underline text-slate-600 hover:bg-slate-200" title="Underline">
+          U
+        </button>
+        <button type="button" onClick={() => runCommand('insertUnorderedList')} className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200" title="Bullet list">
+          • List
+        </button>
+        <button type="button" onClick={() => runCommand('insertOrderedList')} className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200" title="Number list">
+          1. List
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            const url = window.prompt('Nhập URL liên kết:')
+            if (!url) return
+            runCommand('createLink', url)
+          }}
+          className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200"
+          title="Link"
+        >
+          Link
+        </button>
+        <button type="button" onClick={() => runCommand('removeFormat')} className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200" title="Clear format">
+          Clear
+        </button>
+      </div>
+
+      <div
+        ref={editorRef}
+        contentEditable
+        suppressContentEditableWarning
+        onInput={onInput}
+        className="min-h-28 w-full px-3 py-2 text-sm leading-7 text-slate-700 focus:outline-none"
+      />
+    </div>
+  )
+}
+
+const HEADING_SECTION: CMSDetailSection = {
+  kind: 'heading',
+  title: '',
+  description: '',
+  image: '',
+  imageAlt: '',
+  imagePosition: 'auto',
+  imageStyle: 'cover',
+  buttonHref: '',
+}
+
+const IMAGE_POINTS_SECTION: CMSDetailSection = {
+  kind: 'image-points',
+  title: '',
+  description: '',
+  image: '',
+  imageAlt: '',
+  imagePosition: 'right',
+  imageStyle: 'wide',
+  buttonHref: '',
+  points: [],
+}
+
+
 export default function DetailPageEditor() {
   const params = useParams()
   const id = params.id as string
@@ -173,6 +275,58 @@ export default function DetailPageEditor() {
     })
   }
 
+  function updateSectionKind(i: number, nextKind: DetailSectionKind) {
+    setPage((prev) => {
+      if (!prev) return prev
+      const sections = [...prev.sections]
+      const current = sections[i]
+      const nextPoints = nextKind === 'image-points' ? (current.points ?? []) : current.points
+
+      sections[i] = {
+        ...current,
+        kind: nextKind,
+        points: nextPoints,
+      }
+      return { ...prev, sections }
+    })
+  }
+
+  function updatePoint(i: number, pointIndex: number, key: keyof CMSDetailPoint, value: string) {
+    setPage((prev) => {
+      if (!prev) return prev
+      const sections = [...prev.sections]
+      const target = sections[i]
+      const points = target.points ? [...target.points] : []
+      if (!points[pointIndex]) return prev
+      points[pointIndex] = { ...points[pointIndex], [key]: value }
+      sections[i] = { ...target, points }
+      return { ...prev, sections }
+    })
+  }
+
+  function addPoint(i: number) {
+    setPage((prev) => {
+      if (!prev) return prev
+      const sections = [...prev.sections]
+      const target = sections[i]
+      const points = target.points ? [...target.points] : []
+      points.push({ title: '', description: '' })
+      sections[i] = { ...target, points }
+      return { ...prev, sections }
+    })
+  }
+
+  function removePoint(i: number, pointIndex: number) {
+    setPage((prev) => {
+      if (!prev) return prev
+      const sections = [...prev.sections]
+      const target = sections[i]
+      const points = (target.points ?? []).filter((_, idx) => idx !== pointIndex)
+      sections[i] = { ...target, points }
+      return { ...prev, sections }
+    })
+  }
+
   function addSection() {
     setPage((prev) => {
       if (!prev) return prev
@@ -220,6 +374,15 @@ export default function DetailPageEditor() {
     setPage((prev) => prev ? { ...prev, sections: [] } : prev)
   }
 
+  function applyHeadingTemplate() {
+    setPage((prev) => {
+      if (!prev) return prev
+      const first = prev.sections[0]
+      if (first?.kind === 'heading') return prev
+      return { ...prev, sections: [{ ...HEADING_SECTION }, ...prev.sections] }
+    })
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     if (!page) return
@@ -260,6 +423,7 @@ export default function DetailPageEditor() {
               buttonHref: src.buttonHref,
               imagePosition: src.imagePosition,
               imageStyle: src.imageStyle,
+              kind: src.kind,
             }
           }),
         }
@@ -422,6 +586,13 @@ export default function DetailPageEditor() {
               >
                 Tự do
               </button>
+              <button
+                type="button"
+                onClick={applyHeadingTemplate}
+                className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+              >
+                Thêm đầu mục + so le
+              </button>
             </div>
           </div>
         </div>
@@ -439,10 +610,20 @@ export default function DetailPageEditor() {
         {/* Section cards */}
         {page.sections.map((section, i) => (
           <div key={i} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+            {(() => {
+              const sectionKind = section.kind ?? 'content'
+              const isHeading = sectionKind === 'heading'
+              const isImagePoints = sectionKind === 'image-points'
+
+              return (
+                <>
             {/* Section header */}
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-bold uppercase tracking-wide text-slate-500">
                 Mục {i + 1}
+                <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium normal-case tracking-normal text-slate-500">
+                  {isHeading ? 'Đầu mục' : isImagePoints ? 'Ảnh + danh sách' : 'Nội dung'}
+                </span>
               </h2>
               <div className="flex items-center gap-0.5">
                 <button
@@ -478,20 +659,90 @@ export default function DetailPageEditor() {
               </div>
             </div>
 
-            <Field label="Tiêu đề mục">
+            <Field label="Loại mục">
+              <select
+                className={inputCls}
+                value={sectionKind}
+                onChange={(e) => updateSectionKind(i, e.target.value as DetailSectionKind)}
+              >
+                <option value="content">Nội dung (ảnh + text so le)</option>
+                <option value="heading">Đầu mục (tiêu đề + mô tả)</option>
+                <option value="image-points">Ảnh + danh sách text/desc</option>
+              </select>
+            </Field>
+
+            <Field label={isImagePoints ? 'Tiêu đề khối (tuỳ chọn)' : 'Tiêu đề mục'}>
               <input
                 className={inputCls}
                 value={section.title}
                 onChange={(e) => updateSection(i, 'title', e.target.value)}
               />
             </Field>
-            <Field label="Nội dung">
-              <textarea
-                className={`${inputCls} min-h-24 resize-y`}
-                value={section.description}
-                onChange={(e) => updateSection(i, 'description', e.target.value)}
-              />
-            </Field>
+            {!isHeading && !isImagePoints && (
+              <Field label="Nội dung">
+                <RichTextEditor
+                  value={section.description}
+                  onChange={(nextValue) => updateSection(i, 'description', nextValue)}
+                />
+              </Field>
+            )}
+
+            {isImagePoints && (
+              <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Danh sách nội dung dưới ảnh
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => addPoint(i)}
+                      className="rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
+                    >
+                      + Thêm dòng
+                    </button>
+                  </div>
+                </div>
+
+                {(section.points ?? []).length === 0 && (
+                  <p className="text-xs text-slate-400">Chưa có dòng nội dung nào. Nhấn &quot;+ Thêm dòng&quot; để bắt đầu.</p>
+                )}
+
+                {(section.points ?? []).map((point, pointIndex) => (
+                  <div key={pointIndex} className="space-y-2 rounded-lg border border-slate-200 bg-white p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Dòng {pointIndex + 1}</p>
+                      <button
+                        type="button"
+                        onClick={() => removePoint(i, pointIndex)}
+                        className="rounded border border-red-100 bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-500 transition-colors hover:bg-red-100"
+                      >
+                        Xoá
+                      </button>
+                    </div>
+
+                    <Field label="Tiêu đề">
+                      <input
+                        className={inputCls}
+                        value={point.title}
+                        onChange={(e) => updatePoint(i, pointIndex, 'title', e.target.value)}
+                      />
+                    </Field>
+
+                    <Field label="Mô tả">
+                      <textarea
+                        className={`${inputCls} min-h-20 resize-y`}
+                        value={point.description}
+                        onChange={(e) => updatePoint(i, pointIndex, 'description', e.target.value)}
+                      />
+                    </Field>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {!isHeading && !isImagePoints && (
+              <>
 
             {/* Button link toggle */}
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
@@ -570,6 +821,38 @@ export default function DetailPageEditor() {
                 onChange={(e) => updateSection(i, 'imageAlt', e.target.value)}
               />
             </Field>
+              </>
+            )}
+
+            {isImagePoints && (
+              <>
+                <Field label="Vị trí ảnh">
+                  <select
+                    className={inputCls}
+                    value={section.imagePosition === 'left' ? 'left' : 'right'}
+                    onChange={(e) => updateSection(i, 'imagePosition', e.target.value)}
+                  >
+                    <option value="right">Phải</option>
+                    <option value="left">Trái</option>
+                  </select>
+                </Field>
+                <ImageUploader
+                  label="Ảnh khối"
+                  value={section.image}
+                  onChange={(url) => updateSection(i, 'image', url)}
+                />
+                <Field label="Alt text ảnh">
+                  <input
+                    className={inputCls}
+                    value={section.imageAlt}
+                    onChange={(e) => updateSection(i, 'imageAlt', e.target.value)}
+                  />
+                </Field>
+              </>
+            )}
+                </>
+              )
+            })()}
           </div>
         ))}
 
