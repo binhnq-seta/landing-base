@@ -316,7 +316,7 @@ function useMetallicMaterials(isMobile: boolean) {
   )
 
   return useMemo(() => {
-    const color              = new THREE.Color(0x4f82c8)
+    const color              = new THREE.Color(0x55c8f5)
     const roughness          = isMobile ? 0.18 : 0.11
     const metalness          = isMobile ? 0.78 : 0.82
     const clearcoat          = isMobile ? 0.75 : 1.0
