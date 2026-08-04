@@ -168,7 +168,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
     <header className={`${overlay ? 'absolute' : 'sticky border-b border-slate-200/70 bg-white/90 backdrop-blur-xl'} top-0 z-50 w-full`}>
       <div className="mx-auto flex w-full items-center justify-between px-5 py-4 md:px-20">
         <Link href="/" className="inline-flex items-center pt-1" aria-label="General Systems">
-          <Image src="/image/logoWhite.png" alt="General Systems" width={300} height={90} preload className="h-auto w-[220px] md:w-[300px]" />
+          <Image src="/image/LogoWhite.png" alt="General Systems" width={300} height={90} preload className="h-auto w-[220px] md:w-[300px]" />
         </Link>
 
         <button
