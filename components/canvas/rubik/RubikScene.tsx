@@ -540,9 +540,9 @@ export function RubikScene({
         {/* ── The Rubik ── */}
         <RubikCube ref={cubeRef} isMobile={isMobile} />
 
-        {/* ── Internal orange-red glow — GS logo / core heat effect ── */}
-        <pointLight position={[0,  0,    0.2]} intensity={18} color="#ff5010" distance={3.0} decay={2} />
-        <pointLight position={[0, -0.4,  0  ]} intensity={8}  color="#ff8030" distance={2.8} decay={2} />
+        {/* ── Internal white glow — GS logo / illuminated core effect ── */}
+        <pointLight position={[0,  0,    0.2]} intensity={18} color="#ffffff" distance={3.0} decay={2} />
+        <pointLight position={[0, -0.4,  0  ]} intensity={8}  color="#fff7e6" distance={2.8} decay={2} />
 
         {/* ── Six wings — hidden ── */}
         {/* {WINGS.map((wing) => (

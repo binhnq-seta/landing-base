@@ -74,7 +74,7 @@ export function RubikCanvas({
   const mouseRef = useRef<[number, number]>([0, 0])
   const containerRef = useRef<HTMLDivElement>(null)
   const [isVisible, setIsVisible] = useState(true)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
 
   // Lazy init: detectWebGL() runs once synchronously on the first client render.
   // The result is stable for the component lifetime — no useEffect needed.
@@ -112,7 +112,9 @@ export function RubikCanvas({
     mouseRef.current = [0, 0]
   }, [])
 
-  if (!webglOk) {
+  // The Rubik scene is intentionally omitted on mobile. Keep the fallback so
+  // the hero intro still completes and restores scrolling without WebGL.
+  if (isMobile || !webglOk) {
     return (
       <CanvasFallback
         onSceneReady={onSceneReady}

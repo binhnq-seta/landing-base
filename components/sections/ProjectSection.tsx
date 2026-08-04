@@ -53,12 +53,8 @@ interface ProjectSectionProps {
 export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSectionProps) {
     const PROJECTS_DATA = data ?? PROJECTS
     const [activeIndex, setActiveIndex] = useState(0)
-    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-    const [isCarouselHovered, setIsCarouselHovered] = useState(false)
-    const [isSectionVisible, setIsSectionVisible] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
     const touchStartXRef = useRef<number | null>(null)
-    const isCarouselHoveredRef = useRef(false)
 
     const showPrevious = () => {
         setActiveIndex((current) =>
@@ -124,30 +120,6 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
         return () => ctx.revert()
     }, [])
 
-    useEffect(() => {
-        const section = sectionRef.current
-        if (!section) return
-
-        const observer = new IntersectionObserver(
-            ([entry]) => setIsSectionVisible(entry.isIntersecting),
-            { threshold: 0.3 },
-        )
-
-        observer.observe(section)
-        return () => observer.disconnect()
-    }, [])
-
-    useEffect(() => {
-        if (isCarouselHovered || !isSectionVisible) return
-
-        const autoplayTimer = window.setInterval(() => {
-            if (isCarouselHoveredRef.current) return
-            setActiveIndex((current) => (current + 1) % PROJECTS_DATA.length)
-        }, 2000)
-
-        return () => window.clearInterval(autoplayTimer)
-    }, [isCarouselHovered, isSectionVisible])
-
     return (
         <section ref={sectionRef} id="projects" className="relative flex min-h-screen items-center overflow-hidden bg-[#FAFAFF]">
             <Image
@@ -160,13 +132,13 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
             />
 
             <div className="relative z-10 w-full">
-                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(36px,4vw,100px)] font-bold uppercase text-slate-700">
+                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(36px,4vw,100px)] font-extrabold uppercase text-slate-700">
                     {title ?? 'Dự án tiêu biểu'}
                 </h1>
 
                 <div data-project-reveal>
                     <div
-                        className="-my-48 touch-pan-y overflow-hidden py-48"
+                        className="relative -my-48 touch-pan-y overflow-hidden py-48"
                         onTouchStart={handleTouchStart}
                         onTouchEnd={handleTouchEnd}
                     >
@@ -174,9 +146,8 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                             {PROJECTS_DATA.map((project, index) => {
                                 const position = getSlidePosition(index)
                                 const isActive = position === 0
-                                const isHovered = hoveredIndex === index && !isActive
-                                const slideOffset = position * (isHovered ? 86 : 92)
-                                const slideScale = isActive ? 1 : isHovered ? 0.79 : 0.75
+                                const slideOffset = position * 92
+                                const slideScale = isActive ? 1 : 0.75
 
                                 return (
                                     <article
@@ -185,16 +156,6 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                         aria-label={isActive ? undefined : `Chuyển tới dự án ${index + 1}`}
                                         role={isActive ? undefined : 'button'}
                                         tabIndex={isActive ? undefined : 0}
-                                        onMouseEnter={() => {
-                                            isCarouselHoveredRef.current = true
-                                            setIsCarouselHovered(true)
-                                            setHoveredIndex(index)
-                                        }}
-                                        onMouseLeave={() => {
-                                            isCarouselHoveredRef.current = false
-                                            setIsCarouselHovered(false)
-                                            setHoveredIndex(null)
-                                        }}
                                         onClick={() => {
                                             if (!isActive) setActiveIndex(index)
                                         }}
@@ -204,11 +165,11 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                                 setActiveIndex(index)
                                             }
                                         }}
-                                        className={`relative col-start-1 row-start-1 grid w-[88%] md:w-[60%] grid-cols-[minmax(0,40fr)_minmax(0,60fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-5 py-8 transition-[transform,opacity,background-color,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-7 sm:py-12 md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)] hover:border-blue-300/80 hover:bg-blue-200/30 hover:shadow-[0_26px_80px_rgba(37,99,235,0.24)]'}`}
+                                        className={`relative col-start-1 row-start-1 grid w-[88%] md:w-[60%] grid-cols-[minmax(0,40fr)_minmax(0,60fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-5 py-8 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-7 sm:py-12 md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)]'}`}
                                         style={{
-                                            opacity: isActive ? 1 : isHovered ? 0.78 : 0.48,
+                                            opacity: isActive ? 1 : 0.48,
                                             transform: `translateX(${slideOffset}%) scale(${slideScale})`,
-                                            zIndex: isActive ? 3 : isHovered ? 2 : 1,
+                                            zIndex: isActive ? 3 : 1,
                                         }}
                                     >
                                         <div className="absolute inset-y-0 left-0 z-0 w-[40%] overflow-hidden rounded-l-[2rem] bg-blue-50/70">
@@ -241,7 +202,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                             </p>
                                             <Link
                                                 href={`/projects/${project.slug}`}
-                                                className="mt-7 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-6 py-3 text-sm font-semibold text-blue-600 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                                                className="mt-7 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-6 py-3 text-sm font-semibold text-[#30549B] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-[#30549B] hover:bg-[#30549B] hover:text-white hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#30549B]"
                                             >
                                                 {viewMoreLabel ?? 'Xem thêm'}
                                                 <span aria-hidden="true">→</span>
@@ -251,20 +212,29 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                 )
                             })}
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={showPrevious}
+                            aria-label="Dự án trước"
+                            className="absolute left-[1.5%] top-1/2 z-20 inline-flex size-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-blue-200 bg-white text--[#30549B] shadow-lg transition duration-300 hover:-translate-y-[54%] hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:size-16 md:left-[16%]"
+                        >
+                            <span aria-hidden="true" className="text-3xl leading-none">&lt;</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={showNext}
+                            aria-label="Dự án tiếp theo"
+                            className="absolute right-[1.5%] top-1/2 z-20 inline-flex size-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-blue-200 bg-white text--[#30549B] shadow-lg transition duration-300 hover:-translate-y-[54%] hover:border-blue-300 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:size-16 md:right-[16%]"
+                        >
+                            <span aria-hidden="true" className="text-3xl leading-none">&gt;</span>
+                        </button>
                     </div>
 
                     <div className="mt-12 flex items-center justify-center">
                         <div
                             className="flex items-center gap-2"
                             aria-label="Chọn dự án"
-                            onMouseEnter={() => {
-                                isCarouselHoveredRef.current = true
-                                setIsCarouselHovered(true)
-                            }}
-                            onMouseLeave={() => {
-                                isCarouselHoveredRef.current = false
-                                setIsCarouselHovered(false)
-                            }}
                         >
                             {PROJECTS_DATA.map((project, index) => (
                                 <button
@@ -273,7 +243,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                     onClick={() => setActiveIndex(index)}
                                     aria-label={`Xem dự án ${index + 1}`}
                                     aria-current={index === activeIndex ? 'true' : undefined}
-                                    className={`cursor-pointer h-2.5 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-blue-600' : 'w-2.5 bg-blue-200 hover:bg-blue-400'}`}
+                                    className={`cursor-pointer h-2.5 rounded-full transition-all duration-300 ${index === activeIndex ? 'w-8 bg-[#30549B]' : 'w-2.5 bg-blue-200 hover:bg-blue-400'}`}
                                 />
                             ))}
                         </div>

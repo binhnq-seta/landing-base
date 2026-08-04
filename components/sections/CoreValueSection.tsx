@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 
@@ -30,6 +31,14 @@ const FALLBACK_CORE_VALUES: CVFeatureItem[] = [
   { id: '03', title: 'Tư duy hệ thống – Tư duy toàn cầu',   description: 'Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình.' },
   { id: '04', title: 'Học tập liên tục – Đổi mới không ngừng', description: 'Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp.' },
   { id: '05', title: 'Một công ty – Một gia đình',            description: 'Xây dựng văn hoá gắn kết, chia sẻ và phát triển bền vững cùng nhau.' },
+]
+
+const CORE_VALUE_ICONS = [
+  '/assets/coreSection-icon/badge.svg',
+  '/assets/coreSection-icon/person.svg',
+  '/assets/coreSection-icon/ai-mi.svg',
+  '/assets/coreSection-icon/idea-bulb.svg',
+  '/assets/coreSection-icon/group.svg',
 ]
 
 export function CoreValueSection({ data }: FeaturesSectionProps) {
@@ -87,24 +96,30 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
         {/* ── Left: content — z-10 keeps text above the canvas overflow ── */}
         <div className="relative z-10 flex min-h-screen flex-col justify-center px-5 py-14 md:px-0 md:pl-[10vw] md:py-24">
           <div data-core-reveal>
-            <h1 className="mb-4 text-[clamp(36px,4vw,100px)] font-semibold text-slate-700">
+            <h1 className="mb-4 text-[clamp(36px,4vw,100px)] font-extrabold text-slate-700">
               {data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
             </h1>
           </div>
 
           <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2">
-            {features.map((feature) => (
+            {features.map((feature, index) => (
               <div key={feature.id} data-core-reveal className="h-full">
-                <div className="flex h-full flex-col rounded-xl p-6">
-                  <p className="mb-2 text-xl font-extrabold text-[#A31F1A]">
-                    {feature.id}
-                  </p>
-                  <h3 className="mb-2 text-xl font-bold text-slate-700">
-                    {feature.title}
-                  </h3>
-                  <p className="font-light leading-relaxed text-slate-600">
-                    {feature.description}
-                  </p>
+                <div className="flex h-full items-start gap-4 rounded-xl p-6">
+                  <Image
+                    src={CORE_VALUE_ICONS[index % CORE_VALUE_ICONS.length]}
+                    alt=""
+                    aria-hidden="true"
+                    width={56}
+                    height={56}
+                  />
+                  <div className="min-w-0">
+                    <h3 className="mb-2 text-xl font-bold text-[#30549B]">
+                      {feature.title}
+                    </h3>
+                    <p className="font-light leading-relaxed text-[#30549B]">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
