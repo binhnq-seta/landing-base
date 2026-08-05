@@ -373,6 +373,120 @@
       "heroImageAlt": "Điện lực - Năng lượng",
       "sections": [
         {
+          "kind": "heading",
+          "title": "Case Study",
+          "description": "",
+          "image": "",
+          "imageAlt": "",
+          "imagePosition": "auto",
+          "imageStyle": "cover",
+          "buttonHref": ""
+        },
+        {
+          "kind": "content",
+          "title": "JSC \"Inter RAO – Electric Power Generation“",
+          "description": "Công ty Cổ phần Phát điện Tomsk, một doanh nghiệp quan trọng trong lĩnh vực năng lượng Nga. Lĩnh vực hoạt động chính: sản xuất và cung cấp điện và nhiệt cho khu vực Omsk và vùng lân cận (Tomsk/Novosibirsk) ",
+          "image": "/uploads/1785865052848-anwlzfc4kl.jpg",
+          "imageAlt": "Nhà Máy điện",
+          "imagePosition": "auto",
+          "imageStyle": "cover",
+          "buttonHref": ""
+        },
+        {
+          "kind": "heading",
+          "title": "Thách Thức",
+          "description": "",
+          "image": "",
+          "imageAlt": "",
+          "imagePosition": "auto",
+          "imageStyle": "cover",
+          "buttonHref": ""
+        },
+        {
+          "kind": "image-points",
+          "title": "",
+          "description": "",
+          "image": "/uploads/1785866566906-s3uuxwmg6pp.jpg",
+          "imageAlt": "Thách thức",
+          "imagePosition": "left",
+          "imageStyle": "cover",
+          "buttonHref": "",
+          "points": [
+            {
+              "title": "Dữ liệu thiết bị phân mảnh",
+              "description": "SCADA, PLC, DCS, cảm biến và các hệ thống nghiệp vụ đang tồn tại trong nhiều silo dữ liệu."
+            },
+            {
+              "title": "Bảo trì còn bị động",
+              "description": "Khó xác định xu hướng suy giảm và cảnh báo nguy cơ hư hỏng trước khi sự cố xảy ra."
+            },
+            {
+              "title": "Công tác hiện trường thiếu đồng bộ",
+              "description": "Thông tin kiểm tra, bảo trì và sửa chữa chưa được kết nối xuyên suốt với hệ thống quản lý."
+            },
+            {
+              "title": "Khó có góc nhìn toàn diện về tài sản",
+              "description": "Dữ liệu kỹ thuật, bảo trì, vật tư và chi phí chưa được hợp nhất theo vòng đời tài sản."
+            }
+          ]
+        },
+        {
+          "kind": "heading",
+          "title": "Giá trị chúng tôi mang lại",
+          "description": "",
+          "image": "",
+          "imageAlt": "",
+          "imagePosition": "auto",
+          "imageStyle": "cover",
+          "buttonHref": ""
+        },
+        {
+          "kind": "image-points",
+          "title": "",
+          "description": "",
+          "image": "/uploads/1785866972554-s0mrlslaqm.jpg",
+          "imageAlt": "Giá trị",
+          "imagePosition": "right",
+          "imageStyle": "cover",
+          "buttonHref": "",
+          "points": [
+            {
+              "title": "Quan sát toàn diện",
+              "description": "Dữ liệu vận hành thống nhất."
+            },
+            {
+              "title": "Chủ động bảo trì",
+              "description": "Phát hiện rủi ro sớm."
+            },
+            {
+              "title": "Chuẩn hóa vận hành",
+              "description": "Kết nối văn phòng và hiện trường."
+            },
+            {
+              "title": "Ra quyết định bằng dữ liệu",
+              "description": "Biến dữ liệu thiết bị thành thông tin hành động."
+            }
+          ]
+        },
+        {
+          "kind": "heading",
+          "title": "Giới thiệu giải pháp",
+          "description": "",
+          "image": "",
+          "imageAlt": "",
+          "imagePosition": "auto",
+          "imageStyle": "cover",
+          "buttonHref": ""
+        },
+        {
+          "title": "SIGMA.SSPTI",
+          "description": "SSPTI là hệ thống phần mềm công nghiệp hỗ trợ thu thập, hợp nhất, chuẩn hóa, xử lý, lưu trữ và truyền tải dữ liệu công nghệ từ nhiều nguồn khác nhau như DCS, SCADA, PLC, cảm biến, thiết bị đo và cơ sở dữ liệu. Hệ thống tập trung dữ liệu phân tán trên một nền tảng thống nhất, cung cấp nguồn dữ liệu tin cậy phục vụ giám sát vận hành, phân tích, báo cáo và tích hợp với các hệ thống nghiệp vụ, quản lý và phân tích như ERP, EAM và PAS",
+          "image": "/uploads/1785231260242-168xcl4liha.png",
+          "imageAlt": "SIGMA.SSPTI",
+          "imagePosition": "auto",
+          "imageStyle": "cover"
+        },
+        {
           "title": "SIGMA.SUPA",
           "description": "SUPA (Enterprise Asset Management - EAM) là hệ thống quản lý tài sản doanh nghiệp dành cho ngành điện và năng lượng, hỗ trợ số hóa và quản lý toàn bộ vòng đời tài sản trên một nền tảng thống nhất. Hệ thống tích hợp dữ liệu thiết bị, tình trạng kỹ thuật, bảo trì – sửa chữa, vật tư và chi phí vận hành, giúp doanh nghiệp nâng cao độ tin cậy của thiết bị, chuẩn hóa quy trình bảo trì và tối ưu hiệu quả khai thác tài sản. ",
           "image": "/uploads/1785231144990-e17979j2gw6.png",
@@ -385,14 +499,6 @@
           "description": "SIGMA.PAS (Predictive Analytics System) là giải pháp giám sát, chẩn đoán và phân tích tình trạng thiết bị, ứng dụng mô hình toán học tiên tiến kết hợp trí tuệ nhân tạo (AI) và Machine Learning (ML). Giải pháp giúp phát hiện sớm các bất thường, dự báo nguy cơ hư hỏng và đánh giá rủi ro sự cố trước khi xảy ra, góp phần nâng cao độ tin cậy vận hành và tối ưu công tác bảo trì. ",
           "image": "/uploads/1785231213740-klqss80yvxa.png",
           "imageAlt": "SIGMA.PAS",
-          "imagePosition": "auto",
-          "imageStyle": "cover"
-        },
-        {
-          "title": "SIGMA.SSPTI",
-          "description": "SSPTI là hệ thống phần mềm công nghiệp hỗ trợ thu thập, hợp nhất, chuẩn hóa, xử lý, lưu trữ và truyền tải dữ liệu công nghệ từ nhiều nguồn khác nhau như DCS, SCADA, PLC, cảm biến, thiết bị đo và cơ sở dữ liệu. Hệ thống tập trung dữ liệu phân tán trên một nền tảng thống nhất, cung cấp nguồn dữ liệu tin cậy phục vụ giám sát vận hành, phân tích, báo cáo và tích hợp với các hệ thống nghiệp vụ, quản lý và phân tích như ERP, EAM và PAS",
-          "image": "/uploads/1785231260242-168xcl4liha.png",
-          "imageAlt": "SIGMA.SSPTI",
           "imagePosition": "auto",
           "imageStyle": "cover"
         },
@@ -412,7 +518,8 @@
           "imagePosition": "auto",
           "imageStyle": "cover"
         }
-      ]
+      ],
+      "layout": "immersive"
     },
     {
       "type": "solutions",

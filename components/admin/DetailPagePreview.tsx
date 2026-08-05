@@ -35,6 +35,28 @@ function SectionButton({ href, locale, variant = 'dark' }: { href?: string; loca
   )
 }
 
+function escapeHtml(text: string) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function toRichHtml(content: string) {
+  const trimmed = content.trim()
+  if (!trimmed) return ''
+
+  const hasHtmlTag = /<\/?[a-z][\s\S]*>/i.test(content)
+  if (hasHtmlTag) return content
+
+  return content
+    .split(/\n{2,}/)
+    .map((block) => `<p>${escapeHtml(block).replace(/\n/g, '<br/>')}</p>`)
+    .join('')
+}
+
 // ─── Section content (same in all layouts) ────────────────────────────────────
 
 function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; locale: SupportedLocale }) {
@@ -43,11 +65,66 @@ function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; l
       <p className="py-16 text-center text-sm text-slate-300">Chưa có mục nội dung nào.</p>
     )
   }
+  let contentIndex = -1
   return (
     <div className="space-y-12 md:space-y-20">
       {sections.map((section, i) => {
+        const sectionKind = section.kind ?? 'content'
+        if (sectionKind === 'heading') {
+          return (
+            <section key={i} className="rounded-2xl bg-white px-5 py-8 text-center md:px-8 md:py-12">
+              <h2 className="text-[2.8125rem] font-extrabold uppercase leading-tight tracking-[-0.02em] text-[#00162F] sm:text-[3.375rem]">
+                {section.title || <span className="text-slate-300">Tiêu đề đầu mục…</span>}
+              </h2>
+            </section>
+          )
+        }
+
+        if (sectionKind === 'image-points') {
+          const points = section.points ?? []
+          const imgRight = section.imagePosition !== 'left'
+          return (
+            <section key={i} className="space-y-6">
+              {section.title && (
+                <h2 className="text-2xl font-extrabold uppercase leading-tight tracking-[-0.02em] text-[#00162F] sm:text-3xl">
+                  {section.title}
+                </h2>
+              )}
+              <div className="grid items-center gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-8">
+                <div className={`${imgRight ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}>
+                  <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
+                    {points.length === 0 ? (
+                      <p className="text-sm text-slate-300">Chưa có dữ liệu text/desc cho khối này…</p>
+                    ) : (
+                      points.map((point, pointIndex) => (
+                        <article key={pointIndex} className="rounded-xl bg-white p-6">
+                          <h3 className="mb-2 text-xl font-bold">
+                            {point.title || <span className="text-slate-300">Tiêu đề…</span>}
+                          </h3>
+                          <p className="font-light leading-relaxed">
+                            {point.description || <span className="text-slate-300">Mô tả…</span>}
+                          </p>
+                        </article>
+                      ))
+                    )}
+                  </div>
+                </div>
+
+                <div className={`${imgRight ? 'order-1 md:order-2' : 'order-1 md:order-1'}`}>
+                  <div className="relative mx-auto w-full max-w-[30rem] aspect-[4/5] overflow-hidden rounded-2xl bg-slate-100">
+                    {section.image
+                      ? <Img src={section.image} alt={section.imageAlt} />
+                      : <Placeholder label={`Ảnh khối ${i + 1}`} />}
+                  </div>
+                </div>
+              </div>
+            </section>
+          )
+        }
+
+        contentIndex += 1
         const pos = section.imagePosition ?? 'auto'
-        const imgRight = pos === 'right' || (pos === 'auto' && i % 2 === 1)
+        const imgRight = pos === 'right' || (pos === 'auto' && contentIndex % 2 === 1)
         const style = section.imageStyle ?? 'cover'
         const aspect = style === 'portrait' ? 'aspect-[3/4]' : style === 'wide' ? 'aspect-[16/9]' : 'aspect-[4/3]'
         return (
@@ -61,9 +138,16 @@ function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; l
               <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-[#00162F] sm:text-3xl">
                 {section.title || <span className="text-slate-300">Tiêu đề mục {i + 1}…</span>}
               </h2>
-              <p className="mt-4 text-base font-light leading-7 text-slate-600">
-                {section.description || <span className="text-slate-300">Nội dung…</span>}
-              </p>
+              {section.description ? (
+                <div
+                  className="mt-4 text-base font-light leading-7 text-slate-600 [&_a]:text-blue-600 [&_a]:underline [&_li]:ml-5 [&_ol]:list-decimal [&_ol]:space-y-1 [&_p]:mb-3 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:space-y-1"
+                  dangerouslySetInnerHTML={{ __html: toRichHtml(section.description) }}
+                />
+              ) : (
+                <p className="mt-4 text-base font-light leading-7 text-slate-600">
+                  <span className="text-slate-300">Nội dung…</span>
+                </p>
+              )}
               <SectionButton href={section.buttonHref} locale={locale} />
             </div>
           </section>

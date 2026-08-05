@@ -71,15 +71,112 @@ function imgAspect(style?: string) {
   return 'aspect-[4/3]'
 }
 
+function escapeHtml(text: string) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function toRichHtml(content: string) {
+  const trimmed = content.trim()
+  if (!trimmed) return ''
+
+  const hasHtmlTag = /<\/?[a-z][\s\S]*>/i.test(content)
+  if (hasHtmlTag) return content
+
+  return content
+    .split(/\n{2,}/)
+    .map((block) => `<p>${escapeHtml(block).replace(/\n/g, '<br/>')}</p>`)
+    .join('')
+}
+
 // ─── Content sections (always alternating split) ───────────────────────────────
 
 function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; locale: SupportedLocale }) {
   if (sections.length === 0) return null
+  let contentIndex = -1
   return (
     <div className="mx-auto w-full max-w-[1400px] space-y-12 px-5 py-12 md:space-y-20 md:px-12 md:py-20 lg:px-16">
       {sections.map((section, i) => {
+        const sectionKind = section.kind ?? 'content'
+        if (sectionKind === 'heading') {
+          return (
+            <section key={section.title + i} className="rounded-[1.5rem] px-5 py-10 text-center md:px-10 md:py-14">
+              <h2
+                data-detail-reveal
+                className="mx-auto max-w-4xl text-[3.375rem] font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-[4.5rem] lg:text-[5.25rem]"
+              >
+                {section.title}
+              </h2>
+            </section>
+          )
+        }
+
+        if (sectionKind === 'image-points') {
+          const points = section.points ?? []
+          const imgRight = section.imagePosition !== 'left'
+          return (
+            <section key={section.title + i} className="space-y-8">
+              {section.title && (
+                <h2
+                  data-detail-reveal
+                  className="max-w-4xl text-3xl font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]"
+                >
+                  {section.title}
+                </h2>
+              )}
+
+              <div className="grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-10 lg:gap-12">
+                <div className={`${imgRight ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:gap-5">
+                    {points.map((point, pointIndex) => (
+                      <article
+                        key={point.title + pointIndex}
+                        data-detail-reveal
+                        data-detail-delay={`${pointIndex * 0.06}`}
+                        className="rounded-xl bg-white p-6"
+                      >
+                        <h3 className="mb-2 text-xl font-bold">
+                          {point.title}
+                        </h3>
+                        <p className="font-light leading-relaxed">
+                          {point.description}
+                        </p>
+                      </article>
+                    ))}
+                    {points.length === 0 && (
+                      <p className="text-sm text-slate-400">Chưa có dữ liệu text/desc cho khối này.</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className={`${imgRight ? 'order-1 md:order-2' : 'order-1 md:order-1'} md:sticky md:top-28`}>
+                  <div
+                    data-detail-reveal
+                    className="relative mx-auto w-full max-w-[34rem] aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-slate-200"
+                  >
+                    {section.image && (
+                      <Image
+                        src={section.image}
+                        alt={section.imageAlt}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 420px"
+                        className="object-cover"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </section>
+          )
+        }
+
+        contentIndex += 1
         const pos = section.imagePosition ?? 'auto'
-        const imgRight = pos === 'right' || (pos === 'auto' && i % 2 === 1)
+        const imgRight = pos === 'right' || (pos === 'auto' && contentIndex % 2 === 1)
         const style = section.imageStyle ?? 'cover'
         return (
           <section key={section.title + i} className="grid items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
@@ -101,9 +198,12 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
               <h2 data-detail-reveal data-detail-delay="0.08" className="max-w-xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]">
                 {section.title}
               </h2>
-              <p data-detail-reveal data-detail-delay="0.16" className="mt-4 max-w-xl text-base font-light leading-8 text-slate-600 md:text-lg">
-                {section.description}
-              </p>
+              <div
+                data-detail-reveal
+                data-detail-delay="0.16"
+                className="mt-4 max-w-xl text-base font-light leading-8 text-slate-600 md:text-lg [&_a]:text-blue-600 [&_a]:underline [&_li]:ml-5 [&_ol]:list-decimal [&_ol]:space-y-1 [&_p]:mb-3 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:space-y-1"
+                dangerouslySetInnerHTML={{ __html: toRichHtml(section.description) }}
+              />
               <SectionButton href={section.buttonHref} locale={locale} />
             </div>
           </section>
