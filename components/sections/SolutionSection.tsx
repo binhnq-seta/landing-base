@@ -7,16 +7,15 @@ import { gsap } from '@/lib/gsap'
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const SOLUTION_IMAGE = [
-  { title: 'Giải pháp tích hợp',   src: '/image/solution/integration.jpg', alt: 'Giải pháp tích hợp',   desc: 'GS GROUP có năng lực triển khai trọn gói Data Center, các giải pháp hội nghị truyền hình, và hệ thống thiết bị trường quay chuyên nghiệp.' },
-  { title: 'An ninh - Quốc phòng', src: '/image/solution/military.jpg',     alt: 'An ninh - Quốc phòng', desc: 'GS GROUP cung cấp nền tảng quản lý mối đe dọa bên ngoài (External Threat Management) và giải pháp phù hợp cho hạ tầng trọng yếu (điện lực, dầu khí, SCADA/ICS).' },
-  { title: 'Bảo mật - ATTT',        src: '/image/solution/security.jpg',     alt: 'Bảo mật - ATTT',       desc: 'GS GROUP cung cấp nền tảng quản lý mối đe dọa bên ngoài (External Threat Management) và giải pháp phù hợp cho hạ tầng trọng yếu (điện lực, dầu khí, SCADA/ICS).' },
-  { title: 'Điện lực - Năng lượng', src: '/image/solution/energy.jpg',       alt: 'Điện lực - Năng lượng',desc: 'GS GROUP cung cấp giải pháp quản lý thiết bị, sửa chữa và bảo trì, thu thập và truyền tải số liệu kỹ thuật, giám sát từ xa và chuẩn đoán tình trạng kỹ thuật của thiết bị.' },
-  { title: 'Viễn thông',            src: '/image/solution/tele.jpg',          alt: 'Viễn thông',           desc: 'GS GROUP cung cấp giải pháp truyền thông di động cao cấp thế hệ mới, mang lại khả năng kiểm soát toàn diện quyền riêng tư, bảo mật và trải nghiệm liên lạc cho người dùng.' },
-  { title: 'Hàng không',            src: '/image/solution/air.jpg',           alt: 'Hàng không',           desc: 'GS GROUP cung cấp giải pháp quản lý và lập lịch khai thác bay, hỗ trợ phân công phi công – tiếp viên, theo dõi giờ bay/giờ nghỉ và tuân thủ quy định an toàn.' },
+  { title: 'An ninh - Quốc phòng', src: '/image/solution/military.jpg',     alt: 'An ninh - Quốc phòng', desc: 'Tích hợp các giải pháp công nghệ đáp ứng yêu cầu cao về bảo mật, độ tin cậy và khả năng vận hành liên tục cho các hệ thống an ninh – quốc phòng.' },
+  { title: 'Bảo mật - ATTT',        src: '/image/solution/security.jpg',     alt: 'Bảo mật - ATTT',       desc: 'Tích hợp các giải pháp bảo mật giúp phát hiện sớm mối đe dọa, bảo vệ hạ tầng CNTT và tăng cường năng lực phòng vệ trước các nguy cơ an ninh mạng.' },
+  { title: 'Điện lực - Năng lượng', src: '/image/solution/energy.jpg',       alt: 'Điện lực - Năng lượng',desc: 'Tích hợp các giải pháp phần mềm công nghiệp hỗ trợ quản lý dữ liệu, tài sản, bảo trì và vận hành, góp phần nâng cao hiệu quả khai thác, tối ưu nguồn lực và đảm bảo hệ thống điện, năng lượng vận hành an toàn, ổn định.' },
+  { title: 'Viễn thông',            src: '/image/solution/tele.jpg',          alt: 'Viễn thông',           desc: 'Cung cấp các giải pháp viễn thông thế hệ mới, hỗ trợ phát triển hệ sinh thái dịch vụ số, tăng cường bảo mật và nâng cao giá trị cho thuê bao.' },
+  { title: 'Hàng không',            src: '/image/solution/air.jpg',           alt: 'Hàng không',           desc: 'Cung cấp các giải pháp số hoá hoạt động khai thác sân bay, hỗ trợ quản lý dữ liệu, điều phối nguồn lực và nâng cao hiệu quả vận hành.' },
 ]
 
 const SOLUTION_SLUGS = [
-  'giai-phap-tich-hop', 'an-ninh-quoc-phong', 'bao-mat-attt',
+  'an-ninh-quoc-phong', 'bao-mat-attt',
   'dien-luc-nang-luong', 'vien-thong', 'hang-khong',
 ]
 
@@ -109,8 +108,8 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
 
       {/* Mobile layout */}
       <div className="block md:hidden px-5 py-14">
-        <h1 className="mb-8 text-[clamp(36px,6vw,60px)] font-extrabold tracking-wider text-slate-700">
-          GIẢI <br /> PHÁP
+        <h1 className="mb-8 text-[clamp(36px,6vw,60px)] font-extrabold tracking-wider text-slate-700 text-center">
+          {title ? <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</> : <>GIẢI <br /> PHÁP</>}
         </h1>
         <div className="grid grid-cols-2 gap-3">
           {solutions.map((solution, index) => (
@@ -142,9 +141,12 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
           className="absolute z-0 h-auto w-[50%] -top-1/5 -left-[25%] drop-shadow-[0_0_48px_rgba(120,120,120,0.28)]"
         />
 
-        <div className="flex h-full items-end justify-center">
-          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(60px,4vw,100px)] z-1 font-extrabold tracking-wider text-slate-700">
-            {title ?? (<>GIẢI <br /> PHÁP</>)}
+        <div className="flex h-full items-end justify-center px-6">
+          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(40px,3vw,72px)] z-1 font-extrabold tracking-wider text-slate-700 text-center leading-tight">
+            {title
+              ? <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</>
+              : (<>GIẢI <br /> PHÁP</>)
+            }
           </h1>
         </div>
 

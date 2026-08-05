@@ -3,6 +3,7 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSShowcaseCorner, SupportedLocale } from '@/lib/admin/content'
 import { Field, PageHeader, SaveBar, inputCls, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { ImageUploader } from '@/components/admin/ImageUploader'
 
 // Stable display names for each corner id (matches config.ts order)
 const CORNER_LABELS: Record<string, string> = {
@@ -70,18 +71,6 @@ export default function ShowcaseEditorPage() {
                 {CORNER_LABELS[corner.id] ?? corner.id}
               </p>
 
-              {corner.image && (
-                <div className="mb-4 aspect-video overflow-hidden rounded-lg bg-slate-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={corner.image}
-                    alt=""
-                    className="h-full w-full object-cover"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-                  />
-                </div>
-              )}
-
               <div className="space-y-3">
                 <Field label="Nhãn (Label)">
                   <input
@@ -97,14 +86,12 @@ export default function ShowcaseEditorPage() {
                     onChange={(e) => updateCorner(corner.id, 'sublabel', e.target.value)}
                   />
                 </Field>
-                <Field label="Đường dẫn ảnh">
-                  <input
-                    className={inputCls}
-                    value={corner.image}
-                    onChange={(e) => updateCorner(corner.id, 'image', e.target.value)}
-                    placeholder="/image/solution/..."
-                  />
-                </Field>
+                <ImageUploader
+                  label="Ảnh"
+                  value={corner.image}
+                  onChange={(url) => updateCorner(corner.id, 'image', url)}
+                  previewClassName="h-20 w-32 object-cover"
+                />
               </div>
             </div>
           ))}

@@ -111,12 +111,114 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
               >
                 {section.title}
               </h2>
+              {section.description && (
+                <p data-detail-reveal data-detail-delay="0.1" className="mx-auto mt-4 max-w-2xl text-lg font-semibold text-slate-500 md:text-xl">
+                  {section.description}
+                </p>
+              )}
+            </section>
+          )
+        }
+
+        if (sectionKind === 'casestudies') {
+          const points = section.points ?? []
+          return (
+            <section key={section.title + i} className="space-y-6">
+              {section.title && (
+                <h2 data-detail-reveal className="max-w-4xl text-3xl font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]">
+                  {section.title}
+                </h2>
+              )}
+              <div className="grid gap-4 sm:grid-cols-2">
+                {points.map((point, idx) => {
+                  const href = point.href
+                  const inner = (
+                    <div
+                      data-detail-reveal
+                      data-detail-delay={`${idx * 0.08}`}
+                      className={`group relative flex min-h-[200px] flex-col justify-between overflow-hidden rounded-2xl bg-[#00162F] p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${href ? 'cursor-pointer' : ''}`}
+                    >
+                      <div>
+                        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-400">Case Study</p>
+                        <h3 className="text-lg font-bold leading-snug text-white">{point.title}</h3>
+                        {point.description && (
+                          <p className="mt-2 text-sm leading-relaxed text-slate-400">{point.description}</p>
+                        )}
+                      </div>
+                      {href && (
+                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-white/50 transition-colors group-hover:text-white">
+                          Xem chi tiết
+                          <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true">
+                            <path fillRule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  )
+                  return href
+                    ? <Link key={idx} href={href} className="block">{inner}</Link>
+                    : <div key={idx}>{inner}</div>
+                })}
+              </div>
             </section>
           )
         }
 
         if (sectionKind === 'image-points') {
           const points = section.points ?? []
+          const style = section.imageStyle ?? 'cover'
+
+          // ── Background overlay variant ────────────────────────────────────
+          if (style === 'background') {
+            return (
+              <section key={section.title + i} className="relative overflow-hidden rounded-[1.5rem]">
+                {section.image && (
+                  <>
+                    <Image
+                      src={section.image}
+                      alt={section.imageAlt || ''}
+                      fill
+                      sizes="100vw"
+                      className="object-cover"
+                      aria-hidden="true"
+                    />
+                    <div className="absolute inset-0 bg-[#00162F]/82" />
+                  </>
+                )}
+                <div className="relative z-10 px-8 py-14 md:px-16 md:py-20">
+                  {(section.title || section.description) && (
+                    <div data-detail-reveal className="mb-10 text-center">
+                      {section.title && (
+                        <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-white/50">
+                          {section.title}
+                        </p>
+                      )}
+                      {section.description && (
+                        <h2 className="text-2xl font-bold text-white md:text-3xl">
+                          {section.description}
+                        </h2>
+                      )}
+                    </div>
+                  )}
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {points.map((point, idx) => (
+                      <article
+                        key={point.title + idx}
+                        data-detail-reveal
+                        data-detail-delay={`${idx * 0.08}`}
+                        className="rounded-xl border border-white/15 bg-white/10 p-6 backdrop-blur-sm"
+                      >
+                        <h3 className="mb-2 font-bold text-white">{point.title}</h3>
+                        <p className="text-sm leading-relaxed text-white/65">{point.description}</p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
+          // ── Default side-by-side variant ──────────────────────────────────
           const imgRight = section.imagePosition !== 'left'
           return (
             <section key={section.title + i} className="space-y-8">
@@ -195,6 +297,11 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
               )}
             </div>
             <div className={imgRight ? 'md:order-1' : ''}>
+              {/^[A-Z]+\.[A-Z]/.test(section.title) && (
+                <p data-detail-reveal className="mb-3 text-xs font-bold uppercase tracking-widest text-[#A31F1A]">
+                  Giải pháp
+                </p>
+              )}
               <h2 data-detail-reveal data-detail-delay="0.08" className="max-w-xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]">
                 {section.title}
               </h2>

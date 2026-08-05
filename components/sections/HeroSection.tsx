@@ -21,12 +21,11 @@ const RubikCanvas = dynamic(
 
 // Maps solution slug → index in SolutionSection cards
 const SOLUTION_ID_TO_INDEX: Record<string, number> = {
-  'giai-phap-tich-hop': 0,
-  'an-ninh-quoc-phong': 1,
-  'bao-mat-attt': 2,
-  'dien-luc-nang-luong': 3,
-  'vien-thong': 4,
-  'hang-khong': 5,
+  'an-ninh-quoc-phong': 0,
+  'bao-mat-attt': 1,
+  'dien-luc-nang-luong': 2,
+  'vien-thong': 3,
+  'hang-khong': 4,
 }
 
 interface HeroSectionProps {

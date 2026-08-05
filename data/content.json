@@ -1,32 +1,32 @@
 {
   "hero": {
-    "heading": "KẾT NỐI CÔNG NGHỆ XÂY DỰNG TƯƠNG LAI",
-    "description": "General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.",
-    "ctaLabel": "Khám Phá Giải Pháp",
+    "heading": "KẾT NỐI CÔNG NGHỆ – KIẾN TẠO HẠ TẦNG TƯƠNG LAI",
+    "description": "GS-Group cung cấp các giải pháp tích hợp công nghệ tiên tiến cho các hệ thống trọng yếu, bảo đảm kết nối an toàn, tăng cường bảo mật và tối ưu vận hành.",
+    "ctaLabel": "Khám phá ngay",
     "ctaHref": "#solutions"
   },
   "features": {
-    "heading": "VÌ SAO CHỌN GENERAL SYSTEMS?",
+    "heading": "VÌ SAO CHỌN GS-GROUP?",
     "items": [
       {
         "id": "01",
-        "title": "Giải pháp toàn diện",
-        "description": "Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp."
+        "title": "Am hiểu hệ thống trọng yếu",
+        "description": "Hiểu sâu đặc thù vận hành và yêu cầu kỹ thuật của các hệ thống đòi hỏi tiêu chuẩn cao về an toàn, bảo mật và độ tin cậy."
       },
       {
         "id": "02",
-        "title": "Công nghệ tiên tiến",
-        "description": "Ứng dụng công nghệ mới nhất tối ưu hiệu quả và nâng cao năng lực cạnh tranh."
+        "title": "Làm chủ công nghệ",
+        "description": "Tiếp cận, đánh giá và triển khai các giải pháp công nghệ phù hợp với yêu cầu kỹ thuật và mục tiêu của từng dự án."
       },
       {
         "id": "03",
-        "title": "Đội ngũ chuyên gia",
-        "description": "Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình."
+        "title": "Kinh nghiệm thực chiến",
+        "description": "Được kiểm chứng qua nhiều dự án quy mô lớn cho các cơ quan, tổ chức và doanh nghiệp trong những lĩnh vực trọng yếu."
       },
       {
         "id": "04",
-        "title": "Cam kết chất lượng",
-        "description": "Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp."
+        "title": "Giải pháp phù hợp thực tiễn",
+        "description": "Đề xuất và triển khai các giải pháp phù hợp với nhu cầu thực tế, bảo đảm hiệu quả đầu tư và khả năng phát triển lâu dài."
       }
     ]
   },
@@ -35,99 +35,100 @@
     "items": [
       {
         "id": "01",
-        "title": "Giá trị và Niềm tin là trên hết",
-        "description": "Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp."
+        "title": "Niềm tin tạo nên giá trị",
+        "description": "Lấy uy tín, trách nhiệm và sự tin cậy làm nền tảng để xây dựng những mối quan hệ hợp tác bền vững."
       },
       {
         "id": "02",
-        "title": "Tôn trọng giá trị cá nhân",
-        "description": "Ứng dụng công nghệ mới nhất tối ưu hiệu quả và năng cao năng lực cạnh tranh."
+        "title": "Con người tạo nên sức mạnh",
+        "description": "Tôn trọng năng lực, sự khác biệt và giá trị của mỗi cá nhân, xây dựng môi trường làm việc chuyên nghiệp, gắn kết và cùng phát triển."
       },
       {
         "id": "03",
-        "title": "Tư duy hệ thống - Tư duy toàn cầu",
-        "description": "Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình."
+        "title": "Tư duy toàn diện",
+        "description": "Tiếp cận mọi vấn đề bằng góc nhìn tổng thể, đồng bộ và chuẩn mực, bảo đảm giải pháp phù hợp với yêu cầu thực tiễn và xu hướng công nghệ."
       },
       {
         "id": "04",
-        "title": "Học tập liên tục - Đổi mới không ngừng",
-        "description": "Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp."
+        "title": "Đổi mới để dẫn đầu",
+        "description": "Không ngừng cập nhật công nghệ, nâng cao năng lực và hoàn thiện phương thức triển khai để đáp ứng những yêu cầu ngày càng cao của thị trường."
       },
       {
         "id": "05",
-        "title": "Một công ty - Một gia đình",
-        "description": "Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp."
+        "title": "Đồng hành và phát triển bền vững",
+        "description": "Xây dựng quan hệ hợp tác lâu dài trên nền tảng chia sẻ giá trị, cùng phát triển và cùng thành công."
       }
     ]
   },
   "solutions": [
     {
-      "slug": "giai-phap-tich-hop",
-      "title": "Giải pháp tích hợp",
-      "src": "/image/solution/integration.jpg",
-      "alt": "Giải pháp tích hợp",
-      "desc": "GS GROUP có năng lực triển khai trọn gói Data Center, các giải pháp hội nghị truyền hình, và hệ thống thiết bị trường quay chuyên nghiệp."
-    },
-    {
       "slug": "an-ninh-quoc-phong",
       "title": "An ninh - Quốc phòng",
       "src": "/image/solution/military.jpg",
       "alt": "An ninh - Quốc phòng",
-      "desc": "GS GROUP cung cấp nền tảng quản lý mối đe dọa bên ngoài (External Threat Management) và giải pháp phù hợp cho hạ tầng trọng yếu."
+      "desc": "Tích hợp các giải pháp công nghệ đáp ứng yêu cầu cao về bảo mật, độ tin cậy và khả năng vận hành liên tục cho các hệ thống an ninh – quốc phòng."
     },
     {
       "slug": "bao-mat-attt",
       "title": "Bảo mật - ATTT",
       "src": "/image/solution/security.jpg",
       "alt": "Bảo mật - ATTT",
-      "desc": "GS GROUP cung cấp nền tảng quản lý mối đe dọa bên ngoài (External Threat Management) và giải pháp phù hợp cho hạ tầng trọng yếu."
+      "desc": "Tích hợp các giải pháp bảo mật giúp phát hiện sớm mối đe dọa, bảo vệ hạ tầng CNTT và tăng cường năng lực phòng vệ trước các nguy cơ an ninh mạng."
     },
     {
       "slug": "dien-luc-nang-luong",
       "title": "Điện lực - Năng lượng",
       "src": "/image/solution/energy.jpg",
       "alt": "Điện lực - Năng lượng",
-      "desc": "GS GROUP cung cấp giải pháp quản lý thiết bị, sửa chữa và báo trì, thu thập và truyền tải số liệu kỹ thuật, giám sát từ xa."
+      "desc": "Tích hợp các giải pháp phần mềm công nghiệp hỗ trợ quản lý dữ liệu, tài sản, bảo trì và vận hành, góp phần nâng cao hiệu quả khai thác, tối ưu nguồn lực và đảm bảo hệ thống điện, năng lượng vận hành an toàn, ổn định."
     },
     {
       "slug": "vien-thong",
       "title": "Viễn thông",
       "src": "/image/solution/tele.jpg",
       "alt": "Viễn thông",
-      "desc": "GS GROUP cung cấp giải pháp truyền thông di động cao cấp thế hệ mới, mang lại khả năng kiểm soát toàn diện quyền riêng tư."
+      "desc": "Cung cấp các giải pháp viễn thông thế hệ mới, hỗ trợ phát triển hệ sinh thái dịch vụ số, tăng cường bảo mật và nâng cao giá trị cho thuê bao."
     },
     {
       "slug": "hang-khong",
       "title": "Hàng không",
       "src": "/image/solution/air.jpg",
       "alt": "Hàng không",
-      "desc": "GS GROUP cung cấp giải pháp quản lý và lập lịch khai thác bay, hỗ trợ phân công phi công – tiếp viên."
+      "desc": "Cung cấp các giải pháp số hoá hoạt động khai thác sân bay, hỗ trợ quản lý dữ liệu, điều phối nguồn lực và nâng cao hiệu quả vận hành."
     }
   ],
   "projects": [
     {
       "id": "01",
-      "slug": "phan-mem-phan-bay-aves",
-      "category": "VIETNAM AIRLINES",
-      "title": "Phần mềm phân bay (AVES)",
-      "img": "/image/project/aves.jpg",
-      "description": "Năm 2018, Chúng tôi được VNA lựa chọn là đơn vị cung cấp giải pháp phần mềm phân bay phi công, tiếp viên (AVES)."
+      "slug": "he-thong-gsm-co-dong",
+      "category": "CỤC KTNV - BỘ CÔNG AN | 2017",
+      "title": "Hệ thống GSM cơ động và Phân tích tín hiệu vô tuyến",
+      "img": "/image/project/gms.jpg",
+      "description": "GS-Group được lựa chọn triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến, đáp ứng các yêu cầu khắt khe về kỹ thuật, độ ổn định và bảo mật trong lĩnh vực an ninh. Dự án đánh dấu năng lực của GS-Group trong việc triển khai các hệ thống công nghệ cho các cơ quan trọng yếu."
+    },
+    {
+      "id": "01b",
+      "slug": "he-thong-gsm-co-dong",
+      "category": "CỤC KTNV - BỘ CÔNG AN | 2017",
+      "title": "Hệ thống GSM cơ động và Phân tích tín hiệu vô tuyến",
+      "img": "/image/project/gms.jpg",
+      "description": "GS-Group được lựa chọn triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến phục vụ nhiệm vụ chuyên môn của Cục Kỹ thuật Nghiệp vụ – Bộ Công an. Dự án đòi hỏi yêu cầu cao về kỹ thuật, tính bảo mật và độ tin cậy, góp phần khẳng định năng lực triển khai các hệ thống công nghệ phục vụ lĩnh vực an ninh."
     },
     {
       "id": "02",
-      "slug": "he-thong-gsm-co-dong",
-      "category": "CỤC KTVN - BỘ CÔNG AN",
-      "title": "Hệ thống GSM cơ động",
-      "img": "/image/project/gms.jpg",
-      "description": "Năm 2017, Chúng tôi được lựa chọn là đơn vị triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến cho Cục KTNV - Bộ Công an."
+      "slug": "phan-mem-phan-bay-aves",
+      "category": "VIETNAM AIRLINES | 2018",
+      "title": "Hệ thống lập kế hoạch phân bay phi công và tiếp viên (AVES)",
+      "img": "/image/project/aves.jpg",
+      "description": "GS-Group triển khai giải pháp AVES hỗ trợ lập kế hoạch và điều phối lịch phân bay cho đội ngũ phi công và tiếp viên của Vietnam Airlines. Sau khi hệ thống đi vào vận hành, GS-Group tiếp tục đồng hành thông qua các dịch vụ bảo trì, nâng cấp và hỗ trợ kỹ thuật, đảm bảo hệ thống hoạt động ổn định và đáp ứng yêu cầu khai thác lâu dài."
     },
     {
       "id": "03",
       "slug": "he-thong-an-toan-thong-tin",
       "category": "TỔNG CÔNG TY TRUYỀN TẢI ĐIỆN QUỐC GIA",
-      "title": "Hệ thống An toàn Thông tin",
+      "title": "Hệ thống An toàn thông tin",
       "img": "/image/project/sec.jpg",
-      "description": "Dự án trang bị hệ thống An ninh thông tin cho Tổng công ty Truyền tải điện Quốc gia nhằm xây dựng hạ tầng bảo mật tổng thể."
+      "description": "Triển khai hệ thống an toàn thông tin nhằm xây dựng hạ tầng bảo mật tổng thể cho Tổng công ty Truyền tải điện Quốc gia. Giải pháp góp phần bảo vệ hệ thống công nghệ thông tin, hỗ trợ vận hành lưới điện an toàn, liên tục và đáp ứng các yêu cầu về an toàn thông tin đối với hạ tầng năng lượng trọng yếu."
     }
   ],
   "partners": [
@@ -165,7 +166,7 @@
     }
   ],
   "sectionLabels": {
-    "solutions": "GIẢI PHÁP",
+    "solutions": "LĨNH VỰC HOẠT ĐỘNG",
     "projects": "Dự án tiêu biểu",
     "viewMore": "Xem thêm",
     "partners": "ĐỐI TÁC CỦA CHÚNG TÔI"
@@ -235,16 +236,15 @@
           "description": "Mỗi giải pháp bắt đầu bằng việc khảo sát hiện trạng, xác định mục tiêu vận hành và xây dựng kiến trúc phù hợp với nguồn lực của khách hàng.",
           "image": "/image/solution/security.jpg",
           "imageAlt": "Chuyên gia phân tích hệ thống bảo mật",
-          "imagePosition": "left",
-          "imageStyle": "cover",
-          "buttonHref": "projects/he-thong-gsm-co-dong"
+          "imagePosition": "auto",
+          "imageStyle": "cover"
         },
         {
           "title": "Triển khai đồng bộ, kiểm soát chặt chẽ",
           "description": "Quy trình triển khai được chuẩn hóa từ tích hợp thiết bị, phần mềm đến kiểm thử, chuyển giao và đào tạo đội ngũ vận hành.",
           "image": "/image/solution/tele.jpg",
           "imageAlt": "Hệ thống viễn thông được tích hợp đồng bộ",
-          "imagePosition": "left",
+          "imagePosition": "auto",
           "imageStyle": "cover"
         },
         {
@@ -252,11 +252,10 @@
           "description": "Dịch vụ giám sát, bảo trì và nâng cấp giúp hệ thống luôn ổn định, bảo mật và thích ứng với những yêu cầu mới.",
           "image": "/image/solution/energy.jpg",
           "imageAlt": "Hệ thống năng lượng và trung tâm vận hành",
-          "imagePosition": "left",
+          "imagePosition": "auto",
           "imageStyle": "cover"
         }
-      ],
-      "layout": "immersive"
+      ]
     },
     {
       "type": "projects",
@@ -366,51 +365,56 @@
     {
       "type": "solutions",
       "slug": "dien-luc-nang-luong",
-      "eyebrow": "Giải pháp",
-      "title": "Điện lực - Năng lượng",
-      "summary": "GS GROUP thấu hiểu các bài toán về dữ liệu, vận hành và an toàn thông tin trong quá trình số hóa ngành Điện lực Việt Nam. Cùng INTER RAO EUS và SIGMA, chúng tôi tích hợp, bản địa hóa các giải pháp tiên tiến, phù hợp với hạ tầng, quy trình vận hành và yêu cầu đặc thù tại Việt Nam.",
-      "heroImage": "/uploads/1785231067205-7rema9zc7fc.png",
-      "heroImageAlt": "Điện lực - Năng lượng",
+      "layout": "immersive",
+      "eyebrow": "GIẢI PHÁP ĐIỆN LỰC & NĂNG LƯỢNG",
+      "title": "Số hóa dữ liệu và vận hành cho hạ tầng năng lượng hiện đại",
+      "summary": "Kết nối dữ liệu, quản lý, bảo trì thiết bị kỹ thuật, phân tích và chuẩn đoán tình trạng, hoạt động hiện trường trên một hệ sinh thái giải pháp được thiết kế cho ngành điện lực và năng lượng.",
+      "heroImage": "/uploads/1785916794526-88nigvye1zd.png",
+      "heroImageAlt": "Giải pháp điện lực và năng lượng",
       "sections": [
         {
           "kind": "heading",
-          "title": "Case Study",
+          "title": "CASE STUDIES",
           "description": "",
           "image": "",
-          "imageAlt": "",
-          "imagePosition": "auto",
-          "imageStyle": "cover",
-          "buttonHref": ""
+          "imageAlt": ""
         },
         {
-          "kind": "content",
-          "title": "JSC \"Inter RAO – Electric Power Generation“",
-          "description": "Công ty Cổ phần Phát điện Tomsk, một doanh nghiệp quan trọng trong lĩnh vực năng lượng Nga. Lĩnh vực hoạt động chính: sản xuất và cung cấp điện và nhiệt cho khu vực Omsk và vùng lân cận (Tomsk/Novosibirsk) ",
-          "image": "/uploads/1785865052848-anwlzfc4kl.jpg",
-          "imageAlt": "Nhà Máy điện",
-          "imagePosition": "auto",
-          "imageStyle": "cover",
-          "buttonHref": ""
-        },
-        {
-          "kind": "heading",
-          "title": "Thách Thức",
+          "kind": "casestudies",
+          "title": "",
           "description": "",
-          "image": "",
+          "image": "/image/solution/energy.jpg",
           "imageAlt": "",
-          "imagePosition": "auto",
-          "imageStyle": "cover",
-          "buttonHref": ""
+          "points": [
+            {
+              "title": "JSC \"Inter RAO – Electric Power Generation\"",
+              "description": "Triển khai SIGMA.SSPTI và SIGMA.SUPA phục vụ thu thập dữ liệu công nghệ và quản lý tài sản.",
+              "href": "/solutions/case-inter-rao"
+            },
+            {
+              "title": "LLC \"Bashkir Generation Company\"",
+              "description": "Tối ưu hóa công tác bảo trì và vận hành hiện trường với SIGMA.SUPA và SIGMA.ALKOR.",
+              "href": "/solutions/case-bashkir"
+            },
+            {
+              "title": "JSC \"Territorial Generating Company No. 11\"",
+              "description": "Tích hợp hệ sinh thái SIGMA phục vụ quản lý toàn vòng đời tài sản và vận hành.",
+              "href": "/solutions/case-tgk11"
+            },
+            {
+              "title": "JSC \"Tomsk Generation\"",
+              "description": "Triển khai SIGMA.ALKOR và SIGMA.SUS nâng cao năng lực hiện trường và trực quan hóa lưới điện.",
+              "href": "/solutions/case-tomsk"
+            }
+          ]
         },
         {
           "kind": "image-points",
-          "title": "",
+          "title": "NHỮNG THÁCH THỨC ĐANG TỒN TẠI",
           "description": "",
-          "image": "/uploads/1785866566906-s3uuxwmg6pp.jpg",
-          "imageAlt": "Thách thức",
-          "imagePosition": "left",
-          "imageStyle": "cover",
-          "buttonHref": "",
+          "image": "/image/solution/energy.jpg",
+          "imageAlt": "Thách thức vận hành hạ tầng năng lượng",
+          "imagePosition": "right",
           "points": [
             {
               "title": "Dữ liệu thiết bị phân mảnh",
@@ -431,24 +435,13 @@
           ]
         },
         {
-          "kind": "heading",
-          "title": "Giá trị chúng tôi mang lại",
-          "description": "",
-          "image": "",
-          "imageAlt": "",
-          "imagePosition": "auto",
-          "imageStyle": "cover",
-          "buttonHref": ""
-        },
-        {
           "kind": "image-points",
-          "title": "",
-          "description": "",
-          "image": "/uploads/1785866972554-s0mrlslaqm.jpg",
-          "imageAlt": "Giá trị",
+          "title": "Hệ sinh thái SIGMA kết nối toàn bộ chu trình này.",
+          "description": "Những giá trị chúng tôi mang lại cho Khách hàng",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Hệ sinh thái SIGMA",
           "imagePosition": "right",
-          "imageStyle": "cover",
-          "buttonHref": "",
+          "imageStyle": "background",
           "points": [
             {
               "title": "Quan sát toàn diện",
@@ -470,56 +463,48 @@
         },
         {
           "kind": "heading",
-          "title": "Giới thiệu giải pháp",
-          "description": "",
+          "title": "Giới thiệu các giải pháp",
+          "description": "Hệ sinh thái SIGMA được thiết kế chuyên biệt cho ngành điện lực và năng lượng",
           "image": "",
-          "imageAlt": "",
-          "imagePosition": "auto",
-          "imageStyle": "cover",
-          "buttonHref": ""
+          "imageAlt": ""
         },
         {
+          "kind": "content",
           "title": "SIGMA.SSPTI",
-          "description": "SSPTI là hệ thống phần mềm công nghiệp hỗ trợ thu thập, hợp nhất, chuẩn hóa, xử lý, lưu trữ và truyền tải dữ liệu công nghệ từ nhiều nguồn khác nhau như DCS, SCADA, PLC, cảm biến, thiết bị đo và cơ sở dữ liệu. Hệ thống tập trung dữ liệu phân tán trên một nền tảng thống nhất, cung cấp nguồn dữ liệu tin cậy phục vụ giám sát vận hành, phân tích, báo cáo và tích hợp với các hệ thống nghiệp vụ, quản lý và phân tích như ERP, EAM và PAS",
-          "image": "/uploads/1785231260242-168xcl4liha.png",
-          "imageAlt": "SIGMA.SSPTI",
-          "imagePosition": "auto",
+          "description": "Thu thập và chuẩn hóa dữ liệu từ DCS, SCADA, cảm biến và các hệ thống chuyên ngành, hình thành nguồn dữ liệu thống nhất. Kiểm tra và xử lý dữ liệu trước khi cung cấp cho các hệ thống phân tích, giám sát. Tạo nền tảng dữ liệu dùng chung, giúp mở rộng kết nối thuận lợi hơn.",
+          "image": "/image/solution/energy.jpg",
+          "imageAlt": "SIGMA SSPTI",
+          "imagePosition": "right",
           "imageStyle": "cover"
         },
         {
+          "kind": "content",
           "title": "SIGMA.SUPA",
-          "description": "SUPA (Enterprise Asset Management - EAM) là hệ thống quản lý tài sản doanh nghiệp dành cho ngành điện và năng lượng, hỗ trợ số hóa và quản lý toàn bộ vòng đời tài sản trên một nền tảng thống nhất. Hệ thống tích hợp dữ liệu thiết bị, tình trạng kỹ thuật, bảo trì – sửa chữa, vật tư và chi phí vận hành, giúp doanh nghiệp nâng cao độ tin cậy của thiết bị, chuẩn hóa quy trình bảo trì và tối ưu hiệu quả khai thác tài sản. ",
-          "image": "/uploads/1785231144990-e17979j2gw6.png",
-          "imageAlt": "SIGMA.SUPA",
-          "imagePosition": "auto",
+          "description": "Theo dõi tập trung hồ sơ, tình trạng kỹ thuật và lịch sử của từng thiết bị. Lập kế hoạch công việc, nhân lực, vật tư và ngân sách dựa trên nhu cầu thực tế. Hỗ trợ ưu tiên sửa chữa, thay thế và đầu tư theo mức độ quan trọng của tài sản.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "SIGMA SUPA",
+          "imagePosition": "left",
           "imageStyle": "cover"
         },
         {
-          "title": "SIGMA.PAS",
-          "description": "SIGMA.PAS (Predictive Analytics System) là giải pháp giám sát, chẩn đoán và phân tích tình trạng thiết bị, ứng dụng mô hình toán học tiên tiến kết hợp trí tuệ nhân tạo (AI) và Machine Learning (ML). Giải pháp giúp phát hiện sớm các bất thường, dự báo nguy cơ hư hỏng và đánh giá rủi ro sự cố trước khi xảy ra, góp phần nâng cao độ tin cậy vận hành và tối ưu công tác bảo trì. ",
-          "image": "/uploads/1785231213740-klqss80yvxa.png",
-          "imageAlt": "SIGMA.PAS",
-          "imagePosition": "auto",
+          "kind": "content",
+          "title": "SIGMA.ALKOR",
+          "description": "Hỗ trợ nhân viên tiếp nhận nhiệm vụ, kiểm tra thiết bị và ghi nhận kết quả ngay tại hiện trường. Cập nhật nhanh khiếm khuyết, thông số và tiến độ để bộ phận quản lý kịp thời điều phối. Chuẩn hóa checklist, quy trình thao tác và yêu cầu an toàn cho từng công việc.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "SIGMA ALKOR",
+          "imagePosition": "right",
           "imageStyle": "cover"
         },
         {
-          "title": "SIGMA.ALKOR ",
-          "description": "Giải pháp SIGMA.ALKOR – Quản lý đội kỹ thuật hiện trường\nlà nền tảng phần mềm di động hỗ trợ quản lý và tự động hóa công việc của lực lượng kỹ thuật hiện trường trong ngành điện và hạ tầng tiện ích. Giải pháp tích hợp định vị GPS, kết nối với các hệ thống MRO/EAM/ERP và GIS, hỗ trợ điều phối các hoạt động kiểm tra, bảo trì, sửa chữa và xử lý sự cố.\n",
-          "image": "/uploads/1785231290300-mwtgwkg515b.png",
-          "imageAlt": "SIGMA.ALKOR ",
-          "imagePosition": "auto",
-          "imageStyle": "cover"
-        },
-        {
-          "title": "SIGMA.SUS ",
-          "description": "SIGMA.SUS là hệ thống quản lý lưới điện hỗ trợ thu thập, tổng hợp, xác minh và trực quan hóa dữ liệu từ nhiều hệ thống công nghệ và nghiệp vụ trên một nền tảng thống nhất. Giải pháp giúp chuẩn hóa dữ liệu thiết bị, kiểm tra tính chính xác của cấu trúc và dữ liệu lưới điện, đồng thời cung cấp thông tin phục vụ điều hành theo tình huống, bảo trì – sửa chữa, truyền tải, quy hoạch phát triển lưới điện và quản lý đấu nối. ",
-          "image": "/uploads/1785231319093-84k6rcgrwwp.png",
-          "imageAlt": "SIGMA.SUS ",
-          "imagePosition": "auto",
+          "kind": "content",
+          "title": "SIGMA.SUS",
+          "description": "Hiển thị đường dây, trạm biến áp, thiết bị và khách hàng trên bản đồ GIS thống nhất. Giúp xác định vị trí sự cố, thiết bị liên quan và khu vực khách hàng bị ảnh hưởng. Cung cấp dữ liệu không gian và kỹ thuật phục vụ vận hành, bảo trì và đầu tư phát triển.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "SIGMA SUS",
+          "imagePosition": "left",
           "imageStyle": "cover"
         }
-      ],
-      "layout": "immersive"
+      ]
     },
     {
       "type": "solutions",
@@ -657,6 +642,150 @@
           "image": "/image/solution/security.jpg",
           "imageAlt": "Giám sát và vận hành hệ thống",
           "imagePosition": "auto",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "case-inter-rao",
+      "layout": "editorial",
+      "eyebrow": "CASE STUDY | ĐIỆN LỰC & NĂNG LƯỢNG",
+      "title": "JSC Inter RAO – Electric Power Generation",
+      "summary": "Triển khai hệ sinh thái SIGMA phục vụ thu thập dữ liệu công nghệ và quản lý tài sản cho tập đoàn điện lực Inter RAO.",
+      "heroImage": "/image/solution/energy.jpg",
+      "heroImageAlt": "Inter RAO Electric Power Generation",
+      "sections": [
+        {
+          "title": "Bối cảnh",
+          "description": "JSC Inter RAO – Electric Power Generation vận hành nhiều nhà máy điện với hàng nghìn thiết bị công nghiệp. Dữ liệu từ SCADA, DCS và cảm biến tồn tại rời rạc, thiếu nền tảng thống nhất để phân tích và ra quyết định vận hành.",
+          "image": "/image/solution/energy.jpg",
+          "imageAlt": "Nhà máy điện Inter RAO",
+          "imagePosition": "right",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Giải pháp triển khai",
+          "description": "Triển khai SIGMA.SSPTI để thu thập và chuẩn hóa luồng dữ liệu công nghệ từ toàn bộ các hệ thống hiện hữu, kết hợp SIGMA.SUPA để xây dựng hệ thống quản lý tài sản tập trung, theo dõi tình trạng kỹ thuật, lịch sử bảo trì và vòng đời thiết bị.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Hệ thống SIGMA tại Inter RAO",
+          "imagePosition": "left",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Kết quả",
+          "description": "Nguồn dữ liệu vận hành thống nhất từ DCS, SCADA và cảm biến. Công tác bảo trì chuyển từ bị động sang chủ động, giảm thiểu sự cố ngoài kế hoạch. Đội ngũ quản lý ra quyết định dựa trên dữ liệu chính xác, cập nhật liên tục.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Kết quả vận hành",
+          "imagePosition": "right",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "case-bashkir",
+      "layout": "editorial",
+      "eyebrow": "CASE STUDY | ĐIỆN LỰC & NĂNG LƯỢNG",
+      "title": "LLC Bashkir Generation Company",
+      "summary": "Ứng dụng SIGMA.SUPA và SIGMA.ALKOR tối ưu hóa công tác bảo trì và vận hành hiện trường tại Bashkir Generation Company.",
+      "heroImage": "/image/solution/energy.jpg",
+      "heroImageAlt": "Bashkir Generation Company",
+      "sections": [
+        {
+          "title": "Bối cảnh",
+          "description": "LLC Bashkir Generation Company là doanh nghiệp sản xuất điện và nhiệt lớn, vận hành nhiều tổ máy và thiết bị phân bổ trên địa bàn rộng. Công tác bảo trì còn bị động, thiếu kết nối giữa đội ngũ hiện trường và bộ phận quản lý.",
+          "image": "/image/solution/energy.jpg",
+          "imageAlt": "Nhà máy Bashkir",
+          "imagePosition": "right",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Giải pháp triển khai",
+          "description": "Triển khai SIGMA.SUPA để quản lý tập trung hồ sơ thiết bị, lên kế hoạch bảo trì theo nhu cầu thực tế. SIGMA.ALKOR hỗ trợ kỹ thuật viên hiện trường tiếp nhận lệnh công việc, kiểm tra và ghi nhận kết quả trực tiếp trên thiết bị di động.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Giải pháp SIGMA tại Bashkir",
+          "imagePosition": "left",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Kết quả",
+          "description": "Quy trình bảo trì được chuẩn hóa và chủ động hơn. Thông tin hiện trường được cập nhật tức thời vào hệ thống quản lý, rút ngắn thời gian xử lý sự cố và nâng cao an toàn vận hành.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Kết quả vận hành Bashkir",
+          "imagePosition": "right",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "case-tgk11",
+      "layout": "editorial",
+      "eyebrow": "CASE STUDY | ĐIỆN LỰC & NĂNG LƯỢNG",
+      "title": "JSC Territorial Generating Company No. 11",
+      "summary": "Tích hợp hệ sinh thái SIGMA hỗ trợ quản lý toàn vòng đời tài sản và nâng cao hiệu quả vận hành cho TGK-11.",
+      "heroImage": "/image/solution/energy.jpg",
+      "heroImageAlt": "Territorial Generating Company No. 11",
+      "sections": [
+        {
+          "title": "Bối cảnh",
+          "description": "JSC Territorial Generating Company No. 11 (TGK-11) vận hành các nhà máy nhiệt điện tại Tây Siberia. Tài sản thiết bị đa dạng với dữ liệu kỹ thuật, bảo trì và vật tư chưa được quản lý thống nhất trên một nền tảng.",
+          "image": "/image/solution/energy.jpg",
+          "imageAlt": "Nhà máy TGK-11",
+          "imagePosition": "right",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Giải pháp triển khai",
+          "description": "Tích hợp toàn diện hệ sinh thái SIGMA bao gồm SIGMA.SSPTI thu thập dữ liệu, SIGMA.SUPA quản lý tài sản và SIGMA.ALKOR hỗ trợ vận hành hiện trường. Hệ thống kết nối dữ liệu kỹ thuật, bảo trì, vật tư và chi phí vận hành theo vòng đời tài sản.",
+          "image": "/image/solution/integration.jpg",
+          "imageAlt": "Hệ sinh thái SIGMA tại TGK-11",
+          "imagePosition": "left",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Kết quả",
+          "description": "TGK-11 có góc nhìn toàn diện về tài sản trên một nền tảng duy nhất. Hiệu quả khai thác được tối ưu, chi phí bảo trì giảm và độ tin cậy của thiết bị được nâng cao đáng kể.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Kết quả vận hành TGK-11",
+          "imagePosition": "right",
+          "imageStyle": "cover"
+        }
+      ]
+    },
+    {
+      "type": "solutions",
+      "slug": "case-tomsk",
+      "layout": "editorial",
+      "eyebrow": "CASE STUDY | ĐIỆN LỰC & NĂNG LƯỢNG",
+      "title": "JSC Tomsk Generation",
+      "summary": "Triển khai SIGMA.ALKOR và SIGMA.SUS nâng cao năng lực hiện trường và trực quan hóa lưới điện tại Tomsk Generation.",
+      "heroImage": "/image/solution/energy.jpg",
+      "heroImageAlt": "Tomsk Generation",
+      "sections": [
+        {
+          "title": "Bối cảnh",
+          "description": "JSC Tomsk Generation là doanh nghiệp sản xuất và cung cấp điện, nhiệt tại khu vực Tomsk và vùng lân cận. Lưới điện phân tán, thông tin kiểm tra và sửa chữa thiếu đồng bộ giữa hiện trường và trung tâm điều hành.",
+          "image": "/image/solution/energy.jpg",
+          "imageAlt": "Nhà máy Tomsk",
+          "imagePosition": "right",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Giải pháp triển khai",
+          "description": "SIGMA.ALKOR được triển khai để số hóa công tác hiện trường, hỗ trợ kỹ thuật viên tiếp nhận nhiệm vụ, kiểm tra thiết bị và báo cáo kết quả tức thời. SIGMA.SUS cung cấp nền tảng GIS trực quan hóa toàn bộ lưới điện, hỗ trợ xử lý sự cố và quy hoạch phát triển.",
+          "image": "/image/solution/tele.jpg",
+          "imageAlt": "Giải pháp SIGMA tại Tomsk",
+          "imagePosition": "left",
+          "imageStyle": "cover"
+        },
+        {
+          "title": "Kết quả",
+          "description": "Công tác hiện trường được chuẩn hóa, thời gian xử lý sự cố rút ngắn đáng kể. Đội ngũ điều hành có bức tranh toàn diện về lưới điện theo thời gian thực, nâng cao chất lượng quy hoạch và vận hành.",
+          "image": "/image/solution/security.jpg",
+          "imageAlt": "Kết quả vận hành Tomsk",
+          "imagePosition": "right",
           "imageStyle": "cover"
         }
       ]
