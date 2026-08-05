@@ -6,9 +6,9 @@ export const metadata: Metadata = { title: 'Admin CMS – General Systems' }
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-gray-50 font-sans">
+    <div className="flex h-screen overflow-hidden bg-gray-50 font-sans">
       <AdminSidebar />
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className="min-w-0 flex-1 overflow-y-scroll">{children}</main>
     </div>
   )
 }

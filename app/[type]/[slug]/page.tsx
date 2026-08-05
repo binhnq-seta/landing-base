@@ -104,7 +104,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
         const sectionKind = section.kind ?? 'content'
         if (sectionKind === 'heading') {
           return (
-            <section key={section.title + i} className="rounded-[1.5rem] px-5 py-10 text-center md:px-10 md:py-14">
+            <section key={section.title + i} className="rounded-[1.5rem] px-5 py-4 text-center md:px-10 md:py-6">
               <h2
                 data-detail-reveal
                 className="mx-auto max-w-4xl text-[3.375rem] font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-[4.5rem] lg:text-[5.25rem]"
@@ -112,7 +112,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                 {section.title}
               </h2>
               {section.description && (
-                <p data-detail-reveal data-detail-delay="0.1" className="mx-auto mt-4 max-w-2xl text-lg font-semibold text-slate-500 md:text-xl">
+                <p data-detail-reveal data-detail-delay="0.1" className="mx-auto mt-2 max-w-2xl text-lg font-semibold text-slate-500 md:text-xl">
                   {section.description}
                 </p>
               )}
@@ -136,17 +136,17 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                     <div
                       data-detail-reveal
                       data-detail-delay={`${idx * 0.08}`}
-                      className={`group relative flex min-h-[200px] flex-col justify-between overflow-hidden rounded-2xl bg-[#00162F] p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${href ? 'cursor-pointer' : ''}`}
+                      className={`group relative flex h-full min-h-[200px] flex-col justify-between overflow-hidden rounded-2xl border border-blue-200 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl ${href ? 'cursor-pointer' : ''}`}
                     >
                       <div>
-                        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-400">Case Study</p>
-                        <h3 className="text-lg font-bold leading-snug text-white">{point.title}</h3>
+                        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-600">Case Study</p>
+                        <h3 className="text-lg font-bold leading-snug text-[#00162F]">{point.title}</h3>
                         {point.description && (
-                          <p className="mt-2 text-sm leading-relaxed text-slate-400">{point.description}</p>
+                          <p className="mt-2 text-sm leading-relaxed text-slate-600">{point.description}</p>
                         )}
                       </div>
                       {href && (
-                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-white/50 transition-colors group-hover:text-white">
+                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors group-hover:text-blue-800">
                           Xem chi tiết
                           <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true">
                             <path fillRule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clipRule="evenodd" />
@@ -156,8 +156,8 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                     </div>
                   )
                   return href
-                    ? <Link key={idx} href={href} className="block">{inner}</Link>
-                    : <div key={idx}>{inner}</div>
+                    ? <Link key={idx} href={href} className="block h-full">{inner}</Link>
+                    : <div key={idx} className="h-full">{inner}</div>
                 })}
               </div>
             </section>
@@ -221,32 +221,38 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
           // ── Default side-by-side variant ──────────────────────────────────
           const imgRight = section.imagePosition !== 'left'
           return (
-            <section key={section.title + i} className="space-y-8">
-              {section.title && (
-                <h2
-                  data-detail-reveal
-                  className="max-w-4xl text-3xl font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]"
-                >
-                  {section.title}
-                </h2>
-              )}
-
+            <section key={section.title + i}>
               <div className="grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-10 lg:gap-12">
-                <div className={`${imgRight ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}>
-                  <div className="grid gap-4 sm:grid-cols-2 lg:gap-5">
+                <div className={`space-y-6 ${imgRight ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}>
+                  {section.title && (
+                    <h2
+                      data-detail-reveal
+                      className="text-3xl font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]"
+                    >
+                      {section.title}
+                    </h2>
+                  )}
+                  <div>
                     {points.map((point, pointIndex) => (
                       <article
                         key={point.title + pointIndex}
                         data-detail-reveal
-                        data-detail-delay={`${pointIndex * 0.06}`}
-                        className="rounded-xl bg-white p-6"
+                        data-detail-reveal-early
+                        className="group grid grid-cols-[2.75rem_minmax(0,1fr)] gap-3 py-5 md:grid-cols-[3.5rem_minmax(0,1fr)] md:gap-4 md:py-6"
                       >
-                        <h3 className="mb-2 text-xl font-bold">
-                          {point.title}
-                        </h3>
-                        <p className="font-light leading-relaxed">
-                          {point.description}
-                        </p>
+                        <span className="pt-0.5 text-sm font-bold tabular-nums text-[#A31F1A] transition-colors group-hover:text-[#7f1713] md:text-base">
+                          {String(pointIndex + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                          <h3 className="text-lg font-bold leading-snug text-[#00162F] transition-colors group-hover:text-[#A31F1A] md:text-xl">
+                            {point.title}
+                          </h3>
+                          {point.description && (
+                            <p className="mt-2 font-light leading-relaxed text-slate-600">
+                              {point.description}
+                            </p>
+                          )}
+                        </div>
                       </article>
                     ))}
                     {points.length === 0 && (
