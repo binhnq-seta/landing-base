@@ -175,7 +175,7 @@ function HeroHeadline({ page }: { page: CMSDetailPage }) {
           {page.summary || <span className="text-slate-300">Tóm tắt…</span>}
         </p>
       </div>
-      <div className="relative self-stretch px-5 pb-10 pt-6 md:px-6 md:py-10">
+      <div className="relative self-stretch px-5 pb-10 pt-16 md:px-6 md:pb-10 md:pt-20">
         <div className="relative h-full min-h-[340px] overflow-hidden rounded-2xl bg-slate-200 md:min-h-[460px] md:rounded-3xl">
           {page.heroImage
             ? <Img src={page.heroImage} alt={page.heroImageAlt} />
@@ -190,7 +190,7 @@ function HeroHeadline({ page }: { page: CMSDetailPage }) {
 function HeroMagazine({ page }: { page: CMSDetailPage }) {
   return (
     <div className="pt-16">
-      <div className="relative aspect-[16/9] max-h-[72vh] overflow-hidden bg-slate-200">
+      <div className="relative h-[42vh] min-h-[240px] max-h-[520px] w-full overflow-hidden bg-slate-200 md:h-[55vh]">
         {page.heroImage
           ? <Img src={page.heroImage} alt={page.heroImageAlt} />
           : <Placeholder label="Chưa có ảnh hero" />}

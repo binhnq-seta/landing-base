@@ -58,7 +58,7 @@ const NAV_VI: NavLink[] = [
       { label: 'Dự án tiêu biểu', href: '/#projects', items: PROJECTS_VI },
     ],
   },
-  { label: 'Liên hệ', href: '/#footer' },
+  { label: 'Liên hệ', href: '/contact' },
 ]
 
 const NAV_EN: NavLink[] = [
@@ -80,7 +80,7 @@ const NAV_EN: NavLink[] = [
       { label: 'Notable Projects', href: '/#projects', items: PROJECTS_EN },
     ],
   },
-  { label: 'Contact', href: '/#footer' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 function localeHref(pathname: string, target: 'vi' | 'en'): string {
@@ -142,6 +142,9 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
     if (label === 'Trang chủ' || label === 'Home') {
       return pathname === '/' || pathname === '/vi' || pathname === '/en'
     }
+    if (label === 'Liên hệ' || label === 'Contact') {
+      return pathname === `/${locale}/contact`
+    }
     return false
   }
 
@@ -198,7 +201,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
           {NAV_LINKS.map((link) => (
             <div key={link.label} className="group relative">
               <Link
-                href={sectionHref(link.href, locale)}
+                href={link.href === '/contact' ? `/${locale}/contact` : sectionHref(link.href, locale)}
                 aria-current={isActive(link.label) ? 'page' : undefined}
                 className={`inline-flex items-center gap-1.5 py-2 text-base font-medium tracking-wide transition-colors hover:text-[#F5383B] ${isActive(link.label) ? 'text-[#F5383B]' : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}
               >
@@ -252,7 +255,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
           {NAV_LINKS.map((link) => (
             <div key={link.label}>
               <Link
-                href={sectionHref(link.href, locale)}
+                href={link.href === '/contact' ? `/${locale}/contact` : sectionHref(link.href, locale)}
                 onClick={closeMenu}
                 aria-current={isActive(link.label) ? 'page' : undefined}
                 className={`block rounded-lg px-3 py-2 text-base font-medium transition-colors hover:text-[#F5383B] ${dark ? 'hover:bg-white/10' : 'hover:bg-slate-100'} ${isActive(link.label) ? 'text-[#F5383B]' : `${dark ? 'text-white/80' : 'text-slate-700'}`}`}

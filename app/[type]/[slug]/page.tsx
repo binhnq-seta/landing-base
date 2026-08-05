@@ -402,7 +402,7 @@ type PageHeroProps = { page: CMSDetailPage }
 function HeroHeadline({ page }: PageHeroProps) {
   return (
     <div className="grid min-h-screen items-center md:grid-cols-2">
-      <header className="px-5 pb-8 pt-32 md:px-12 md:pb-20 md:pt-40 lg:px-16">
+      <header className="px-5 pb-8 pt-32 md:px-20 md:pb-20 lg:px-16">
         {page.eyebrow && (
           <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]">
             {page.eyebrow}
@@ -415,7 +415,7 @@ function HeroHeadline({ page }: PageHeroProps) {
           {page.summary}
         </p>
       </header>
-      <div className="relative self-stretch px-5 pb-12 pt-8 md:px-8 md:py-12">
+      <div className="relative self-stretch px-5 pb-12 pt-20 md:px-8 md:pb-12">
         <div data-detail-reveal data-detail-hero className="relative h-full min-h-[420px] overflow-hidden rounded-[1.5rem] bg-slate-200 md:min-h-[580px] md:rounded-[2rem]">
           <Image
             src={page.heroImage}
@@ -435,8 +435,8 @@ function HeroHeadline({ page }: PageHeroProps) {
 /** Full-width image on top, title + summary centered below */
 function HeroMagazine({ page }: PageHeroProps) {
   return (
-    <div className="pt-28 md:pt-36">
-      <div className="relative aspect-[16/9] max-h-[80vh] overflow-hidden bg-slate-200">
+    <div className="pt-20">
+      <div className="relative left-1/2 h-[42vh] min-h-[280px] max-h-[640px] w-screen max-w-none -translate-x-1/2 overflow-hidden bg-slate-200 md:h-[58vh]">
         <Image
           src={page.heroImage}
           alt={page.heroImageAlt}
