@@ -25,10 +25,10 @@ const ICONS = [
 ]
 
 const FALLBACK_FEATURES_VI = [
-  { id: 1, title: 'Giải pháp toàn diện', description: 'Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp.' },
-  { id: 2, title: 'Công nghệ tiên tiến', description: 'Ứng dụng công nghệ mới nhất tối ưu hiệu quả và năng cao năng lực cạnh tranh.' },
-  { id: 3, title: 'Đội ngũ chuyên gia', description: 'Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình.' },
-  { id: 4, title: 'Cam kết chất lượng', description: 'Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp.' },
+  { id: 1, title: 'Am hiểu hệ thống trọng yếu', description: 'Hiểu sâu đặc thù vận hành và yêu cầu kỹ thuật của các hệ thống đòi hỏi tiêu chuẩn cao về an toàn, bảo mật và độ tin cậy.' },
+  { id: 2, title: 'Làm chủ công nghệ', description: 'Tiếp cận, đánh giá và triển khai các giải pháp công nghệ phù hợp với yêu cầu kỹ thuật và mục tiêu của từng dự án.' },
+  { id: 3, title: 'Kinh nghiệm thực chiến', description: 'Được kiểm chứng qua nhiều dự án quy mô lớn cho các cơ quan, tổ chức và doanh nghiệp trong những lĩnh vực trọng yếu.' },
+  { id: 4, title: 'Giải pháp phù hợp thực tiễn', description: 'Đề xuất và triển khai các giải pháp phù hợp với nhu cầu thực tế, bảo đảm hiệu quả đầu tư và khả năng phát triển lâu dài.' },
 ]
 
 const FALLBACK_FEATURES_EN = [
@@ -113,8 +113,8 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
   const features = data?.features?.length ? data.features : fallback
 
   const headingFallback = locale === 'en'
-    ? <><span>WHY CHOOSE</span> <p><span className="text-[#D62828]">GENERAL SYSTEMS</span>?</p></>
-    : <>VÌ SAO CHỌN <p><span className="text-[#D62828]">GENERAL SYSTEMS</span>?</p></>
+    ? <><span>WHY CHOOSE</span> <p><span className="text-[#D62828]">GS-GROUP</span>?</p></>
+    : <>VÌ SAO CHỌN <p><span className="text-[#D62828]">GS-GROUP</span>?</p></>
 
   return (
     <section ref={sectionRef} id="features" className="relative min-h-screen bg-[#F2F7FF]">

@@ -142,6 +142,38 @@ const additionalPages = [
     summary: 'Hạ tầng bảo mật tổng thể bảo vệ hệ thống công nghệ thông tin và hoạt động điều hành lưới điện quốc gia.',
     heroImage: '/image/solution/security.jpg',
   },
+  {
+    type: 'solutions' as const,
+    slug: 'case-inter-rao',
+    eyebrow: 'Case Study | Điện lực & Năng lượng',
+    title: 'JSC Inter RAO – Electric Power Generation',
+    summary: 'Triển khai hệ sinh thái SIGMA phục vụ thu thập dữ liệu công nghệ và quản lý tài sản cho Inter RAO.',
+    heroImage: '/image/solution/energy.jpg',
+  },
+  {
+    type: 'solutions' as const,
+    slug: 'case-bashkir',
+    eyebrow: 'Case Study | Điện lực & Năng lượng',
+    title: 'LLC Bashkir Generation Company',
+    summary: 'Ứng dụng SIGMA.SUPA và SIGMA.ALKOR tối ưu hóa công tác bảo trì và vận hành hiện trường.',
+    heroImage: '/image/solution/energy.jpg',
+  },
+  {
+    type: 'solutions' as const,
+    slug: 'case-tgk11',
+    eyebrow: 'Case Study | Điện lực & Năng lượng',
+    title: 'JSC Territorial Generating Company No. 11',
+    summary: 'Tích hợp hệ sinh thái SIGMA hỗ trợ quản lý toàn vòng đời tài sản và nâng cao hiệu quả vận hành.',
+    heroImage: '/image/solution/energy.jpg',
+  },
+  {
+    type: 'solutions' as const,
+    slug: 'case-tomsk',
+    eyebrow: 'Case Study | Điện lực & Năng lượng',
+    title: 'JSC Tomsk Generation',
+    summary: 'Triển khai SIGMA.ALKOR và SIGMA.SUS nâng cao năng lực hiện trường và trực quan hóa lưới điện.',
+    heroImage: '/image/solution/energy.jpg',
+  },
 ]
 
 const sharedSections: [DetailSection, DetailSection, DetailSection] = [

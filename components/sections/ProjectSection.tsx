@@ -8,30 +8,39 @@ import { gsap } from '@/lib/gsap'
 const PROJECTS = [
     {
         id: '01',
-        slug: 'phan-mem-phan-bay-aves',
-        category: 'VIETNAM AIRLINES',
-        title: 'Phần mềm phân bay (AVES)',
-        img: '/image/project/aves.jpg',
+        slug: 'he-thong-gsm-co-dong',
+        category: 'CỤC KTNV - BỘ CÔNG AN | 2017',
+        title: 'Hệ thống GSM cơ động và Phân tích tín hiệu vô tuyến',
+        img: '/image/project/gms.jpg',
         description:
-            'Năm 2018, Chúng tôi được VNA lựa chọn là đơn vị cung cấp giải pháp phần mềm phân bay phi công, tiếp viên (AVES). Cho đến nay Chúng tôi tiếp tục cung cấp dịch vụ bảo trì, nâng cấp và hỗ trợ kỹ thuật cho VNA.',
+            'GS-Group được lựa chọn triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến, đáp ứng các yêu cầu khắt khe về kỹ thuật, độ ổn định và bảo mật trong lĩnh vực an ninh. Dự án đánh dấu năng lực của GS-Group trong việc triển khai các hệ thống công nghệ cho các cơ quan trọng yếu.',
+    },
+    {
+        id: '01b',
+        slug: 'he-thong-gsm-co-dong',
+        category: 'CỤC KTNV - BỘ CÔNG AN | 2017',
+        title: 'Hệ thống GSM cơ động và Phân tích tín hiệu vô tuyến',
+        img: '/image/project/gms.jpg',
+        description:
+            'GS-Group được lựa chọn triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến phục vụ nhiệm vụ chuyên môn của Cục Kỹ thuật Nghiệp vụ – Bộ Công an. Dự án đòi hỏi yêu cầu cao về kỹ thuật, tính bảo mật và độ tin cậy, góp phần khẳng định năng lực triển khai các hệ thống công nghệ phục vụ lĩnh vực an ninh.',
     },
     {
         id: '02',
-        slug: 'he-thong-gsm-co-dong',
-        category: 'CỤC KTVN - BỘ CÔNG An',
-        title: 'Hệ thống GSM cơ động',
-        img: '/image/project/gms.jpg',
+        slug: 'phan-mem-phan-bay-aves',
+        category: 'VIETNAM AIRLINES | 2018',
+        title: 'Hệ thống lập kế hoạch phân bay phi công và tiếp viên (AVES)',
+        img: '/image/project/aves.jpg',
         description:
-            'Năm 2017, Chúng tôi được lựa chọn là đơn vị triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến cho Cục KTNV - Bộ Công an',
+            'GS-Group triển khai giải pháp AVES hỗ trợ lập kế hoạch và điều phối lịch phân bay cho đội ngũ phi công và tiếp viên của Vietnam Airlines. Sau khi hệ thống đi vào vận hành, GS-Group tiếp tục đồng hành thông qua các dịch vụ bảo trì, nâng cấp và hỗ trợ kỹ thuật, đảm bảo hệ thống hoạt động ổn định và đáp ứng yêu cầu khai thác lâu dài.',
     },
     {
         id: '03',
         slug: 'he-thong-an-toan-thong-tin',
         category: 'TỔNG CÔNG TY TRUYỀN TẢI ĐIỆN QUỐC GIA',
-        title: 'Hệ thống An toàn Thông tin',
+        title: 'Hệ thống An toàn thông tin',
         img: '/image/project/sec.jpg',
         description:
-            'Dự án trang bị hệ thống An ninh thông tin cho Tổng công ty Truyền tải điện Quốc gia nhằm xây dựng hạ tầng bảo mật tổng thể, bảo vệ an toàn hệ thống CNTT và điều hành lưới điện, đảm bảo vận hành liên tục, tin cậy và tuân thủ các yêu cầu an ninh quốc gia',
+            'Triển khai hệ thống an toàn thông tin nhằm xây dựng hạ tầng bảo mật tổng thể cho Tổng công ty Truyền tải điện Quốc gia. Giải pháp góp phần bảo vệ hệ thống công nghệ thông tin, hỗ trợ vận hành lưới điện an toàn, liên tục và đáp ứng các yêu cầu về an toàn thông tin đối với hạ tầng năng lượng trọng yếu.',
     },
 ]
 
