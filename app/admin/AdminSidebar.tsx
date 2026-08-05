@@ -34,23 +34,38 @@ export function AdminSidebar() {
         </span>
       </div>
 
-      <nav className="flex-1 p-3">
-        {NAV.map(({ href, label }) => {
-          const active = pathname.startsWith(href)
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`mb-1 flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                active
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-              }`}
-            >
-              {label}
-            </Link>
-          )
-        })}
+      <nav className="flex flex-1 flex-col p-3">
+        <div className="flex-1">
+          {NAV.map(({ href, label }) => {
+            const active = pathname.startsWith(href)
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`mb-1 flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                  active
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                {label}
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Highlighted guide link */}
+        <Link
+          href="/admin/guide"
+          className={`mt-2 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all ${
+            pathname.startsWith('/admin/guide')
+              ? 'bg-amber-500 text-white shadow-md'
+              : 'bg-amber-500/20 text-amber-300 hover:bg-amber-500 hover:text-white'
+          }`}
+        >
+          <span className="text-base leading-none">📖</span>
+          Hướng dẫn sử dụng
+        </Link>
       </nav>
 
       <div className="border-t border-slate-700 p-3 space-y-2">
