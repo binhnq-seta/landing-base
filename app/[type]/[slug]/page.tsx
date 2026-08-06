@@ -389,7 +389,7 @@ function RelatedPages({
         <div data-detail-reveal className="mt-10 flex flex-wrap items-center justify-start gap-6 border-t border-slate-200 pt-10 text-left">
           <p className="text-2xl font-medium md:text-3xl">{copy.contact}</p>
           <Link
-            href="#footer"
+            href={`/${locale}/contact`}
             className="inline-flex min-h-14 w-fit items-center justify-center rounded-full bg-[#A31F1A] px-10 py-4 text-base font-semibold text-white shadow-lg shadow-[#A31F1A]/20 transition-all hover:scale-105 hover:bg-[#c12a24]"
           >
             {copy.button}

@@ -12,7 +12,8 @@ const COPY = {
     intro: 'Hãy chia sẻ bài toán của bạn. Đội ngũ GS Group sẽ phản hồi và cùng bạn xác định hướng triển khai phù hợp.',
     formTitle: 'Gửi yêu cầu tư vấn', formIntro: 'Điền thông tin bên dưới, chúng tôi sẽ liên hệ lại trong thời gian sớm nhất.',
     office: 'Văn phòng', phone: 'Điện thoại', email: 'Email', hours: 'Thời gian làm việc',
-    address: 'Phòng 809, Deaha Business Centre, 360 Kim Mã, Giảng Võ, Hà Nội',
+    address1: 'Số 2 lô F1 Nguyễn Cảnh Dị, Định Công, Hà Nội',
+    address2: 'Phòng 810, Deaha Business Centre, 360 Kim Mã, Giảng Võ, Hà Nội',
     hoursValue: 'Thứ Hai – Thứ Sáu, 08:30 – 17:30',
   },
   en: {
@@ -20,7 +21,8 @@ const COPY = {
     intro: 'Tell us about your challenge. The GS Group team will get back to you and help identify a practical way forward.',
     formTitle: 'Send an enquiry', formIntro: 'Complete the form below and our team will contact you as soon as possible.',
     office: 'Office', phone: 'Phone', email: 'Email', hours: 'Business hours',
-    address: 'Room 809, Deaha Business Centre, 360 Kim Ma, Giang Vo, Hanoi',
+    address1: 'No. 2, F1 Lot, Nguyen Canh Di, Dinh Cong, Hanoi',
+    address2: 'Room 810, Deaha Business Centre, 360 Kim Ma, Giang Vo, Hanoi',
     hoursValue: 'Monday – Friday, 08:30 – 17:30',
   },
 } as const
@@ -49,10 +51,11 @@ export default async function ContactPage({ params }: { params: Promise<{ type: 
   const locale = type as Locale
   const t = COPY[locale]
   const contactDetails = [
-    { type: 'pin' as const, label: t.office, value: t.address },
-    { type: 'phone' as const, label: t.phone, value: '0987 359 603', href: 'tel:+84987359603' },
-    { type: 'mail' as const, label: t.email, value: 'contact@gs-group.vn', href: 'mailto:contact@gs-group.vn' },
-    { type: 'clock' as const, label: t.hours, value: t.hoursValue },
+    { id: 'office-1', type: 'pin' as const, label: t.office, value: t.address1 },
+    { id: 'office-2', type: 'pin' as const, label: t.office, value: t.address2 },
+    { id: 'phone', type: 'phone' as const, label: t.phone, value: '0987 359 603', href: 'tel:+84987359603' },
+    { id: 'email', type: 'mail' as const, label: t.email, value: 'contact@gs-group.vn', href: 'mailto:contact@gs-group.vn' },
+    { id: 'hours', type: 'clock' as const, label: t.hours, value: t.hoursValue },
   ]
 
   return <>
@@ -73,7 +76,7 @@ export default async function ContactPage({ params }: { params: Promise<{ type: 
           <p className="text-xs font-semibold tracking-[0.22em] text-[#F5383B]">{locale === 'vi' ? 'THÔNG TIN LIÊN HỆ' : 'CONTACT DETAILS'}</p>
           <div className="mt-8 space-y-8">
             {contactDetails.map((item) => (
-              <div key={item.label} className="flex items-start gap-4">
+              <div key={item.id} className="flex items-start gap-4">
                 <span className="mt-0.5 shrink-0 text-[#F5383B]"><ContactIcon type={item.type} /></span>
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{item.label}</p>
