@@ -108,7 +108,7 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
 
       {/* Mobile layout */}
       <div className="block md:hidden px-5 py-14">
-        <h1 className="mb-8 text-[clamp(36px,6vw,60px)] font-extrabold tracking-wider text-slate-700 text-center">
+        <h1 className="mb-8 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] text-center">
           {title ? <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</> : <>GIẢI <br /> PHÁP</>}
         </h1>
         <div className="grid grid-cols-2 gap-3">
@@ -142,7 +142,7 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
         />
 
         <div className="flex h-full items-end justify-center px-6">
-          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(40px,3vw,72px)] z-1 font-extrabold tracking-wider text-slate-700 text-center leading-tight">
+          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(32px,3vw,48px)] z-1 font-extrabold leading-[1.1] tracking-[-0.01em] text-[#263A59] text-center">
             {title
               ? <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</>
               : (<>GIẢI <br /> PHÁP</>)

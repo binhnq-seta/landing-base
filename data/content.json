@@ -1,6 +1,6 @@
 {
   "hero": {
-    "heading": "KẾT NỐI CÔNG NGHỆ – KIẾN TẠO HẠ TẦNG TƯƠNG LAI",
+    "heading": "KẾT NỐI CÔNG NGHỆ\nKIẾN TẠO HẠ TẦNG TƯƠNG LAI",
     "description": "GS-Group cung cấp các giải pháp tích hợp công nghệ tiên tiến cho các hệ thống trọng yếu, bảo đảm kết nối an toàn, tăng cường bảo mật và tối ưu vận hành.",
     "ctaLabel": "Khám phá ngay",
     "ctaHref": "#solutions"
@@ -365,7 +365,7 @@
     {
       "type": "solutions",
       "slug": "dien-luc-nang-luong",
-      "layout": "immersive",
+      "layout": "headline",
       "eyebrow": "GIẢI PHÁP ĐIỆN LỰC & NĂNG LƯỢNG",
       "title": "Số hóa dữ liệu và vận hành cho hạ tầng năng lượng hiện đại",
       "summary": "Kết nối dữ liệu, quản lý, bảo trì thiết bị kỹ thuật, phân tích và chuẩn đoán tình trạng, hoạt động hiện trường trên một hệ sinh thái giải pháp được thiết kế cho ngành điện lực và năng lượng.",
@@ -378,35 +378,6 @@
           "description": "",
           "image": "",
           "imageAlt": ""
-        },
-        {
-          "kind": "casestudies",
-          "title": "",
-          "description": "",
-          "image": "/image/solution/energy.jpg",
-          "imageAlt": "",
-          "points": [
-            {
-              "title": "JSC \"Inter RAO – Electric Power Generation\"",
-              "description": "Triển khai SIGMA.SSPTI và SIGMA.SUPA phục vụ thu thập dữ liệu công nghệ và quản lý tài sản.",
-              "href": "/solutions/case-inter-rao"
-            },
-            {
-              "title": "LLC \"Bashkir Generation Company\"",
-              "description": "Tối ưu hóa công tác bảo trì và vận hành hiện trường với SIGMA.SUPA và SIGMA.ALKOR.",
-              "href": "/solutions/case-bashkir"
-            },
-            {
-              "title": "JSC \"Territorial Generating Company No. 11\"",
-              "description": "Tích hợp hệ sinh thái SIGMA phục vụ quản lý toàn vòng đời tài sản và vận hành.",
-              "href": "/solutions/case-tgk11"
-            },
-            {
-              "title": "JSC \"Tomsk Generation\"",
-              "description": "Triển khai SIGMA.ALKOR và SIGMA.SUS nâng cao năng lực hiện trường và trực quan hóa lưới điện.",
-              "href": "/solutions/case-tomsk"
-            }
-          ]
         },
         {
           "kind": "image-points",
@@ -438,9 +409,9 @@
           "kind": "image-points",
           "title": "Hệ sinh thái SIGMA kết nối toàn bộ chu trình này.",
           "description": "Những giá trị chúng tôi mang lại cho Khách hàng",
-          "image": "/image/solution/integration.jpg",
+          "image": "/uploads/1786521972179-85lg13ywi2j.png",
           "imageAlt": "Hệ sinh thái SIGMA",
-          "imagePosition": "right",
+          "imagePosition": "left",
           "imageStyle": "background",
           "points": [
             {
@@ -471,7 +442,7 @@
         {
           "kind": "content",
           "title": "SIGMA.SSPTI",
-          "description": "Thu thập và chuẩn hóa dữ liệu từ DCS, SCADA, cảm biến và các hệ thống chuyên ngành, hình thành nguồn dữ liệu thống nhất. Kiểm tra và xử lý dữ liệu trước khi cung cấp cho các hệ thống phân tích, giám sát. Tạo nền tảng dữ liệu dùng chung, giúp mở rộng kết nối thuận lợi hơn.",
+          "description": "<ul><li>Thu thập và chuẩn hóa dữ liệu từ <span style=\"font-weight: bold; color: rgb(154, 76, 76);\">DCS, SCADA</span>, cảm biến và các hệ thống chuyên ngành, hình thành nguồn dữ liệu thống nhất.&nbsp;</li><li>Kiểm tra và xử lý dữ liệu trước khi cung cấp cho các hệ thống phân tích, giám sát.&nbsp;</li><li>Tạo nền tảng dữ liệu dùng chung, giúp mở rộng kết nối thuận lợi hơn.</li></ul>",
           "image": "/image/solution/energy.jpg",
           "imageAlt": "SIGMA SSPTI",
           "imagePosition": "right",

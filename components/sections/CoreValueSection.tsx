@@ -43,7 +43,7 @@ const CORE_VALUE_ICONS = [
 
 export function CoreValueSection({ data }: FeaturesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     const section = sectionRef.current
@@ -96,7 +96,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
         {/* ── Left: content — z-10 keeps text above the canvas overflow ── */}
         <div className="relative z-10 flex min-h-screen flex-col justify-center px-5 py-14 md:px-0 md:pl-[10vw] md:py-24">
           <div data-core-reveal>
-            <h1 className="mb-4 text-[clamp(36px,4vw,100px)] font-extrabold text-slate-700">
+            <h1 className="mb-4 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59]">
               {data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
             </h1>
           </div>

@@ -10,6 +10,35 @@ import type { SupportedLocale } from '@/lib/admin/content'
 import { inputCls, Field, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
 import { DetailPagePreview } from '@/components/admin/DetailPagePreview'
 
+function ColorSwatch({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: string | undefined
+  onChange: (c: string) => void
+}) {
+  return (
+    <label
+      className="flex cursor-pointer items-center gap-1.5 rounded px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-100"
+      title={`Màu ${label}`}
+    >
+      <span>A</span>
+      <span
+        className="inline-block h-3.5 w-5 rounded-sm border border-slate-300"
+        style={{ background: value ?? '#000000' }}
+      />
+      <input
+        type="color"
+        className="sr-only"
+        value={value ?? '#000000'}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </label>
+  )
+}
+
 const EMPTY_SECTION: CMSDetailSection = {
   kind: 'content',
   title: '',
@@ -113,10 +142,61 @@ function sanitizeEditorHtml(html: string) {
     .trim()
 }
 
+function ToolBtn({
+  children,
+  onClick,
+  title,
+  className = '',
+}: {
+  children: React.ReactNode
+  onClick: () => void
+  title: string
+  className?: string
+}) {
+  return (
+    <button
+      type="button"
+      title={title}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+      className={`rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200 ${className}`}
+    >
+      {children}
+    </button>
+  )
+}
+
+const FONT_SIZES = [
+  { value: '1', label: 'Rất nhỏ' },
+  { value: '2', label: 'Nhỏ' },
+  { value: '3', label: 'Bình thường' },
+  { value: '4', label: 'Lớn' },
+  { value: '5', label: 'Rất lớn' },
+  { value: '6', label: 'Cực lớn' },
+  { value: '7', label: 'Khổng lồ' },
+]
+
+const FONT_FAMILIES = [
+  { value: 'sans-serif', label: 'Sans-serif' },
+  { value: 'serif', label: 'Serif' },
+  { value: 'monospace', label: 'Monospace' },
+  { value: 'Arial', label: 'Arial' },
+  { value: 'Georgia', label: 'Georgia' },
+  { value: 'Times New Roman', label: 'Times New Roman' },
+  { value: 'Helvetica', label: 'Helvetica' },
+]
+
 function RichTextEditor({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   const editorRef = useRef<HTMLDivElement>(null)
+  const isInternalChange = useRef(false)
+  const savedRange = useRef<Range | null>(null)
+  const colorRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    if (isInternalChange.current) {
+      isInternalChange.current = false
+      return
+    }
     const el = editorRef.current
     if (!el) return
     if (el.innerHTML !== value) {
@@ -124,50 +204,169 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (value: 
     }
   }, [value])
 
+  function saveRange() {
+    const sel = window.getSelection()
+    savedRange.current = sel && sel.rangeCount > 0 ? sel.getRangeAt(0).cloneRange() : null
+  }
+
+  function restoreRange() {
+    const range = savedRange.current
+    const el = editorRef.current
+    if (!range || !el) return
+    el.focus()
+    const sel = window.getSelection()
+    if (!sel) return
+    sel.removeAllRanges()
+    sel.addRange(range)
+  }
+
   function runCommand(command: string, commandValue?: string) {
+    document.execCommand('styleWithCSS', false, 'true')
+    isInternalChange.current = true
     document.execCommand(command, false, commandValue)
     const html = editorRef.current?.innerHTML ?? ''
     onChange(sanitizeEditorHtml(html))
   }
 
   function onInput() {
+    isInternalChange.current = true
     const html = editorRef.current?.innerHTML ?? ''
     onChange(sanitizeEditorHtml(html))
   }
 
+  const Divider = () => <div className="mx-0.5 h-4 w-px bg-slate-200 self-center" aria-hidden="true" />
+
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
       <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-slate-50 p-2">
-        <button type="button" onClick={() => runCommand('bold')} className="rounded px-2 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-200" title="Bold">
-          B
-        </button>
-        <button type="button" onClick={() => runCommand('italic')} className="rounded px-2 py-1 text-xs italic text-slate-600 hover:bg-slate-200" title="Italic">
-          I
-        </button>
-        <button type="button" onClick={() => runCommand('underline')} className="rounded px-2 py-1 text-xs underline text-slate-600 hover:bg-slate-200" title="Underline">
-          U
-        </button>
-        <button type="button" onClick={() => runCommand('insertUnorderedList')} className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200" title="Bullet list">
+        {/* Basic format */}
+        <ToolBtn title="In đậm" onClick={() => runCommand('bold')}>
+          <strong>B</strong>
+        </ToolBtn>
+        <ToolBtn title="In nghiêng" onClick={() => runCommand('italic')}>
+          <em>I</em>
+        </ToolBtn>
+        <ToolBtn title="Gạch chân" onClick={() => runCommand('underline')}>
+          <u>U</u>
+        </ToolBtn>
+
+        <Divider />
+
+        {/* Alignment */}
+        <ToolBtn title="Căn trái" onClick={() => runCommand('justifyLeft')}>
+          <svg viewBox="0 0 14 14" fill="currentColor" className="h-3 w-3" aria-hidden="true">
+            <rect x="1" y="1"    width="12" height="1.5" rx="0.5"/>
+            <rect x="1" y="4.5"  width="8"  height="1.5" rx="0.5"/>
+            <rect x="1" y="8"    width="12" height="1.5" rx="0.5"/>
+            <rect x="1" y="11.5" width="6"  height="1.5" rx="0.5"/>
+          </svg>
+        </ToolBtn>
+        <ToolBtn title="Căn giữa" onClick={() => runCommand('justifyCenter')}>
+          <svg viewBox="0 0 14 14" fill="currentColor" className="h-3 w-3" aria-hidden="true">
+            <rect x="1" y="1"    width="12" height="1.5" rx="0.5"/>
+            <rect x="3" y="4.5"  width="8"  height="1.5" rx="0.5"/>
+            <rect x="1" y="8"    width="12" height="1.5" rx="0.5"/>
+            <rect x="4" y="11.5" width="6"  height="1.5" rx="0.5"/>
+          </svg>
+        </ToolBtn>
+        <ToolBtn title="Căn phải" onClick={() => runCommand('justifyRight')}>
+          <svg viewBox="0 0 14 14" fill="currentColor" className="h-3 w-3" aria-hidden="true">
+            <rect x="1" y="1"    width="12" height="1.5" rx="0.5"/>
+            <rect x="5" y="4.5"  width="8"  height="1.5" rx="0.5"/>
+            <rect x="1" y="8"    width="12" height="1.5" rx="0.5"/>
+            <rect x="7" y="11.5" width="6"  height="1.5" rx="0.5"/>
+          </svg>
+        </ToolBtn>
+
+        <Divider />
+
+        {/* Lists */}
+        <ToolBtn title="Danh sách bullet" onClick={() => runCommand('insertUnorderedList')}>
           • List
-        </button>
-        <button type="button" onClick={() => runCommand('insertOrderedList')} className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200" title="Number list">
+        </ToolBtn>
+        <ToolBtn title="Danh sách số" onClick={() => runCommand('insertOrderedList')}>
           1. List
-        </button>
-        <button
-          type="button"
+        </ToolBtn>
+
+        <Divider />
+
+        {/* Font size */}
+        <select
+          className="rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600 cursor-pointer"
+          title="Cỡ chữ"
+          defaultValue=""
+          onMouseDown={saveRange}
+          onChange={(e) => {
+            const v = e.target.value
+            if (!v) return
+            restoreRange()
+            runCommand('fontSize', v)
+            e.target.value = ''
+          }}
+        >
+          <option value="" disabled>Cỡ chữ</option>
+          {FONT_SIZES.map((s) => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+
+        {/* Font family */}
+        <select
+          className="rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600 cursor-pointer"
+          title="Font chữ"
+          defaultValue=""
+          onMouseDown={saveRange}
+          onChange={(e) => {
+            const v = e.target.value
+            if (!v) return
+            restoreRange()
+            runCommand('fontName', v)
+            e.target.value = ''
+          }}
+        >
+          <option value="" disabled>Font</option>
+          {FONT_FAMILIES.map((f) => (
+            <option key={f.value} value={f.value}>{f.label}</option>
+          ))}
+        </select>
+
+        {/* Font color */}
+        <label
+          className="relative flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 hover:bg-slate-200"
+          title="Màu chữ"
+          onMouseDown={saveRange}
+        >
+          <span className="text-xs font-bold text-slate-600 underline decoration-red-500">A</span>
+          <input
+            ref={colorRef}
+            type="color"
+            defaultValue="#000000"
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            onChange={(e) => {
+              restoreRange()
+              runCommand('foreColor', e.target.value)
+            }}
+          />
+        </label>
+
+        <Divider />
+
+        {/* Link */}
+        <ToolBtn
+          title="Chèn liên kết"
           onClick={() => {
             const url = window.prompt('Nhập URL liên kết:')
             if (!url) return
             runCommand('createLink', url)
           }}
-          className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200"
-          title="Link"
         >
           Link
-        </button>
-        <button type="button" onClick={() => runCommand('removeFormat')} className="rounded px-2 py-1 text-xs text-slate-600 hover:bg-slate-200" title="Clear format">
+        </ToolBtn>
+
+        {/* Clear format */}
+        <ToolBtn title="Xóa định dạng" onClick={() => runCommand('removeFormat')}>
           Clear
-        </button>
+        </ToolBtn>
       </div>
 
       <div
@@ -175,7 +374,10 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (value: 
         contentEditable
         suppressContentEditableWarning
         onInput={onInput}
-        className="min-h-28 w-full px-3 py-2 text-sm leading-7 text-slate-700 focus:outline-none"
+        onSelect={saveRange}
+        onKeyUp={saveRange}
+        onMouseUp={saveRange}
+        className="min-h-28 w-full px-3 py-2 text-sm leading-7 text-slate-700 focus:outline-none [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1 [&_li]:leading-7 [&_li]:mt-1 [&_p]:mb-2"
       />
     </div>
   )
@@ -184,6 +386,7 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (value: 
 const HEADING_SECTION: CMSDetailSection = {
   kind: 'heading',
   title: '',
+  titleAlign: 'center',
   description: '',
   image: '',
   imageAlt: '',
@@ -216,6 +419,7 @@ export default function DetailPageEditor() {
   const [allPages, setAllPages] = useState<CMSDetailPage[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
   const [showPreview, setShowPreview] = useState(false)
+  const [collapsedSections, setCollapsedSections] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     setPage(null)
@@ -424,6 +628,8 @@ export default function DetailPageEditor() {
               imagePosition: src.imagePosition,
               imageStyle: src.imageStyle,
               kind: src.kind,
+              titleSize: src.titleSize,
+              titleAlign: src.titleAlign,
             }
           }),
         }
@@ -512,28 +718,36 @@ export default function DetailPageEditor() {
             </div>
           </div>
 
-          <Field label="Eyebrow (nhãn nhỏ phía trên tiêu đề)">
-            <input
-              className={inputCls}
-              value={page.eyebrow}
-              onChange={(e) => updatePage('eyebrow', e.target.value)}
-            />
-          </Field>
-          <Field label="Tiêu đề trang">
-            <input
-              className={inputCls}
-              value={page.title}
-              onChange={(e) => updatePage('title', e.target.value)}
-              required
-            />
-          </Field>
-          <Field label="Tóm tắt">
+          {/* Eyebrow */}
+          <div>
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-xs font-medium text-slate-500">Eyebrow (nhãn nhỏ phía trên tiêu đề)</span>
+              <ColorSwatch label="eyebrow" value={page.eyebrowColor} onChange={(c) => updatePage('eyebrowColor', c)} />
+            </div>
+            <input className={inputCls} value={page.eyebrow} onChange={(e) => updatePage('eyebrow', e.target.value)} />
+          </div>
+
+          {/* Tiêu đề trang */}
+          <div>
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-xs font-medium text-slate-500">Tiêu đề trang</span>
+              <ColorSwatch label="tiêu đề" value={page.titleColor} onChange={(c) => updatePage('titleColor', c)} />
+            </div>
+            <input className={inputCls} value={page.title} onChange={(e) => updatePage('title', e.target.value)} required />
+          </div>
+
+          {/* Tóm tắt */}
+          <div>
+            <div className="mb-1 flex items-center justify-between">
+              <span className="text-xs font-medium text-slate-500">Tóm tắt</span>
+              <ColorSwatch label="tóm tắt" value={page.summaryColor} onChange={(c) => updatePage('summaryColor', c)} />
+            </div>
             <textarea
               className={`${inputCls} min-h-24 resize-y`}
               value={page.summary}
               onChange={(e) => updatePage('summary', e.target.value)}
             />
-          </Field>
+          </div>
           <ImageUploader
             label="Ảnh hero"
             value={page.heroImage}
@@ -614,18 +828,30 @@ export default function DetailPageEditor() {
               const sectionKind = section.kind ?? 'content'
               const isHeading = sectionKind === 'heading'
               const isImagePoints = sectionKind === 'image-points'
+              const isCollapsed = collapsedSections.has(i)
 
               return (
                 <>
             {/* Section header */}
-            <div className="flex items-center justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-wide text-slate-500">
-                Mục {i + 1}
-                <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium normal-case tracking-normal text-slate-500">
-                  {isHeading ? 'Đầu mục' : isImagePoints ? 'Ảnh + danh sách' : 'Nội dung'}
-                </span>
-              </h2>
-              <div className="flex items-center gap-0.5">
+            <div
+              className="flex cursor-pointer select-none items-center justify-between"
+              onClick={() => setCollapsedSections(prev => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n })}
+            >
+              <div className="flex min-w-0 items-center gap-2">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={`h-3.5 w-3.5 shrink-0 text-slate-400 transition-transform duration-150 ${isCollapsed ? '-rotate-90' : ''}`} aria-hidden="true">
+                  <path d="M4 6l4 4 4-4" />
+                </svg>
+                <h2 className="text-xs font-bold uppercase tracking-wide text-slate-500">
+                  Mục {i + 1}
+                  <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium normal-case tracking-normal text-slate-500">
+                    {isHeading ? 'Đầu mục' : isImagePoints ? 'Ảnh + danh sách' : 'Nội dung'}
+                  </span>
+                </h2>
+                {isCollapsed && section.title && (
+                  <span className="ml-1 max-w-[200px] truncate text-xs text-slate-400">{section.title}</span>
+                )}
+              </div>
+              <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
                 <button
                   type="button"
                   onClick={() => moveSection(i, -1)}
@@ -659,6 +885,7 @@ export default function DetailPageEditor() {
               </div>
             </div>
 
+            {!isCollapsed && (<>
             <Field label="Loại mục">
               <select
                 className={inputCls}
@@ -671,13 +898,102 @@ export default function DetailPageEditor() {
               </select>
             </Field>
 
-            <Field label={isImagePoints ? 'Tiêu đề khối (tuỳ chọn)' : 'Tiêu đề mục'}>
+            {/* Title + size + alignment row */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <label className="text-xs font-medium text-slate-500">
+                  {isImagePoints ? 'Tiêu đề khối (tuỳ chọn)' : 'Tiêu đề mục'}
+                </label>
+                <div className="flex items-center gap-2">
+                  {/* Title color */}
+                  <ColorSwatch
+                    label="tiêu đề mục"
+                    value={section.titleColor}
+                    onChange={(c) => updateSection(i, 'titleColor', c)}
+                  />
+                  {/* Title size */}
+                  <select
+                    className="rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600"
+                    title="Cỡ chữ tiêu đề"
+                    value={section.titleSize ?? ''}
+                    onChange={(e) => updateSection(i, 'titleSize', e.target.value)}
+                  >
+                    <option value="">Cỡ mặc định</option>
+                    <option value="xs">Rất nhỏ</option>
+                    <option value="sm">Nhỏ</option>
+                    <option value="base">Vừa</option>
+                    <option value="lg">Lớn</option>
+                    <option value="xl">Rất lớn</option>
+                    <option value="2xl">Lớn hơn</option>
+                    <option value="3xl">Rất lớn</option>
+                    <option value="4xl">Cực lớn</option>
+                  </select>
+                  {/* Title alignment */}
+                  <div className="flex items-center rounded border border-slate-200 bg-white overflow-hidden">
+                    {(['left', 'center', 'right'] as const).map((align) => (
+                      <button
+                        key={align}
+                        type="button"
+                        title={align === 'left' ? 'Căn trái' : align === 'center' ? 'Căn giữa' : 'Căn phải'}
+                        onClick={() => updateSection(i, 'titleAlign', align)}
+                        className={`px-2 py-1 text-xs transition-colors ${
+                          (section.titleAlign ?? 'left') === align
+                            ? 'bg-blue-500 text-white'
+                            : 'text-slate-600 hover:bg-slate-100'
+                        }`}
+                      >
+                        {align === 'left' ? (
+                          <svg viewBox="0 0 12 12" fill="currentColor" className="h-2.5 w-2.5" aria-hidden="true">
+                            <rect x="0" y="0.5" width="12" height="1.5" rx="0.5"/>
+                            <rect x="0" y="4"   width="8"  height="1.5" rx="0.5"/>
+                            <rect x="0" y="7.5" width="12" height="1.5" rx="0.5"/>
+                            <rect x="0" y="11"  width="5"  height="1.5" rx="0.5"/>
+                          </svg>
+                        ) : align === 'center' ? (
+                          <svg viewBox="0 0 12 12" fill="currentColor" className="h-2.5 w-2.5" aria-hidden="true">
+                            <rect x="0" y="0.5" width="12" height="1.5" rx="0.5"/>
+                            <rect x="2" y="4"   width="8"  height="1.5" rx="0.5"/>
+                            <rect x="0" y="7.5" width="12" height="1.5" rx="0.5"/>
+                            <rect x="3" y="11"  width="6"  height="1.5" rx="0.5"/>
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 12 12" fill="currentColor" className="h-2.5 w-2.5" aria-hidden="true">
+                            <rect x="0" y="0.5" width="12" height="1.5" rx="0.5"/>
+                            <rect x="4" y="4"   width="8"  height="1.5" rx="0.5"/>
+                            <rect x="0" y="7.5" width="12" height="1.5" rx="0.5"/>
+                            <rect x="7" y="11"  width="5"  height="1.5" rx="0.5"/>
+                          </svg>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
               <input
                 className={inputCls}
                 value={section.title}
                 onChange={(e) => updateSection(i, 'title', e.target.value)}
               />
-            </Field>
+            </div>
+            {isHeading && (
+              <>
+                <ImageUploader
+                  label="Ảnh nền (tuỳ chọn)"
+                  value={section.image}
+                  onChange={(url) => updateSection(i, 'image', url)}
+                />
+                {section.image && (
+                  <Field label="Alt text ảnh">
+                    <input
+                      className={inputCls}
+                      value={section.imageAlt}
+                      onChange={(e) => updateSection(i, 'imageAlt', e.target.value)}
+                    />
+                  </Field>
+                )}
+              </>
+            )}
+
             {!isHeading && !isImagePoints && (
               <Field label="Nội dung">
                 <RichTextEditor
@@ -811,6 +1127,7 @@ export default function DetailPageEditor() {
                   <option value="contain">Contain (vừa khung)</option>
                   <option value="portrait">Portrait (dọc 3:4)</option>
                   <option value="wide">Wide (ngang 16:9)</option>
+                  <option value="background">Nền (ảnh phủ toàn khối)</option>
                 </select>
               </Field>
             </div>
@@ -850,6 +1167,7 @@ export default function DetailPageEditor() {
                 </Field>
               </>
             )}
+            </>)}
                 </>
               )
             })()}

@@ -415,10 +415,8 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
         style={{ opacity: introComplete ? undefined : 0 }}
       >
         <div className="w-full md:w-[clamp(400px,42%,640px)]">
-          <h1 data-hero-heading className="mb-6 text-[clamp(22px,2.5vw,58px)] font-extrabold text-white">
-            {data?.heading ?? (
-              <>KẾT NỐI CÔNG NGHỆ XÂY DỰNG <span className="text-[#A31F1A]">TƯƠNG LAI</span></>
-            )}
+          <h1 data-hero-heading className="mb-6 whitespace-pre-line text-[clamp(24px,2.7vw,62px)] font-extrabold text-white">
+            {data?.heading ?? 'KẾT NỐI CÔNG NGHỆ\nKIẾN TẠO HẠ TẦNG TƯƠNG LAI'}
           </h1>
           <p data-hero-sub className="mb-10 text-start text-[clamp(16px,1vw,22px)] font-light text-[#E3F2FD]/75">
             {data?.description ?? 'General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.'}
@@ -437,9 +435,9 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
               </span>
             </a>
           </div>
-          <div ref={statsRef} className="mx-auto grid max-w-5xl grid-cols-2 gap-8 pt-20 md:grid-cols-3">
+          <div ref={statsRef} className="grid grid-cols-2 gap-8 pt-20 md:grid-cols-3">
             {(t.raw('stats') as { value: string; label: string }[]).map((stat) => (
-              <div key={stat.label} data-stat className="text-center">
+              <div key={stat.label} data-stat className="text-start">
                 <p className="text-4xl font-medium text-white">{stat.value}</p>
                 <p className="mt-1 pt-5 text-sm font-light text-[#E3F2FD]/65">{stat.label}</p>
               </div>

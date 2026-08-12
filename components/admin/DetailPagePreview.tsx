@@ -59,6 +59,25 @@ function toRichHtml(content: string) {
 
 // ─── Section content (same in all layouts) ────────────────────────────────────
 
+const TITLE_SIZE_CLS: Record<string, string> = {
+  xs:   'text-sm sm:text-base',
+  sm:   'text-base sm:text-lg',
+  base: 'text-lg sm:text-xl',
+  lg:   'text-xl sm:text-2xl',
+  xl:   'text-2xl sm:text-3xl',
+  '2xl':'text-3xl sm:text-4xl',
+  '3xl':'text-4xl sm:text-5xl',
+  '4xl':'text-5xl sm:text-6xl',
+}
+
+const RICH_TEXT_CLS =
+  'mt-4 text-base font-light leading-7 text-slate-600 ' +
+  '[&_a]:text-blue-600 [&_a]:underline ' +
+  '[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2 ' +
+  '[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-2 ' +
+  '[&_li]:leading-7 [&_li]:mt-1 ' +
+  '[&_p]:mb-3 [&_strong]:font-semibold'
+
 function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; locale: SupportedLocale }) {
   if (sections.length === 0) {
     return (
@@ -70,10 +89,25 @@ function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; l
     <div className="space-y-12 md:space-y-20">
       {sections.map((section, i) => {
         const sectionKind = section.kind ?? 'content'
+        const titleSizeCls = section.titleSize ? TITLE_SIZE_CLS[section.titleSize] : undefined
+        const alignCls = section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : 'text-left'
+
         if (sectionKind === 'heading') {
+          const defaultTitleCls = titleSizeCls ?? 'text-[2.8125rem] sm:text-[3.375rem]'
+          const headingAlign = section.titleAlign ?? 'center'
+          const headingAlignCls = headingAlign === 'center' ? 'text-center' : headingAlign === 'right' ? 'text-right' : 'text-left'
           return (
-            <section key={i} className="rounded-2xl bg-white px-5 py-8 text-center md:px-8 md:py-12">
-              <h2 className="text-[2.8125rem] font-extrabold uppercase leading-tight tracking-[-0.02em] text-[#00162F] sm:text-[3.375rem]">
+            <section key={i} className={`relative overflow-hidden rounded-2xl bg-white px-5 py-8 md:px-8 md:py-12 ${headingAlignCls}`}>
+              {section.image && (
+                <div className="absolute inset-0">
+                  <img src={section.image} alt={section.imageAlt ?? ''} className="h-full w-full object-cover opacity-15" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-white/60 to-white/10" />
+                </div>
+              )}
+              <h2
+                className={`relative font-extrabold uppercase leading-tight tracking-[-0.02em] ${defaultTitleCls}`}
+                style={{ color: section.titleColor ?? '#000000' }}
+              >
                 {section.title || <span className="text-slate-300">Tiêu đề đầu mục…</span>}
               </h2>
             </section>
@@ -82,11 +116,56 @@ function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; l
 
         if (sectionKind === 'image-points') {
           const points = section.points ?? []
+          const imgStyle = section.imageStyle ?? 'cover'
+
+          if (imgStyle === 'background') {
+            return (
+              <section key={i} className="relative overflow-hidden rounded-2xl">
+                {section.image
+                  ? <>
+                      <img src={section.image} alt={section.imageAlt ?? ''} className="absolute inset-0 h-full w-full object-cover" aria-hidden="true" />
+                      <div className="absolute inset-0 bg-[#00162F]/82" />
+                    </>
+                  : <div className="absolute inset-0 bg-slate-800 rounded-2xl" />
+                }
+                <div className="relative z-10 px-6 py-10 md:px-10 md:py-14">
+                  {(section.title || section.description) && (
+                    <div className="mb-8 text-center">
+                      {section.title && (
+                        <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-white/50">
+                          {section.title}
+                        </p>
+                      )}
+                      {section.description && (
+                        <h2 className="text-xl font-bold text-white md:text-2xl">{section.description}</h2>
+                      )}
+                    </div>
+                  )}
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    {points.length === 0
+                      ? <p className="text-sm text-white/40">Chưa có dữ liệu…</p>
+                      : points.map((point, idx) => (
+                          <article key={idx} className="rounded-xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
+                            <h3 className="mb-1.5 font-bold text-white">{point.title || <span className="opacity-40">Tiêu đề…</span>}</h3>
+                            <p className="text-sm leading-relaxed text-white/65">{point.description || <span className="opacity-40">Mô tả…</span>}</p>
+                          </article>
+                        ))
+                    }
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
           const imgRight = section.imagePosition !== 'left'
+          const titleCls = titleSizeCls ?? 'text-2xl sm:text-3xl'
           return (
             <section key={i} className="space-y-6">
               {section.title && (
-                <h2 className="text-2xl font-extrabold uppercase leading-tight tracking-[-0.02em] text-[#00162F] sm:text-3xl">
+                <h2
+                  className={`font-extrabold uppercase leading-tight tracking-[-0.02em] ${titleCls} ${alignCls}`}
+                  style={{ color: section.titleColor ?? '#000000' }}
+                >
                   {section.title}
                 </h2>
               )}
@@ -127,6 +206,38 @@ function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; l
         const imgRight = pos === 'right' || (pos === 'auto' && contentIndex % 2 === 1)
         const style = section.imageStyle ?? 'cover'
         const aspect = style === 'portrait' ? 'aspect-[3/4]' : style === 'wide' ? 'aspect-[16/9]' : 'aspect-[4/3]'
+        const contentTitleCls = titleSizeCls ?? 'text-2xl sm:text-3xl'
+
+        if (style === 'background') {
+          return (
+            <section key={i} className="relative overflow-hidden rounded-2xl">
+              {section.image
+                ? <>
+                    <img src={section.image} alt={section.imageAlt ?? ''} className="absolute inset-0 h-full w-full object-cover" aria-hidden="true" />
+                    <div className="absolute inset-0 bg-[#00162F]/82" />
+                  </>
+                : <div className="absolute inset-0 bg-slate-800" />
+              }
+              <div className="relative z-10 px-6 py-10 md:px-10 md:py-14">
+                <h2
+                  className={`font-semibold leading-tight tracking-[-0.02em] text-white ${contentTitleCls}`}
+                >
+                  {section.title || <span className="opacity-30">Tiêu đề mục {i + 1}…</span>}
+                </h2>
+                {section.description ? (
+                  <div
+                    className="mt-4 text-base font-light leading-7 text-white/80 [&_p]:mb-3 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-1"
+                    dangerouslySetInnerHTML={{ __html: toRichHtml(section.description) }}
+                  />
+                ) : (
+                  <p className="mt-4 text-base font-light text-white/40">Nội dung…</p>
+                )}
+                <SectionButton href={section.buttonHref} locale={locale} variant="light" />
+              </div>
+            </section>
+          )
+        }
+
         return (
           <section key={i} className="grid items-center gap-6 md:grid-cols-2 md:gap-12">
             <div className={`relative overflow-hidden rounded-xl bg-slate-100 ${aspect} ${imgRight ? 'md:order-2' : ''}`}>
@@ -135,12 +246,15 @@ function PreviewSections({ sections, locale }: { sections: CMSDetailSection[]; l
                 : <Placeholder label={`Ảnh mục ${i + 1}`} />}
             </div>
             <div className={imgRight ? 'md:order-1' : ''}>
-              <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-[#00162F] sm:text-3xl">
+              <h2
+                className={`font-semibold leading-tight tracking-[-0.02em] ${contentTitleCls} ${alignCls}`}
+                style={{ color: section.titleColor ?? '#000000' }}
+              >
                 {section.title || <span className="text-slate-300">Tiêu đề mục {i + 1}…</span>}
               </h2>
               {section.description ? (
                 <div
-                  className="mt-4 text-base font-light leading-7 text-slate-600 [&_a]:text-blue-600 [&_a]:underline [&_li]:ml-5 [&_ol]:list-decimal [&_ol]:space-y-1 [&_p]:mb-3 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:space-y-1"
+                  className={RICH_TEXT_CLS}
                   dangerouslySetInnerHTML={{ __html: toRichHtml(section.description) }}
                 />
               ) : (
@@ -164,14 +278,23 @@ function HeroHeadline({ page }: { page: CMSDetailPage }) {
     <div className="grid min-h-[55vh] items-center md:grid-cols-2">
       <div className="px-5 pb-8 pt-16 md:px-10 md:py-16">
         {page.eyebrow && (
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-[#A31F1A]">
+          <p
+            className="mb-3 text-xs font-semibold uppercase tracking-widest"
+            style={{ color: page.eyebrowColor ?? '#000000' }}
+          >
             {page.eyebrow}
           </p>
         )}
-        <h1 className="text-[clamp(1.8rem,3.5vw,4rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+        <h1
+          className="text-[clamp(1.8rem,3.5vw,4rem)] font-semibold leading-tight tracking-[-0.03em]"
+          style={{ color: page.titleColor ?? '#000000' }}
+        >
           {page.title || <span className="text-slate-300">Tiêu đề trang…</span>}
         </h1>
-        <p className="mt-5 max-w-lg text-base font-light leading-8 text-slate-600">
+        <p
+          className="mt-5 max-w-lg text-base font-light leading-8"
+          style={{ color: page.summaryColor ?? '#000000' }}
+        >
           {page.summary || <span className="text-slate-300">Tóm tắt…</span>}
         </p>
       </div>
@@ -180,6 +303,7 @@ function HeroHeadline({ page }: { page: CMSDetailPage }) {
           {page.heroImage
             ? <Img src={page.heroImage} alt={page.heroImageAlt} />
             : <Placeholder label="Chưa có ảnh hero" />}
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/35" />
         </div>
       </div>
@@ -194,21 +318,31 @@ function HeroMagazine({ page }: { page: CMSDetailPage }) {
         {page.heroImage
           ? <Img src={page.heroImage} alt={page.heroImageAlt} />
           : <Placeholder label="Chưa có ảnh hero" />}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/20" />
       </div>
       <div className="px-5 pb-6 pt-8 md:px-10 md:pb-10 md:pt-12">
         <div className="grid md:grid-cols-[1fr_2fr] md:gap-12 items-start">
           <div>
             {page.eyebrow && (
-              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#A31F1A]">
+              <p
+                className="mb-2 text-xs font-semibold uppercase tracking-widest"
+                style={{ color: page.eyebrowColor ?? '#000000' }}
+              >
                 {page.eyebrow}
               </p>
             )}
-            <h1 className="text-[clamp(1.8rem,3vw,3rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+            <h1
+              className="text-[clamp(1.8rem,3vw,3rem)] font-semibold leading-tight tracking-[-0.03em]"
+              style={{ color: page.titleColor ?? '#000000' }}
+            >
               {page.title || <span className="text-slate-300">Tiêu đề trang…</span>}
             </h1>
           </div>
-          <p className="mt-4 text-base font-light leading-8 text-slate-500 md:mt-1 md:pt-1">
+          <p
+            className="mt-4 text-base font-light leading-8 md:mt-1 md:pt-1"
+            style={{ color: page.summaryColor ?? '#000000' }}
+          >
             {page.summary || <span className="text-slate-300">Tóm tắt…</span>}
           </p>
         </div>
@@ -223,18 +357,28 @@ function HeroImmersive({ page }: { page: CMSDetailPage }) {
       {page.heroImage
         ? <Img src={page.heroImage} alt={page.heroImageAlt} className="object-cover opacity-55" />
         : <Placeholder label="Chưa có ảnh hero" />}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#00162F]/20 via-transparent to-[#00162F]/85" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[40%]" style={{ background: 'linear-gradient(to bottom, rgba(15,23,42,0.90) 0%, rgba(15,23,42,0.05) 100%)' }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#00162F]/85" />
       <div className="absolute bottom-0 left-0 right-0 px-5 pb-12 md:px-10 md:pb-16">
         {page.eyebrow && (
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/65">
+          <p
+            className="mb-3 text-xs font-semibold uppercase tracking-widest"
+            style={{ color: page.eyebrowColor ?? 'rgba(255,255,255,0.65)' }}
+          >
             {page.eyebrow}
           </p>
         )}
-        <h1 className="max-w-3xl text-[clamp(2rem,4.5vw,4.5rem)] font-semibold leading-tight tracking-[-0.03em] text-white">
-          {page.title || <span className="text-white/30">Tiêu đề trang…</span>}
+        <h1
+          className="max-w-3xl text-[clamp(2rem,4.5vw,4.5rem)] font-semibold leading-tight tracking-[-0.03em]"
+          style={{ color: page.titleColor ?? '#ffffff' }}
+        >
+          {page.title || <span className="opacity-30">Tiêu đề trang…</span>}
         </h1>
-        <p className="mt-4 max-w-xl text-base font-light leading-8 text-white/70">
-          {page.summary || <span className="text-white/30">Tóm tắt…</span>}
+        <p
+          className="mt-4 max-w-xl text-base font-light leading-8"
+          style={{ color: page.summaryColor ?? 'rgba(255,255,255,0.7)' }}
+        >
+          {page.summary || <span className="opacity-30">Tóm tắt…</span>}
         </p>
       </div>
     </div>
@@ -247,14 +391,23 @@ function HeroEditorial({ page }: { page: CMSDetailPage }) {
       <div className="px-5 md:px-10">
         <div className="mx-auto max-w-3xl text-center">
           {page.eyebrow && (
-            <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-[#A31F1A]">
+            <p
+              className="mb-4 text-xs font-semibold uppercase tracking-widest"
+              style={{ color: page.eyebrowColor ?? '#000000' }}
+            >
               {page.eyebrow}
             </p>
           )}
-          <h1 className="text-[clamp(2rem,4.5vw,4.5rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+          <h1
+            className="text-[clamp(2rem,4.5vw,4.5rem)] font-semibold leading-tight tracking-[-0.03em]"
+            style={{ color: page.titleColor ?? '#000000' }}
+          >
             {page.title || <span className="text-slate-300">Tiêu đề trang…</span>}
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base font-light leading-8 text-slate-600">
+          <p
+            className="mx-auto mt-5 max-w-2xl text-base font-light leading-8"
+            style={{ color: page.summaryColor ?? '#000000' }}
+          >
             {page.summary || <span className="text-slate-300">Tóm tắt…</span>}
           </p>
         </div>
@@ -264,6 +417,7 @@ function HeroEditorial({ page }: { page: CMSDetailPage }) {
           {page.heroImage
             ? <Img src={page.heroImage} alt={page.heroImageAlt} />
             : <Placeholder label="Chưa có ảnh hero" />}
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/20" />
         </div>
       </div>

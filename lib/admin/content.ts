@@ -68,6 +68,9 @@ export interface CMSDetailPoint {
 export interface CMSDetailSection {
   kind?: DetailSectionKind
   title: string
+  titleSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
+  titleAlign?: 'left' | 'center' | 'right'
+  titleColor?: string
   description: string
   image: string
   imageAlt: string
@@ -81,8 +84,11 @@ export interface CMSDetailPage {
   type: 'solutions' | 'projects'
   slug: string
   eyebrow: string
+  eyebrowColor?: string
   title: string
+  titleColor?: string
   summary: string
+  summaryColor?: string
   heroImage: string
   heroImageAlt: string
   layout?: DetailPageLayout
