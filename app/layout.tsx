@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
 import { LocaleSync } from '@/components/LocaleSync'
@@ -17,6 +18,13 @@ const inter = localFont({
   style: 'normal',
   display: 'swap',
 })
+
+export const metadata: Metadata = {
+  icons: {
+    icon: [{ url: '/favicon.png', type: 'image/png' }],
+    shortcut: '/favicon.png',
+  },
+}
 
 // Root layout — provides html/body and font CSS variables for all routes.
 // Locale-specific providers (NextIntlClientProvider, SmoothScrollProvider) live in

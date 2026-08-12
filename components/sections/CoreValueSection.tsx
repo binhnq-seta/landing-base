@@ -43,7 +43,7 @@ const CORE_VALUE_ICONS = [
 
 export function CoreValueSection({ data }: FeaturesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     const section = sectionRef.current

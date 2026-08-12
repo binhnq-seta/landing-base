@@ -2,7 +2,7 @@
 
 import { useMemo, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { MeshTransmissionMaterial, Environment } from '@react-three/drei'
+import { Environment, MeshTransmissionMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
 // ─── Rectangular-cross-section torus ─────────────────────────────────────────

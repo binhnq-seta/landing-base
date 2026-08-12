@@ -485,7 +485,6 @@ function HeroHeadline({ page }: PageHeroProps) {
             className="object-cover"
           />
           <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/40" />
         </div>
       </div>
     </div>
@@ -506,7 +505,6 @@ function HeroMagazine({ page }: PageHeroProps) {
           className="object-cover"
         />
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#00162F]/20" />
       </div>
       <div className="mx-auto max-w-[1400px] px-5 pb-8 pt-10 md:px-12 md:pb-12 md:pt-14 lg:px-16">
         <div className="grid md:grid-cols-[1fr_2fr] md:gap-16 items-start">
@@ -539,10 +537,9 @@ function HeroImmersive({ page }: PageHeroProps) {
         fill
         priority
         sizes="100vw"
-        className="object-cover opacity-55"
+        className="object-cover"
       />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[40%]" style={{ background: 'linear-gradient(to bottom, rgba(15,23,42,0.90) 0%, rgba(15,23,42,0.05) 100%)' }} />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#00162F]/20 via-transparent to-[#00162F]/85" />
       <div className="absolute bottom-0 left-0 right-0 px-5 pb-14 md:px-12 md:pb-20 lg:px-16">
         <div className="mx-auto max-w-[1400px]">
           {page.eyebrow && (
@@ -592,7 +589,6 @@ function HeroEditorial({ page }: PageHeroProps) {
             className="object-cover"
           />
           <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/25" />
         </div>
       </div>
     </div>

@@ -158,7 +158,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
       {/* Background is limited to the first viewport (hero only). */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 z-0 h-screen bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/image/bg-hd.jpg')", backgroundSize: '100% 100%' }}
+        style={{ backgroundImage: "url('/assets/Background.png')", backgroundSize: '100% 100%' }}
         aria-hidden="true"
       />
 
