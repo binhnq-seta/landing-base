@@ -173,7 +173,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
         </div>
         <div className="relative z-10 flex flex-col items-center gap-4">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-300/70">
-            Đang khởi tạo
+            {t('initializing')}
           </p>
           <div className="flex items-center gap-2" aria-hidden="true">
             <span className="h-2 w-2 animate-pulse rounded-full bg-[#D62828] [animation-delay:-0.3s]" />

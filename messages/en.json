@@ -7,7 +7,8 @@
     ],
     "defaultHeading": "CONNECTING TECHNOLOGY TO BUILD THE FUTURE",
     "defaultDescription": "General Systems provides comprehensive technology solutions that help businesses optimise performance and efficiency in the digital era.",
-    "defaultCta": "Explore Solutions"
+    "defaultCta": "Explore Solutions",
+    "initializing": "Initializing"
   },
   "nav": {
     "home": "Home",

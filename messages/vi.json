@@ -7,7 +7,8 @@
     ],
     "defaultHeading": "KẾT NỐI CÔNG NGHỆ – KIẾN TẠO HẠ TẦNG TƯƠNG LAI",
     "defaultDescription": "GS-Group cung cấp các giải pháp tích hợp công nghệ tiên tiến cho các hệ thống trọng yếu, bảo đảm kết nối an toàn, tăng cường bảo mật và tối ưu vận hành.",
-    "defaultCta": "Khám phá ngay"
+    "defaultCta": "Khám phá ngay",
+    "initializing": "Đang khởi tạo"
   },
   "nav": {
     "home": "Trang chủ",
