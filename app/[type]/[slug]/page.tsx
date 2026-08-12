@@ -10,6 +10,7 @@ import { SiteHeader } from '@/components/layout/SiteHeader'
 import { detailPages, getDetailPage } from '@/lib/detail-pages'
 import { getContent } from '@/lib/admin/content'
 import type { CMSDetailSection, CMSDetailPage, SupportedLocale } from '@/lib/admin/content'
+import type { CSSProperties } from 'react'
 
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
@@ -93,6 +94,17 @@ function toRichHtml(content: string) {
     .join('')
 }
 
+const SECTION_TITLE_SIZE_CLS: Record<string, string> = {
+  xs:   'text-lg sm:text-xl',
+  sm:   'text-xl sm:text-2xl',
+  base: 'text-2xl',
+  lg:   'text-2xl sm:text-3xl',
+  xl:   'text-3xl sm:text-4xl',
+  '2xl':'text-3xl sm:text-4xl',
+  '3xl':'text-4xl sm:text-5xl',
+  '4xl':'text-5xl sm:text-6xl',
+}
+
 // ─── Content sections (always alternating split) ───────────────────────────────
 
 function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; locale: SupportedLocale }) {
@@ -104,10 +116,11 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
         const sectionKind = section.kind ?? 'content'
         if (sectionKind === 'heading') {
           return (
-            <section key={section.title + i} className="rounded-[1.5rem] px-5 py-4 text-center md:px-10 md:py-6">
+            <section key={section.title + i} className={`rounded-[1.5rem] px-5 py-4 md:px-10 md:py-6 ${section.titleAlign === 'left' ? 'text-left' : section.titleAlign === 'right' ? 'text-right' : 'text-center'}`}>
               <h2
                 data-detail-reveal
-                className="mx-auto max-w-4xl text-[3.375rem] font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-[4.5rem] lg:text-[5.25rem]"
+                className={`mx-auto max-w-4xl font-extrabold uppercase leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'}`}
+                style={{ color: section.titleColor ?? '#00162F' }}
               >
                 {section.title}
               </h2>
@@ -125,7 +138,11 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
           return (
             <section key={section.title + i} className="space-y-6">
               {section.title && (
-                <h2 data-detail-reveal className="max-w-4xl text-3xl font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]">
+                <h2
+                  data-detail-reveal
+                  className={`max-w-4xl font-extrabold uppercase leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                  style={{ color: section.titleColor ?? '#00162F' }}
+                >
                   {section.title}
                 </h2>
               )}
@@ -194,7 +211,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                         </p>
                       )}
                       {section.description && (
-                        <h2 className="text-2xl font-bold text-white md:text-3xl">
+                        <h2 className="text-[clamp(2rem,2.5vw,3rem)] font-extrabold leading-[1.1] tracking-[-0.01em] text-white">
                           {section.description}
                         </h2>
                       )}
@@ -227,7 +244,8 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                   {section.title && (
                     <h2
                       data-detail-reveal
-                      className="text-3xl font-extrabold uppercase leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]"
+                      className={`font-extrabold uppercase leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                      style={{ color: section.titleColor ?? '#00162F' }}
                     >
                       {section.title}
                     </h2>
@@ -286,6 +304,36 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
         const pos = section.imagePosition ?? 'auto'
         const imgRight = pos === 'right' || (pos === 'auto' && contentIndex % 2 === 1)
         const style = section.imageStyle ?? 'cover'
+
+        if (style === 'background') {
+          return (
+            <section key={section.title + i} className="relative overflow-hidden rounded-[1.5rem]">
+              {section.image && (
+                <>
+                  <Image src={section.image} alt={section.imageAlt} fill sizes="100vw" className="object-cover" aria-hidden="true" />
+                  <div className="absolute inset-0 bg-[#00162F]/82" />
+                </>
+              )}
+              <div className="relative z-10 px-8 py-14 md:px-16 md:py-20">
+                <h2
+                  data-detail-reveal
+                  className={`max-w-3xl font-extrabold leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                  style={{ color: section.titleColor ?? '#ffffff' }}
+                >
+                  {section.title}
+                </h2>
+                <div
+                  data-detail-reveal
+                  data-detail-delay="0.1"
+                  className="mt-4 max-w-2xl text-base font-light leading-8 text-white/80 [&_p]:mb-3 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mt-1"
+                  dangerouslySetInnerHTML={{ __html: toRichHtml(section.description) }}
+                />
+                <SectionButton href={section.buttonHref} locale={locale} variant="light" />
+              </div>
+            </section>
+          )
+        }
+
         return (
           <section key={section.title + i} className="grid items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
             <div
@@ -308,7 +356,12 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                   Giải pháp
                 </p>
               )}
-              <h2 data-detail-reveal data-detail-delay="0.08" className="max-w-xl text-3xl font-semibold leading-tight tracking-[-0.03em] text-[#00162F] sm:text-4xl lg:text-[2.75rem]">
+              <h2
+                data-detail-reveal
+                data-detail-delay="0.08"
+                className={`max-w-xl font-extrabold leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                style={{ color: section.titleColor ?? '#00162F' }}
+              >
                 {section.title}
               </h2>
               <div
@@ -410,14 +463,14 @@ function HeroHeadline({ page }: PageHeroProps) {
     <div className="grid min-h-screen items-center md:grid-cols-2">
       <header className="px-5 pb-8 pt-32 md:px-20 md:pb-20 lg:px-16">
         {page.eyebrow && (
-          <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]">
+          <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]" style={{ color: page.eyebrowColor ?? undefined }}>
             {page.eyebrow}
           </p>
         )}
-        <h1 data-detail-reveal data-detail-hero className="text-[clamp(2rem,4vw,4.5rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+        <h1 data-detail-reveal data-detail-hero className="text-[clamp(2.25rem,4vw,4.5rem)] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#00162F]" style={{ color: page.titleColor ?? undefined }}>
           {page.title}
         </h1>
-        <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mt-6 max-w-lg text-base font-light leading-8 text-slate-600 md:text-lg">
+        <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mt-6 max-w-lg text-base font-light leading-8 text-slate-600 md:text-lg" style={{ color: page.summaryColor ?? undefined }}>
           {page.summary}
         </p>
       </header>
@@ -431,6 +484,7 @@ function HeroHeadline({ page }: PageHeroProps) {
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
           />
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/40" />
         </div>
       </div>
@@ -451,21 +505,22 @@ function HeroMagazine({ page }: PageHeroProps) {
           sizes="100vw"
           className="object-cover"
         />
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#00162F]/20" />
       </div>
       <div className="mx-auto max-w-[1400px] px-5 pb-8 pt-10 md:px-12 md:pb-12 md:pt-14 lg:px-16">
         <div className="grid md:grid-cols-[1fr_2fr] md:gap-16 items-start">
           <div>
             {page.eyebrow && (
-              <p data-detail-reveal data-detail-hero className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]">
+              <p data-detail-reveal data-detail-hero className="mb-3 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]" style={{ color: page.eyebrowColor ?? undefined }}>
                 {page.eyebrow}
               </p>
             )}
-            <h1 data-detail-reveal data-detail-hero className="text-[clamp(2rem,3.5vw,3.5rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+            <h1 data-detail-reveal data-detail-hero className="text-[clamp(2.25rem,4vw,4.5rem)] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#00162F]" style={{ color: page.titleColor ?? undefined }}>
               {page.title}
             </h1>
           </div>
-          <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mt-4 text-base font-light leading-8 text-slate-500 md:mt-1 md:text-lg md:pt-2">
+          <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mt-4 text-base font-light leading-8 text-slate-500 md:mt-1 md:text-lg md:pt-2" style={{ color: page.summaryColor ?? undefined }}>
             {page.summary}
           </p>
         </div>
@@ -486,18 +541,19 @@ function HeroImmersive({ page }: PageHeroProps) {
         sizes="100vw"
         className="object-cover opacity-55"
       />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[40%]" style={{ background: 'linear-gradient(to bottom, rgba(15,23,42,0.90) 0%, rgba(15,23,42,0.05) 100%)' }} />
       <div className="absolute inset-0 bg-gradient-to-b from-[#00162F]/20 via-transparent to-[#00162F]/85" />
       <div className="absolute bottom-0 left-0 right-0 px-5 pb-14 md:px-12 md:pb-20 lg:px-16">
         <div className="mx-auto max-w-[1400px]">
           {page.eyebrow && (
-            <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/70">
+            <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/70" style={{ color: page.eyebrowColor ?? undefined }}>
               {page.eyebrow}
             </p>
           )}
-          <h1 data-detail-reveal data-detail-hero className="max-w-3xl text-[clamp(2.5rem,5vw,5rem)] font-semibold leading-tight tracking-[-0.03em] text-white">
+          <h1 data-detail-reveal data-detail-hero className="max-w-3xl text-[clamp(2.25rem,4vw,4.5rem)] font-extrabold leading-[1.1] tracking-[-0.01em] text-white" style={{ color: page.titleColor ?? undefined }}>
             {page.title}
           </h1>
-          <p data-detail-reveal data-detail-hero data-detail-delay="0.12" className="mt-5 max-w-xl text-base font-light leading-8 text-white/75 md:text-lg">
+          <p data-detail-reveal data-detail-hero data-detail-delay="0.12" className="mt-5 max-w-xl text-base font-light leading-8 text-white/75 md:text-lg" style={{ color: page.summaryColor ?? undefined }}>
             {page.summary}
           </p>
         </div>
@@ -513,14 +569,14 @@ function HeroEditorial({ page }: PageHeroProps) {
       <div className="mx-auto max-w-[1400px] px-5 md:px-12 lg:px-16">
         <div className="mx-auto max-w-3xl text-center">
           {page.eyebrow && (
-            <p data-detail-reveal data-detail-hero className="mb-5 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]">
+            <p data-detail-reveal data-detail-hero className="mb-5 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]" style={{ color: page.eyebrowColor ?? undefined }}>
               {page.eyebrow}
             </p>
           )}
-          <h1 data-detail-reveal data-detail-hero className="text-[clamp(2.5rem,5vw,5rem)] font-semibold leading-tight tracking-[-0.03em] text-[#00162F]">
+          <h1 data-detail-reveal data-detail-hero className="text-[clamp(2.25rem,4vw,4.5rem)] font-extrabold leading-[1.1] tracking-[-0.01em] text-[#00162F]" style={{ color: page.titleColor ?? undefined }}>
             {page.title}
           </h1>
-          <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mx-auto mt-6 max-w-2xl text-base font-light leading-8 text-slate-600 md:text-lg">
+          <p data-detail-reveal data-detail-hero data-detail-delay="0.1" className="mx-auto mt-6 max-w-2xl text-base font-light leading-8 text-slate-600 md:text-lg" style={{ color: page.summaryColor ?? undefined }}>
             {page.summary}
           </p>
         </div>
@@ -535,6 +591,7 @@ function HeroEditorial({ page }: PageHeroProps) {
             sizes="(max-width: 768px) 100vw, 95vw"
             className="object-cover"
           />
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[35%]" style={{ background: 'linear-gradient(to bottom, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.05) 100%)' }} />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#00162F]/25" />
         </div>
       </div>

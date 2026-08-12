@@ -130,7 +130,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
     }, [])
 
     return (
-        <section ref={sectionRef} id="projects" className="relative flex min-h-screen items-center overflow-hidden bg-[#FAFAFF]">
+        <section ref={sectionRef} id="projects" className="relative flex min-h-screen items-center overflow-hidden bg-[#EAF3FC]">
             <Image
                 src="/image/project-bg.png"
                 alt=""
@@ -141,7 +141,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
             />
 
             <div className="relative z-10 w-full">
-                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(36px,4vw,100px)] font-extrabold uppercase text-slate-700">
+                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59]">
                     {title ?? 'Dự án tiêu biểu'}
                 </h1>
 
@@ -174,14 +174,14 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                                 setActiveIndex(index)
                                             }
                                         }}
-                                        className={`relative col-start-1 row-start-1 grid w-[88%] md:w-[60%] grid-cols-[minmax(0,40fr)_minmax(0,60fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-5 py-8 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-7 sm:py-12 md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-blue-100 bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)]'}`}
+                                        className={`relative col-start-1 row-start-1 grid w-[88%] md:w-[60%] grid-cols-[minmax(0,56fr)_minmax(0,44fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-5 py-8 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-7 sm:py-12 md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-[#D6E4F7] bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)]'}`}
                                         style={{
                                             opacity: isActive ? 1 : 0.48,
                                             transform: `translateX(${slideOffset}%) scale(${slideScale})`,
                                             zIndex: isActive ? 3 : 1,
                                         }}
                                     >
-                                        <div className="absolute inset-y-0 left-0 z-0 w-[40%] overflow-hidden rounded-l-[2rem] bg-blue-50/70">
+                                        <div className="absolute inset-y-0 left-0 z-0 w-[56%] overflow-hidden rounded-l-[2rem] bg-blue-50/70">
                                             <Image
                                                 src={project.img}
                                                 alt="Dự án tiêu biểu"
@@ -200,7 +200,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                         <div aria-hidden="true" className="min-h-[clamp(14rem,25vw,45rem)]" />
 
                                         <div className="relative z-10 flex flex-col items-start">
-                                            <span className="mb-5 text-sm font-medium uppercase text-slate-700">
+                                            <span className="mb-2 text-sm font-medium uppercase text-slate-700">
                                                 {project.category}
                                             </span>
                                             <h3 className="max-w-2xl text-xl font-bold leading-snug text-slate-700 sm:text-2xl md:text-3xl">

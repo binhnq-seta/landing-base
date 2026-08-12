@@ -83,7 +83,7 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
             </ul>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:justify-self-end md:gap-16 md:pr-20">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:gap-16 md:pl-[16vw]">
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">{t.colSolutions}</h3>
               <ul className="mt-4 space-y-3 font-light text-sm text-white">

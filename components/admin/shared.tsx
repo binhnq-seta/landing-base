@@ -62,7 +62,7 @@ export function LocaleTabs({
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
-          {l === 'vi' ? '🇻🇳 Tiếng Việt' : 'EN'}
+          {l === 'vi' ? '🇻🇳 Tiếng Việt' : 'EN English'}
         </button>
       ))}
     </div>

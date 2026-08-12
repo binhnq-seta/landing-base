@@ -367,7 +367,7 @@
     {
       "type": "solutions",
       "slug": "dien-luc-nang-luong",
-      "layout": "immersive",
+      "layout": "headline",
       "eyebrow": "POWER & ENERGY SOLUTIONS",
       "title": "Digitising data and operations for modern energy infrastructure",
       "summary": "Connecting data, managing and maintaining technical equipment, analysing and diagnosing conditions, and supporting field operations across a solution ecosystem designed for the power and energy sector.",
@@ -382,7 +382,7 @@
           "imageAlt": ""
         },
         {
-          "kind": "casestudies",
+          "kind": "image-points",
           "title": "",
           "description": "",
           "image": "/uploads/1785865052848-anwlzfc4kl.jpg",
@@ -408,7 +408,8 @@
               "description": "Deploying SIGMA.ALKOR and SIGMA.SUS to enhance field capability and power grid visualisation.",
               "href": "/solutions/case-tomsk"
             }
-          ]
+          ],
+          "imagePosition": "right"
         },
         {
           "kind": "image-points",
@@ -416,7 +417,7 @@
           "description": "",
           "image": "/image/solution/energy.jpg",
           "imageAlt": "Operational challenges in energy infrastructure",
-          "imagePosition": "right",
+          "imagePosition": "left",
           "points": [
             {
               "title": "Fragmented equipment data",
@@ -434,16 +435,15 @@
               "title": "No comprehensive asset overview",
               "description": "Technical data, maintenance records, materials and costs are not consolidated across the asset lifecycle."
             }
-          ]
+          ],
+          "imageStyle": "background"
         },
         {
-          "kind": "image-points",
+          "kind": "heading",
           "title": "The SIGMA ecosystem connects every step of this cycle.",
           "description": "The value we deliver to our clients",
           "image": "/image/solution/integration.jpg",
           "imageAlt": "SIGMA ecosystem",
-          "imagePosition": "right",
-          "imageStyle": "background",
           "points": [
             {
               "title": "Full visibility",
@@ -464,11 +464,13 @@
           ]
         },
         {
-          "kind": "heading",
+          "kind": "content",
           "title": "Introducing our solutions",
           "description": "The SIGMA ecosystem — purpose-built for the power and energy sector",
           "image": "",
-          "imageAlt": ""
+          "imageAlt": "",
+          "imagePosition": "right",
+          "imageStyle": "cover"
         },
         {
           "title": "SIGMA.SSPTI",
@@ -502,8 +504,9 @@
           "description": "SIGMA.ALKOR is a mobile software platform supporting the management and automation of field engineering work in the power and utilities sector. It integrates GPS positioning, connectivity with MRO/EAM/ERP and GIS systems, and supports the coordination of inspection, maintenance, repair and incident response activities.",
           "image": "/uploads/1785231290300-mwtgwkg515b.png",
           "imageAlt": "SIGMA.ALKOR",
-          "imagePosition": "auto",
-          "imageStyle": "cover"
+          "imagePosition": "left",
+          "imageStyle": "cover",
+          "kind": "content"
         },
         {
           "title": "SIGMA.SUS",
