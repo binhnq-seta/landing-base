@@ -121,7 +121,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
   const features = data?.features?.length ? data.features : fallback
 
   const headingFallback = locale === 'en'
-    ? <><span>WHY CHOOSE</span><span className="text-[#D62828]">GS-GROUP</span>?</>
+    ? <><span>WHY CHOOSE</span> <span className="text-[#D62828]">GS-GROUP</span>?</>
     : <>VÌ SAO CHỌN <span className="text-[#D62828]">GS-GROUP</span>?</>
 
   return (
