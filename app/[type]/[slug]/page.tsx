@@ -461,7 +461,7 @@ type PageHeroProps = { page: CMSDetailPage }
 function HeroHeadline({ page }: PageHeroProps) {
   return (
     <div className="grid min-h-screen items-center md:grid-cols-2">
-      <header className="px-5 pb-8 pt-32 md:px-20 md:pb-20 lg:px-16">
+      <header className="self-start px-5 pb-8 pt-32 md:px-20 md:pb-20 lg:px-16">
         {page.eyebrow && (
           <p data-detail-reveal data-detail-hero className="mb-4 text-sm font-semibold uppercase tracking-widest text-[#A31F1A]" style={{ color: page.eyebrowColor ?? undefined }}>
             {page.eyebrow}

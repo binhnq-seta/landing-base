@@ -131,17 +131,8 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
 
     return (
         <section ref={sectionRef} id="projects" className="relative flex min-h-screen items-center overflow-hidden bg-[#EAF3FC]">
-            <Image
-                src="/image/project-bg.png"
-                alt=""
-                fill
-                sizes="100vw"
-                className="z-0 scale-60 object-cover blur-[80px] -rotate-[100deg] translate-x-[20%] -translate-y-[40%]"
-                aria-hidden="true"
-            />
-
             <div className="relative z-10 w-full">
-                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:text-[clamp(32px,3vw,48px)]">
+                <h1 data-project-reveal className="relative mb-[1.5vw] px-[5vh] text-start text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:px-[10vw] md:text-[clamp(32px,3vw,48px)] [@media(min-height:900px)]:-top-6">
                     {title ?? 'Dự án tiêu biểu'}
                 </h1>
 
