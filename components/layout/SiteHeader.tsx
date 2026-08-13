@@ -176,7 +176,7 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
       <div className="mx-auto flex w-full items-center justify-between px-5 py-4 md:px-20">
         <Link href="/" className="inline-flex items-center pt-1" aria-label="General Systems">
           <Image
-            src={dark ? '/image/LogoWhite.png' : '/image/logoLg.png'}
+            src={dark ? '/image/lgWhite.png' : '/image/lgBlack.png'}
             alt="General Systems"
             width={300}
             height={90}

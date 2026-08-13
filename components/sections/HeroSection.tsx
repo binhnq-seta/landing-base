@@ -169,7 +169,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
       >
         <div className="relative z-10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/image/LogoWhite.png" alt="General Systems" className="h-auto w-[300px] max-w-[80vw]" />
+          <img src="/image/lgWhite.png" alt="General Systems" className="h-auto w-[300px] max-w-[80vw]" />
         </div>
         <div className="relative z-10 flex flex-col items-center gap-4">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-300/70">
