@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, type FormEvent } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { CMSDetailPage, CMSDetailPoint, CMSDetailSection, DetailPageLayout, DetailSectionKind } from '@/lib/admin/content'
 import { detailPages } from '@/lib/detail-pages'
@@ -426,12 +426,18 @@ export default function DetailPageEditor() {
   const [rawType, slug] = id.split('--')
   const type = rawType as 'solutions' | 'projects'
 
+  const router = useRouter()
   const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [page, setPage] = useState<CMSDetailPage | null>(null)
   const [allPages, setAllPages] = useState<CMSDetailPage[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
   const [showPreview, setShowPreview] = useState(false)
   const [collapsedSections, setCollapsedSections] = useState<Set<number>>(new Set())
+  const [showCopyModal, setShowCopyModal] = useState(false)
+  const [copyType, setCopyType] = useState<'solutions' | 'projects'>('solutions')
+  const [copySlug, setCopySlug] = useState('')
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'saving' | 'invalid' | 'exists' | 'error'>('idle')
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'ok' | 'error'>('idle')
 
   useEffect(() => {
     setPage(null)
@@ -662,10 +668,176 @@ export default function DetailPageEditor() {
     }
   }
 
+  async function handleSync() {
+    if (!page) return
+    setSyncStatus('syncing')
+    const otherLocale = locale === 'vi' ? 'en' : 'vi'
+    const isEmpty = (s: string | undefined) => !s || !stripHtml(s).trim()
+    try {
+      const otherData: { detailPages?: CMSDetailPage[] } = await fetch(
+        `/api/admin/content?locale=${otherLocale}`
+      ).then((r) => r.json())
+      const otherPages = otherData.detailPages ?? []
+      const otherPage = otherPages.find((p) => p.type === page.type && p.slug === page.slug)
+
+      const merged: CMSDetailPage = {
+        type: page.type,
+        slug: page.slug,
+        layout: page.layout,
+        headlineTextMarginTop: page.headlineTextMarginTop,
+        heroImage: page.heroImage,
+        eyebrow: !isEmpty(otherPage?.eyebrow) ? otherPage!.eyebrow! : page.eyebrow,
+        title: !isEmpty(otherPage?.title) ? otherPage!.title : page.title,
+        summary: !isEmpty(otherPage?.summary) ? otherPage!.summary! : page.summary,
+        heroImageAlt: !isEmpty(otherPage?.heroImageAlt) ? otherPage!.heroImageAlt : page.heroImageAlt,
+        sections: page.sections.map((src, i) => {
+          const tgt = otherPage?.sections?.[i]
+          return {
+            kind: src.kind,
+            imageStyle: src.imageStyle,
+            imagePosition: src.imagePosition,
+            image: src.image,
+            backgroundOpacity: src.backgroundOpacity,
+            buttonHref: src.buttonHref,
+            titleSize: src.titleSize,
+            titleAlign: src.titleAlign,
+            title: !isEmpty(tgt?.title) ? tgt!.title : src.title,
+            description: !isEmpty(tgt?.description) ? tgt!.description : src.description,
+            imageAlt: !isEmpty(tgt?.imageAlt) ? tgt!.imageAlt : src.imageAlt,
+            points: src.points?.map((srcPt, j) => {
+              const tgtPt = tgt?.points?.[j]
+              return {
+                href: srcPt.href,
+                title: !isEmpty(tgtPt?.title) ? tgtPt!.title : srcPt.title,
+                description: !isEmpty(tgtPt?.description) ? tgtPt!.description : srcPt.description,
+              }
+            }),
+          }
+        }),
+      }
+
+      const idx = otherPages.findIndex((p) => p.type === page.type && p.slug === page.slug)
+      const updatedOther = idx >= 0
+        ? otherPages.map((p, i) => (i === idx ? merged : p))
+        : [...otherPages, merged]
+
+      const res = await fetch(`/api/admin/content?locale=${otherLocale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ detailPages: updatedOther }),
+      })
+      if (!res.ok) { setSyncStatus('error'); return }
+      setSyncStatus('ok')
+    } catch {
+      setSyncStatus('error')
+    } finally {
+      setTimeout(() => setSyncStatus('idle'), 3000)
+    }
+  }
+
+  async function handleCopy() {
+    if (!page) return
+    const trimmedSlug = copySlug.trim()
+    if (!trimmedSlug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(trimmedSlug)) {
+      setCopyStatus('invalid')
+      return
+    }
+    setCopyStatus('saving')
+    try {
+      const [viData, enData]: [{ detailPages?: CMSDetailPage[] }, { detailPages?: CMSDetailPage[] }] = await Promise.all([
+        fetch('/api/admin/content?locale=vi').then((r) => r.json()),
+        fetch('/api/admin/content?locale=en').then((r) => r.json()),
+      ])
+      const viPages = viData.detailPages ?? []
+      const enPages = enData.detailPages ?? []
+
+      if (viPages.some((p) => p.type === copyType && p.slug === trimmedSlug) ||
+          enPages.some((p) => p.type === copyType && p.slug === trimmedSlug)) {
+        setCopyStatus('exists')
+        return
+      }
+
+      const viPage = viPages.find((p) => p.type === page.type && p.slug === page.slug) ?? page
+      const enPage = enPages.find((p) => p.type === page.type && p.slug === page.slug) ?? page
+
+      await Promise.all([
+        fetch('/api/admin/content?locale=vi', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ detailPages: [...viPages, { ...viPage, type: copyType, slug: trimmedSlug }] }),
+        }),
+        fetch('/api/admin/content?locale=en', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ detailPages: [...enPages, { ...enPage, type: copyType, slug: trimmedSlug }] }),
+        }),
+      ])
+
+      setShowCopyModal(false)
+      router.push(`/admin/detail-pages/${copyType}--${trimmedSlug}`)
+    } catch {
+      setCopyStatus('error')
+    }
+  }
+
   return (
     <>
       {showPreview && page && (
         <DetailPagePreview page={page} locale={locale} onClose={() => setShowPreview(false)} />
+      )}
+
+      {showCopyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
+            <h2 className="text-lg font-bold text-slate-800">Sao chép trang</h2>
+            <p className="mt-1 text-sm text-slate-500">Tạo bản sao với nội dung giống hệt. Chọn category và nhập slug mới.</p>
+
+            <div className="mt-4 space-y-3">
+              <div>
+                <label className="mb-1 block text-xs font-semibold text-slate-600">Category</label>
+                <select
+                  className={inputCls}
+                  value={copyType}
+                  onChange={(e) => { setCopyType(e.target.value as 'solutions' | 'projects'); setCopyStatus('idle') }}
+                >
+                  <option value="solutions">Giải pháp (solutions)</option>
+                  <option value="projects">Dự án (projects)</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-semibold text-slate-600">Slug mới</label>
+                <input
+                  className={inputCls}
+                  placeholder="vd: bao-mat-he-thong-v2"
+                  value={copySlug}
+                  onChange={(e) => { setCopySlug(e.target.value); setCopyStatus('idle') }}
+                />
+                <p className="mt-1 text-xs text-slate-400">Chỉ dùng chữ thường, số và dấu gạch ngang (không dấu cách)</p>
+              </div>
+              {copyStatus === 'invalid' && <p className="text-xs text-red-500">Slug không hợp lệ. Chỉ dùng a–z, 0–9 và dấu gạch ngang.</p>}
+              {copyStatus === 'exists' && <p className="text-xs text-red-500">Slug này đã tồn tại trong category đã chọn. Vui lòng chọn slug khác.</p>}
+              {copyStatus === 'error' && <p className="text-xs text-red-500">Có lỗi xảy ra, vui lòng thử lại.</p>}
+            </div>
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => { setShowCopyModal(false); setCopyStatus('idle') }}
+                className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={handleCopy}
+                disabled={copyStatus === 'saving'}
+                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+              >
+                {copyStatus === 'saving' ? 'Đang sao chép…' : 'Sao chép'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     <div className="p-8">
@@ -679,21 +851,72 @@ export default function DetailPageEditor() {
             {type} / {slug}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => setShowPreview(true)}
-          disabled={!page}
-          className="flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-300 hover:text-blue-600 disabled:opacity-40"
-        >
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 10C3.732 5.943 6.524 3 10 3s6.268 2.943 7.542 7c-1.274 4.057-4.066 7-7.542 7S3.732 14.057 2.458 10z" />
-            <circle cx="10" cy="10" r="2.5" strokeLinecap="round" />
-          </svg>
-          Xem trước
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setCopyType(page?.type ?? 'solutions')
+              setCopySlug('')
+              setCopyStatus('idle')
+              setShowCopyModal(true)
+            }}
+            disabled={!page}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-emerald-300 hover:text-emerald-600 disabled:opacity-40"
+          >
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4" aria-hidden="true">
+              <rect x="7" y="7" width="10" height="10" rx="2" strokeLinejoin="round"/>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 13V4a1 1 0 0 1 1-1h9" />
+            </svg>
+            Sao chép
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowPreview(true)}
+            disabled={!page}
+            className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-colors hover:border-blue-300 hover:text-blue-600 disabled:opacity-40"
+          >
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 10C3.732 5.943 6.524 3 10 3s6.268 2.943 7.542 7c-1.274 4.057-4.066 7-7.542 7S3.732 14.057 2.458 10z" />
+              <circle cx="10" cy="10" r="2.5" strokeLinecap="round" />
+            </svg>
+            Xem trước
+          </button>
+        </div>
       </div>
 
-      <LocaleTabs value={locale} onChange={setLocale} />
+      <div className="flex items-center justify-between gap-4">
+        <LocaleTabs value={locale} onChange={setLocale} />
+        {page && (
+          <button
+            type="button"
+            onClick={handleSync}
+            disabled={syncStatus === 'syncing'}
+            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-medium text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
+            title={`Đồng bộ template và ảnh từ ${locale.toUpperCase()} sang ${locale === 'vi' ? 'EN' : 'VI'}. Nội dung đã có sẵn ở bên kia sẽ được giữ nguyên.`}
+          >
+            {syncStatus === 'syncing' ? (
+              'Đang đồng bộ…'
+            ) : syncStatus === 'ok' ? (
+              <>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.5 6.5 12 13 5" />
+                </svg>
+                Đã đồng bộ sang {locale === 'vi' ? 'EN' : 'VI'}
+              </>
+            ) : syncStatus === 'error' ? (
+              'Lỗi, thử lại'
+            ) : (
+              <>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2 5.5A4.5 4.5 0 0 1 10.9 4M14 10.5A4.5 4.5 0 0 1 5.1 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 2v3h3M5 14v-3H2" />
+                </svg>
+                Đồng bộ sang {locale === 'vi' ? 'EN' : 'VI'}
+              </>
+            )}
+          </button>
+        )}
+      </div>
 
       {!page ? (
         <div className="mt-6 text-sm text-slate-500">Đang tải…</div>
@@ -1182,7 +1405,29 @@ export default function DetailPageEditor() {
 
             {isImagePoints && (
               <>
-                {section.imageStyle === 'background' ? (
+                <Field label="Layout ảnh">
+                  <select
+                    className={inputCls}
+                    value={section.imageStyle === 'background' ? 'background' : (section.imagePosition === 'left' ? 'left' : 'right')}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      if (v === 'background') {
+                        updateSection(i, 'imageStyle', 'background')
+                      } else {
+                        if (section.imageStyle === 'background') {
+                          updateSection(i, 'imageStyle', 'cover')
+                        }
+                        updateSection(i, 'imagePosition', v)
+                      }
+                    }}
+                  >
+                    <option value="right">Ảnh bên phải, danh sách bên trái</option>
+                    <option value="left">Ảnh bên trái, danh sách bên phải</option>
+                    <option value="background">Ảnh nền (phủ toàn section)</option>
+                  </select>
+                </Field>
+
+                {section.imageStyle === 'background' && (
                   <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-2">
                     <label className="block text-xs font-medium text-slate-500">
                       Độ mờ phủ nền (0% = trong suốt · 100% = tối hoàn toàn, mặc định 82%)
@@ -1201,18 +1446,8 @@ export default function DetailPageEditor() {
                       </span>
                     </div>
                   </div>
-                ) : (
-                  <Field label="Vị trí ảnh">
-                    <select
-                      className={inputCls}
-                      value={section.imagePosition === 'left' ? 'left' : 'right'}
-                      onChange={(e) => updateSection(i, 'imagePosition', e.target.value)}
-                    >
-                      <option value="right">Phải</option>
-                      <option value="left">Trái</option>
-                    </select>
-                  </Field>
                 )}
+
                 <ImageUploader
                   label={section.imageStyle === 'background' ? 'Ảnh nền' : 'Ảnh khối'}
                   value={section.image}

@@ -33,6 +33,7 @@ export default function GuidePage() {
             ['#slug', '14. Cách điền Slug'],
             ['#settings', '15. Cài đặt'],
             ['#workflow', '16. Quy trình thêm nội dung mới'],
+            ['#copy-page', '17. Sao chép trang chi tiết'],
           ].map(([href, label]) => (
             <li key={href}>
               <a href={href} className="hover:underline">{label}</a>
@@ -368,6 +369,29 @@ export default function GuidePage() {
             <li><strong>Kiểm tra tiếng Anh:</strong> Chuyển tab sang EN → điền bản dịch cho các trường cần thiết.</li>
             <li><strong>Lưu và xem trước:</strong> Nhấn Lưu → nhấn "Xem trang web" ở sidebar để kiểm tra kết quả.</li>
           </ol>
+        </Section>
+
+        {/* ── 17. Sao chép trang chi tiết ── */}
+        <Section id="copy-page" icon="📋" title="17. Sao chép trang chi tiết">
+          <p>Tính năng <strong>Sao chép trang</strong> giúp tạo nhanh một trang chi tiết mới với toàn bộ nội dung giống hệt trang hiện tại, chỉ thay đổi category và slug.</p>
+          <p><strong>Cách dùng:</strong></p>
+          <ol className="ml-5 list-decimal space-y-1">
+            <li>Mở trang chi tiết cần sao chép trong CRM (<strong>Trang chi tiết → chọn trang</strong>).</li>
+            <li>Nhấn nút <strong>Sao chép</strong> (màu xanh lá, cạnh nút Xem trước) ở góc phải phía trên.</li>
+            <li>Trong hộp thoại xuất hiện:
+              <ul className="ml-5 mt-1 list-disc space-y-1">
+                <li>Chọn <strong>Category</strong>: <em>Giải pháp (solutions)</em> hoặc <em>Dự án (projects)</em>.</li>
+                <li>Nhập <strong>Slug mới</strong> — theo cùng quy tắc mục 14: chữ thường, số, dấu gạch ngang, không dấu cách.</li>
+              </ul>
+            </li>
+            <li>Nhấn <strong>Sao chép</strong> để xác nhận. Hệ thống sẽ tạo trang mới và chuyển thẳng vào trang vừa tạo.</li>
+          </ol>
+          <Note>
+            Bản sao chép nội dung của <em>cả hai ngôn ngữ</em> (VI và EN). Sau khi sao chép, nhớ vào từng tab ngôn ngữ để chỉnh lại tiêu đề và nội dung phù hợp với trang mới, rồi nhấn <strong>Lưu</strong>.
+          </Note>
+          <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <span className="font-semibold">⚠️ Lưu ý:</span> Slug mới không được trùng với bất kỳ trang nào đã tồn tại trong cùng category. Nếu trùng, hệ thống sẽ thông báo lỗi và không tạo bản sao.
+          </div>
         </Section>
 
       </div>
