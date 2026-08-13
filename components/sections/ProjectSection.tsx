@@ -130,15 +130,15 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
     }, [])
 
     return (
-        <section ref={sectionRef} id="projects" className="relative flex min-h-screen items-center overflow-hidden bg-[#EAF3FC]">
-            <div className="relative z-10 w-full">
-                <h1 data-project-reveal className="relative mb-[1.5vw] px-[5vh] text-start text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:px-[10vw] md:text-[clamp(32px,3vw,48px)] [@media(min-height:900px)]:-top-6">
+        <section ref={sectionRef} id="projects" className="relative flex items-center overflow-hidden bg-[#EAF3FC] py-12 md:min-h-screen md:py-16 lg:py-0">
+            <div className="relative z-10 flex w-full flex-col gap-6 md:gap-8">
+                <h1 data-project-reveal className="px-[5vh] text-start text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:px-[10vw] md:text-[clamp(32px,3vw,48px)]">
                     {title ?? 'Dự án tiêu biểu'}
                 </h1>
 
                 <div data-project-reveal>
                     <div
-                        className="relative -my-48 touch-pan-y overflow-hidden py-48"
+                        className="relative touch-pan-y overflow-hidden"
                         onTouchStart={handleTouchStart}
                         onTouchEnd={handleTouchEnd}
                     >
@@ -165,14 +165,14 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                                 setActiveIndex(index)
                                             }
                                         }}
-                                        className={`relative col-start-1 row-start-1 grid w-[88%] md:w-[60%] grid-cols-[minmax(0,56fr)_minmax(0,44fr)] items-center gap-4 justify-self-center rounded-[2rem] border px-5 py-8 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:px-7 sm:py-12 md:gap-8 md:px-12 md:py-14 lg:gap-14 ${isActive ? 'border-[#D6E4F7] bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)]'}`}
+                                        className={`relative col-start-1 row-start-1 grid w-[84%] grid-cols-[minmax(0,48fr)_minmax(0,52fr)] items-center gap-3 justify-self-center rounded-[1.5rem] border px-3 py-5 transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none sm:w-[80%] sm:grid-cols-[minmax(0,52fr)_minmax(0,48fr)] sm:px-5 sm:py-7 md:w-[64%] md:gap-5 md:px-7 md:py-8 lg:w-[60%] lg:grid-cols-[minmax(0,56fr)_minmax(0,44fr)] lg:gap-14 lg:rounded-[2rem] lg:px-12 lg:py-14 ${isActive ? 'border-[#D6E4F7] bg-white shadow-[0_24px_70px_rgba(37,99,235,0.12)]' : 'cursor-pointer border-blue-200/60 bg-blue-200/20 shadow-[0_20px_60px_rgba(37,99,235,0.14)]'}`}
                                         style={{
                                             opacity: isActive ? 1 : 0.48,
                                             transform: `translateX(${slideOffset}%) scale(${slideScale})`,
                                             zIndex: isActive ? 3 : 1,
                                         }}
                                     >
-                                        <div className="absolute inset-y-0 left-0 z-0 w-[56%] overflow-hidden rounded-l-[2rem] bg-blue-50/70">
+                                        <div className="absolute inset-y-0 left-0 z-0 w-[48%] overflow-hidden rounded-l-[1.5rem] bg-blue-50/70 sm:w-[52%] lg:w-[56%] lg:rounded-l-[2rem]">
                                             <Image
                                                 src={project.img}
                                                 alt="Dự án tiêu biểu"
@@ -188,25 +188,25 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                             />
                                         </div>
 
-                                        <div aria-hidden="true" className="min-h-[clamp(14rem,25vw,45rem)]" />
+                                        <div aria-hidden="true" className="min-h-48 sm:min-h-52 md:min-h-64 lg:min-h-[clamp(14rem,25vw,45rem)]" />
 
                                         <div className="relative z-10 flex flex-col items-start">
-                                            <span className="mb-1 -translate-y-1 text-sm font-medium uppercase text-[#30549B]">
+                                            <span className="mb-1 -translate-y-1 text-[10px] font-medium uppercase text-[#30549B] md:text-xs lg:text-sm">
                                                 {project.category}
                                             </span>
-                                            <h3 className="max-w-2xl text-xl font-bold leading-snug text-slate-700 sm:text-2xl md:text-3xl">
+                                            <h3 className="max-w-2xl text-sm font-bold leading-snug text-slate-700 sm:text-base md:text-xl lg:text-3xl">
                                                 {project.title}
                                             </h3>
                                             <span
                                                 aria-hidden="true"
-                                                className="mt-5 h-1 w-20 rounded-full bg-[#30549B]"
+                                                className="mt-3 h-1 w-12 rounded-full bg-[#30549B] md:w-16 lg:mt-5 lg:w-20"
                                             />
-                                            <p className="mt-5 max-w-2xl leading-6 text-slate-700 md:leading-8 text-[clamp(14px,1vw,18px)]">
+                                            <p className="mt-3 max-w-2xl text-[11px] leading-4 text-slate-700 sm:text-xs sm:leading-5 md:text-sm md:leading-6 lg:mt-5 lg:text-[clamp(14px,1vw,18px)] lg:leading-8">
                                                 {project.description}
                                             </p>
                                             <Link
                                                 href={`/projects/${project.slug}`}
-                                                className="mt-7 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-6 py-3 text-sm font-semibold text-[#30549B] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-[#30549B] hover:bg-[#30549B] hover:text-white hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#30549B]"
+                                                className="mt-4 inline-flex items-center gap-1 rounded-full border border-blue-200 bg-white px-3 py-2 text-[11px] font-semibold text-[#30549B] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-[#30549B] hover:bg-[#30549B] hover:text-white hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#30549B] md:gap-2 md:px-4 md:text-xs lg:mt-7 lg:px-6 lg:py-3 lg:text-sm"
                                             >
                                                 {viewMoreLabel ?? 'Xem thêm'}
                                                 <span aria-hidden="true">→</span>
@@ -261,7 +261,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                         </button>
                     </div>
 
-                    <div className="mt-12 flex items-center justify-center">
+                    <div className="mt-6 flex items-center justify-center md:mt-8">
                         <div
                             className="flex items-center gap-2"
                             aria-label="Chọn dự án"
