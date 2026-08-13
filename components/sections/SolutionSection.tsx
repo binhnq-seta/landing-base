@@ -142,7 +142,7 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
         />
 
         <div className="flex h-full items-end justify-center px-6">
-          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(32px,3vw,48px)] z-1 font-extrabold leading-[1.1] tracking-[-0.01em] text-[#263A59] text-center">
+          <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(32px,3vw,48px)] z-1 font-extrabold leading-[1.3] tracking-[-0.01em] text-[#263A59] text-center">
             {title
               ? <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</>
               : (<>GIẢI <br /> PHÁP</>)

@@ -26,11 +26,13 @@ export default function GuidePage() {
             ['#partners', '7. Đối tác'],
             ['#section-labels', '8. Nhãn section'],
             ['#detail-pages', '9. Trang chi tiết'],
-            ['#image-style', '10. Chọn style ảnh'],
-            ['#detail-button', '11. Nút "Xem thêm"'],
-            ['#slug', '12. Cách điền Slug'],
-            ['#settings', '13. Cài đặt'],
-            ['#workflow', '14. Quy trình thêm nội dung mới'],
+            ['#rich-text', '10. Định dạng văn bản (Rich Text)'],
+            ['#icon-guide', '11. Upload icon / SVG code'],
+            ['#image-style', '12. Chọn style ảnh'],
+            ['#detail-button', '13. Nút "Xem thêm"'],
+            ['#slug', '14. Cách điền Slug'],
+            ['#settings', '15. Cài đặt'],
+            ['#workflow', '16. Quy trình thêm nội dung mới'],
           ].map(([href, label]) => (
             <li key={href}>
               <a href={href} className="hover:underline">{label}</a>
@@ -72,7 +74,9 @@ export default function GuidePage() {
             ['Tiêu đề section', 'Đầu đề của cả section'],
             ['Mỗi mục: Tiêu đề', 'Tiêu đề ngắn của lý do (1–5 từ)'],
             ['Mỗi mục: Mô tả', 'Nội dung giải thích chi tiết'],
+            ['Mỗi mục: Icon', 'Icon hiển thị trên thẻ — upload ảnh hoặc dán SVG code (xem mục 11)'],
           ]} />
+          <Note>Nếu không cài icon, hệ thống tự dùng icon mặc định theo thứ tự mục. Xem mục 11 để biết cách thêm icon tùy chỉnh.</Note>
         </Section>
 
         {/* ── 4. Core Values ── */}
@@ -82,7 +86,9 @@ export default function GuidePage() {
             ['Tiêu đề section', 'Đầu đề của section giá trị cốt lõi'],
             ['Mỗi mục: Tiêu đề', 'Tên giá trị (ví dụ: "Uy tín & Tin cậy")'],
             ['Mỗi mục: Mô tả', 'Diễn giải giá trị đó'],
+            ['Mỗi mục: Icon', 'Icon hiển thị trên thẻ — upload ảnh hoặc dán SVG code (xem mục 11)'],
           ]} />
+          <Note>Nếu không cài icon, hệ thống tự dùng icon mặc định theo thứ tự mục. Xem mục 11 để biết cách thêm icon tùy chỉnh.</Note>
         </Section>
 
         {/* ── 5. Solutions ── */}
@@ -92,7 +98,7 @@ export default function GuidePage() {
             ['Tên giải pháp', 'Tiêu đề thẻ giải pháp'],
             ['Mô tả', 'Đoạn mô tả ngắn'],
             ['Ảnh', 'Ảnh bìa của thẻ giải pháp'],
-            ['Slug', 'Mã định danh URL cho trang chi tiết (xem mục 12)'],
+            ['Slug', 'Mã định danh URL cho trang chi tiết (xem mục 14)'],
           ]} />
         </Section>
 
@@ -149,10 +155,121 @@ export default function GuidePage() {
               </tbody>
             </table>
           </div>
+
+          <h3 className="mt-6 mb-2 font-bold text-slate-800">Tùy chỉnh nâng cao</h3>
+
+          <div className="space-y-4">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="font-semibold text-slate-800 mb-1">🎨 Định dạng tiêu đề & văn bản</p>
+              <p>Tất cả các ô tiêu đề, mô tả, nội dung trong trang chi tiết đều hỗ trợ <strong>rich text</strong> — có thể in đậm, đổi màu, chỉnh cỡ chữ v.v. Xem chi tiết tại <a href="#rich-text" className="text-blue-600 underline">mục 10</a>.</p>
+            </div>
+
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="font-semibold text-slate-800 mb-1">🌅 Layout Headline — Padding top phần text</p>
+              <p>Khi trang sử dụng layout <strong>Headline</strong>, xuất hiện trường <strong>"Margin top (vh)"</strong> cho phép đẩy khối text trái xuống thấp hơn. Đơn vị là <code className="rounded bg-slate-100 px-1">vh</code> (% chiều cao màn hình) — mặc định 12.5vh.</p>
+              <ul className="mt-2 ml-4 list-disc text-xs text-slate-600 space-y-0.5">
+                <li>Giá trị nhỏ (5–10): text gần đỉnh màn hình hơn</li>
+                <li>Giá trị lớn (20–40): text xuống thấp hơn, tạo khoảng thoáng phía trên</li>
+              </ul>
+            </div>
+
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="font-semibold text-slate-800 mb-1">🌑 Image-points Background — Opacity màn phủ</p>
+              <p>Với section <strong>image-points</strong> kiểu <strong>background</strong> (ảnh phủ toàn section), có thanh kéo <strong>"Độ mờ nền (opacity)"</strong> điều chỉnh độ tối của lớp phủ màu tối phía trên ảnh.</p>
+              <ul className="mt-2 ml-4 list-disc text-xs text-slate-600 space-y-0.5">
+                <li>0% — ảnh hiện rõ hoàn toàn, không có lớp phủ</li>
+                <li>82% — mặc định, ảnh khá tối để text dễ đọc</li>
+                <li>100% — tối hoàn toàn (ảnh không nhìn thấy)</li>
+              </ul>
+            </div>
+          </div>
         </Section>
 
-        {/* ── 10. Image Style ── */}
-        <Section id="image-style" icon="🖼️" title="10. Chọn style ảnh">
+        {/* ── 10. Rich Text ── */}
+        <Section id="rich-text" icon="✏️" title="10. Định dạng văn bản (Rich Text Editor)">
+          <p>Hầu hết các ô văn bản trong <strong>Trang chi tiết</strong> đều có thanh công cụ định dạng phía trên. Các thao tác có thể thực hiện:</p>
+
+          <div className="overflow-x-auto mt-3">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-slate-100">
+                  <Th>Nút / Công cụ</Th>
+                  <Th>Chức năng</Th>
+                  <Th>Cách dùng</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <Tr cells={['B / I / U', 'In đậm / Nghiêng / Gạch chân', 'Bôi đen text → nhấn nút']} />
+                <Tr cells={['Căn chỉnh (≡)', 'Trái / Giữa / Phải', 'Đặt con trỏ trong đoạn → nhấn nút']} />
+                <Tr cells={['• List / 1. List', 'Danh sách bullet / danh sách số', 'Đặt con trỏ → nhấn nút, mỗi Enter tạo dòng mới']} />
+                <Tr cells={['Dropdown cỡ chữ (px)', 'Chọn cỡ chữ chính xác như Word: 8–72px', 'Bôi đen text → chọn cỡ trong dropdown']} />
+                <Tr cells={['Dropdown font chữ', 'Đổi kiểu chữ (Sans, Serif, Mono…)', 'Bôi đen text → chọn font']} />
+                <Tr cells={['Ô màu (■)', 'Đổi màu chữ', 'Bôi đen text → nhấn ô màu → chọn màu trong bảng chọn màu của trình duyệt']} />
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="mt-5 mb-2 font-bold text-slate-800">Lưu ý khi dùng Rich Text</h3>
+          <ul className="ml-5 list-disc space-y-2 text-slate-700 text-sm">
+            <li><strong>Bôi đen trước, định dạng sau:</strong> Luôn chọn (bôi đen) phần text muốn định dạng trước khi nhấn nút trên toolbar. Nhấn nút khi không có gì được chọn sẽ không có tác dụng.</li>
+            <li><strong>Màu chữ:</strong> Khi nhấn ô màu trên toolbar, trình duyệt sẽ mở bảng chọn màu hệ thống (có thể nhập mã HEX). Bôi đen text trước, sau đó nhấn ô màu để áp dụng.</li>
+            <li><strong>Cỡ chữ:</strong> Dropdown hiển thị danh sách các cỡ phổ biến (8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72 px). Bôi đen text rồi chọn cỡ.</li>
+            <li><strong>Xem trước:</strong> Định dạng hiển thị ngay trong ô soạn thảo — đúng như trên trang web thật.</li>
+            <li><strong>Không bị mất khi lưu:</strong> Định dạng (HTML) được lưu cùng nội dung — khi mở lại vẫn giữ nguyên.</li>
+          </ul>
+
+          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <strong>⚠️ Chú ý tiêu đề trong danh sách:</strong> Các tiêu đề trang chi tiết (ô "Tên trang") hiển thị ở danh sách CRM và phần "Khám phá thêm" sẽ tự động bỏ định dạng HTML để hiện chữ thuần — tránh lỗi hiển thị thẻ HTML. Tuy nhiên trên trang web thật, định dạng vẫn hiển thị đầy đủ.
+          </div>
+        </Section>
+
+        {/* ── 11. Icon Guide ── */}
+        <Section id="icon-guide" icon="🎨" title="11. Upload icon / SVG code">
+          <p>Các mục trong <strong>Vì sao chọn chúng tôi</strong> và <strong>Giá trị cốt lõi</strong> cho phép cài icon tùy chỉnh theo hai cách: upload ảnh hoặc dán SVG code.</p>
+
+          <h3 className="mt-4 mb-2 font-bold text-slate-800">So sánh hai cách</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-slate-100">
+                  <Th>Cách</Th>
+                  <Th>Ưu điểm</Th>
+                  <Th>Nhược điểm</Th>
+                </tr>
+              </thead>
+              <tbody>
+                <Tr cells={['SVG code (khuyến nghị)', 'Màu sắc thay đổi theo brand (currentColor) — tự động xanh #30549B. Không cần host ảnh', 'Cần copy đúng toàn bộ thẻ <svg>...</svg>']} />
+                <Tr cells={['Upload ảnh (.svg / .png / .webp)', 'Đơn giản, kéo thả file', 'Màu cố định trong file ảnh, không đổi khi hover. SVG upload không nhận currentColor']} />
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4">
+            <p className="font-semibold text-green-800 mb-2">✅ Khuyến nghị: Dùng SVG code</p>
+            <ol className="ml-4 list-decimal space-y-1.5 text-sm text-green-800">
+              <li>Tìm icon phù hợp trên <strong>heroicons.com</strong>, <strong>lucide.dev</strong>, hoặc <strong>iconify.design</strong>.</li>
+              <li>Chọn icon → chọn kiểu <strong>Outline</strong> hoặc <strong>Solid</strong> → nhấn <strong>Copy SVG</strong>.</li>
+              <li>Trong CRM, cuộn xuống phần <strong>Icon</strong> của mục cần chỉnh.</li>
+              <li>Dán code vào ô <strong>"hoặc dán SVG code"</strong> phía dưới.</li>
+              <li>Nhấn <strong>Lưu</strong> — icon hiển thị ngay với màu xanh brand.</li>
+            </ol>
+          </div>
+
+          <h3 className="mt-5 mb-2 font-bold text-slate-800">Màu sắc SVG hoạt động như thế nào?</h3>
+          <ul className="ml-5 list-disc space-y-1.5 text-slate-700 text-sm">
+            <li>SVG dùng <code className="rounded bg-slate-100 px-1">fill=&quot;currentColor&quot;</code> hoặc <code className="rounded bg-slate-100 px-1">stroke=&quot;currentColor&quot;</code> → tự lấy màu <strong>#30549B</strong> (xanh brand) do hệ thống thiết lập sẵn.</li>
+            <li>SVG có màu cứng trong code (ví dụ: <code className="rounded bg-slate-100 px-1">fill=&quot;#FF0000&quot;</code>) → giữ nguyên màu đó, không bị ảnh hưởng.</li>
+            <li>Nếu muốn icon có màu khác brand, hãy sửa trực tiếp giá trị màu trong SVG code trước khi dán.</li>
+          </ul>
+
+          <h3 className="mt-5 mb-2 font-bold text-slate-800">Dùng upload ảnh khi nào?</h3>
+          <p>Khi có file ảnh thiết kế sẵn (logo, biểu tượng riêng của dự án) không có phiên bản SVG code — dùng <strong>Tải ảnh lên</strong> thay vì dán SVG. Lưu ý: màu sắc sẽ cố định theo file ảnh gốc.</p>
+
+          <Note>Hai cách dùng cùng một trường dữ liệu — nếu vừa upload vừa dán SVG, cái nào nhập sau sẽ ghi đè cái trước. Nhấn <strong>Xóa</strong> để xóa SVG code hiện tại và chuyển sang upload ảnh.</Note>
+        </Section>
+
+        {/* ── 12. Image Style ── */}
+        <Section id="image-style" icon="🖼️" title="12. Chọn style ảnh">
           <p>Khi section có trường <strong>Ảnh</strong>, bạn cần chọn <strong>Image Style</strong> để quyết định cách ảnh được hiển thị:</p>
           <div className="overflow-x-auto mt-3">
             <table className="w-full text-sm border-collapse">
@@ -172,11 +289,11 @@ export default function GuidePage() {
               </tbody>
             </table>
           </div>
-          <Note>Với kind <code>image-points</code>, thường chọn <strong>cover</strong> hoặc <strong>background</strong>. Với sơ đồ/biểu đồ, chọn <strong>contain</strong>.</Note>
+          <Note>Với kind <code>image-points</code>, thường chọn <strong>cover</strong> hoặc <strong>background</strong>. Với sơ đồ/biểu đồ, chọn <strong>contain</strong>. Khi chọn <strong>background</strong>, dùng thanh kéo <em>Opacity màn phủ</em> để điều chỉnh độ tối.</Note>
         </Section>
 
-        {/* ── 11. Detail Button ── */}
-        <Section id="detail-button" icon="🔗" title='11. Nút "Xem thêm"'>
+        {/* ── 13. Detail Button ── */}
+        <Section id="detail-button" icon="🔗" title='13. Nút "Xem thêm"'>
           <p>Mỗi trang chi tiết (Giải pháp / Dự án) có thể bật/tắt nút <strong>"Xem chi tiết"</strong> dẫn tới trang riêng:</p>
           <ul className="ml-5 mt-2 list-disc space-y-1 text-slate-700 text-sm">
             <li>Bật nút: tích vào ô <strong>"Hiển thị nút xem thêm"</strong></li>
@@ -186,8 +303,8 @@ export default function GuidePage() {
           <Note>Nếu trang chi tiết chưa có nội dung, hãy tắt nút để tránh dẫn vào trang trống.</Note>
         </Section>
 
-        {/* ── 12. Slug ── */}
-        <Section id="slug" icon="🔑" title="12. Cách điền Slug">
+        {/* ── 14. Slug ── */}
+        <Section id="slug" icon="🔑" title="14. Cách điền Slug">
           <p>Slug là mã định danh URL cho từng giải pháp hoặc dự án. Slug quyết định đường dẫn trang chi tiết.</p>
 
           <h3 className="mt-4 mb-2 font-bold text-slate-800">Quy tắc đặt slug</h3>
@@ -218,8 +335,8 @@ export default function GuidePage() {
           </div>
         </Section>
 
-        {/* ── 13. Settings ── */}
-        <Section id="settings" icon="⚙️" title="13. Cài đặt">
+        {/* ── 15. Settings ── */}
+        <Section id="settings" icon="⚙️" title="15. Cài đặt">
           <h3 className="mb-2 font-bold text-slate-800">Đổi mật khẩu</h3>
           <FieldTable rows={[
             ['Mật khẩu hiện tại', 'Nhập mật khẩu đang dùng để xác thực'],
@@ -237,14 +354,16 @@ export default function GuidePage() {
           <Note>Không chia sẻ mật khẩu qua kênh không bảo mật. Mỗi thành viên nên có tài khoản riêng.</Note>
         </Section>
 
-        {/* ── 14. Workflow ── */}
-        <Section id="workflow" icon="🔄" title="14. Quy trình thêm nội dung mới">
+        {/* ── 16. Workflow ── */}
+        <Section id="workflow" icon="🔄" title="16. Quy trình thêm nội dung mới">
           <ol className="ml-5 list-decimal space-y-3 text-slate-700 text-sm">
             <li><strong>Chuẩn bị ảnh:</strong> Đặt tên ảnh theo format <code className="rounded bg-slate-100 px-1">ten-du-an.jpg</code>, không dùng tiếng Việt hay khoảng trắng.</li>
             <li><strong>Tải ảnh lên:</strong> Dùng nút "Tải ảnh lên" trong CRM — ảnh sẽ lưu vào <code className="rounded bg-slate-100 px-1">/public/image/</code>.</li>
-            <li><strong>Tạo mục:</strong> Vào trang tương ứng (Giải pháp / Dự án) → điền thông tin → điền Slug theo quy tắc mục 12 → Lưu.</li>
+            <li><strong>Tạo mục:</strong> Vào trang tương ứng (Giải pháp / Dự án) → điền thông tin → điền Slug theo quy tắc mục 14 → Lưu.</li>
             <li><strong>Bật trang chi tiết:</strong> Vào <strong>Trang chi tiết</strong> → chọn mục vừa tạo → tích "Hiển thị nút xem thêm".</li>
             <li><strong>Thêm các section:</strong> Nhấn "Thêm section" → chọn loại phù hợp → điền nội dung → chọn style ảnh.</li>
+            <li><strong>Định dạng văn bản:</strong> Bôi đen text trong ô soạn thảo → dùng toolbar để in đậm, đổi màu, chỉnh cỡ chữ (xem mục 10).</li>
+            <li><strong>Thêm icon (nếu cần):</strong> Vào mục Vì sao chọn / Giá trị cốt lõi → dán SVG code vào ô icon của từng mục (xem mục 11).</li>
             <li><strong>Sắp xếp thứ tự:</strong> Kéo thả các section để sắp xếp theo thứ tự muốn hiển thị.</li>
             <li><strong>Kiểm tra tiếng Anh:</strong> Chuyển tab sang EN → điền bản dịch cho các trường cần thiết.</li>
             <li><strong>Lưu và xem trước:</strong> Nhấn Lưu → nhấn "Xem trang web" ở sidebar để kiểm tra kết quả.</li>

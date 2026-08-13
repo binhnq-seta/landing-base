@@ -25,6 +25,7 @@ export interface CMSCoreValue {
   id: string
   title: string
   description: string
+  icon?: string
 }
 
 export interface CMSCoreValues {
@@ -110,6 +111,7 @@ export interface CMSFeatureItem {
   id: string
   title: string
   description: string
+  icon?: string
 }
 
 export interface CMSFeatures {

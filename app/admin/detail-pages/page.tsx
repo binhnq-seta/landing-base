@@ -6,6 +6,10 @@ import { detailPages } from '@/lib/detail-pages'
 import type { CMSDetailPage } from '@/lib/admin/content'
 import { PageHeader } from '@/components/admin/shared'
 
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, '').trim()
+}
+
 export default function DetailPagesListPage() {
   const [cmsPages, setCmsPages] = useState<CMSDetailPage[]>([])
 
@@ -16,7 +20,7 @@ export default function DetailPagesListPage() {
   }, [])
 
   function getTitle(type: string, slug: string, fallback: string) {
-    return cmsPages.find((p) => p.type === type && p.slug === slug)?.title ?? fallback
+    return stripHtml(cmsPages.find((p) => p.type === type && p.slug === slug)?.title ?? fallback)
   }
 
   return (

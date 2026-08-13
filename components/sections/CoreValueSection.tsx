@@ -14,6 +14,7 @@ interface CVFeatureItem {
   id: string | number
   title: string
   description: string
+  icon?: string
 }
 
 interface CVFeaturesData {
@@ -105,13 +106,24 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
             {features.map((feature, index) => (
               <div key={feature.id} data-core-reveal className="h-full">
                 <div className="flex h-full items-start gap-4 rounded-xl p-6">
-                  <Image
-                    src={CORE_VALUE_ICONS[index % CORE_VALUE_ICONS.length]}
-                    alt=""
-                    aria-hidden="true"
-                    width={56}
-                    height={56}
-                  />
+                  {feature.icon?.trim().startsWith('<') ? (
+                    <span
+                      className="block h-14 w-14 shrink-0 text-[#30549B] [&_svg]:h-full [&_svg]:w-full"
+                      aria-hidden="true"
+                      dangerouslySetInnerHTML={{ __html: feature.icon }}
+                    />
+                  ) : feature.icon ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={feature.icon} alt="" aria-hidden="true" className="h-14 w-14 shrink-0 object-contain" />
+                  ) : (
+                    <Image
+                      src={CORE_VALUE_ICONS[index % CORE_VALUE_ICONS.length]}
+                      alt=""
+                      aria-hidden="true"
+                      width={56}
+                      height={56}
+                    />
+                  )}
                   <div className="min-w-0">
                     <h3 className="mb-2 text-xl font-bold text-[#30549B]">
                       {feature.title}

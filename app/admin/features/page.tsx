@@ -3,8 +3,9 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSFeatures, CMSFeatureItem, SupportedLocale } from '@/lib/admin/content'
 import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { ImageUploader } from '@/components/admin/ImageUploader'
 
-const BLANK: CMSFeatureItem = { id: '', title: '', description: '' }
+const BLANK: CMSFeatureItem = { id: '', title: '', description: '', icon: '' }
 
 export default function FeaturesEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
@@ -117,6 +118,29 @@ export default function FeaturesEditorPage() {
                     onChange={(e) => updateItem(i, 'description', e.target.value)}
                   />
                 </Field>
+                <div className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-3">
+                  <p className="mb-2 text-xs font-semibold text-slate-600">Icon</p>
+                  {item.icon?.trim().startsWith('<') ? (
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="block h-10 w-10 [&_svg]:h-full [&_svg]:w-full" dangerouslySetInnerHTML={{ __html: item.icon }} />
+                      <span className="text-xs text-slate-400">SVG code đang dùng</span>
+                      <button type="button" onClick={() => updateItem(i, 'icon', '')} className="text-xs text-red-400 hover:text-red-600">Xóa</button>
+                    </div>
+                  ) : null}
+                  <ImageUploader
+                    label="Tải ảnh lên"
+                    value={item.icon?.trim().startsWith('<') ? '' : (item.icon ?? '')}
+                    onChange={(url) => updateItem(i, 'icon', url)}
+                    previewClassName="h-10 w-10 object-contain"
+                  />
+                  <p className="my-2 text-center text-xs text-slate-400">— hoặc dán SVG code —</p>
+                  <textarea
+                    className={`${inputCls} min-h-16 resize-y font-mono text-xs`}
+                    placeholder="<svg xmlns=...>...</svg>"
+                    value={item.icon?.trim().startsWith('<') ? item.icon : ''}
+                    onChange={(e) => updateItem(i, 'icon', e.target.value)}
+                  />
+                </div>
               </div>
             ))}
           </div>
