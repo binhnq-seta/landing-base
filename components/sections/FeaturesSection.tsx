@@ -129,7 +129,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
         </div>
         <div className="relative flex flex-col px-5 md:px-0 mr-0 md:mr-5 justify-center max-w-[800px] min-h-screen py-14 md:py-24">
           <div data-feature-reveal className="text-start">
-            <h1 className="mb-4 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] text-start bottom-0">
+            <h1 className="mb-4 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] text-start bottom-0 md:text-[clamp(32px,3vw,48px)]">
               {data?.heading ?? headingFallback}
             </h1>
           </div>

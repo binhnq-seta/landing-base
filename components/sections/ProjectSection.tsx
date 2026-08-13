@@ -141,7 +141,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
             />
 
             <div className="relative z-10 w-full">
-                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59]">
+                <h1 data-project-reveal className="mb-[3vw] text-start px-[5vw] md:px-[10vw] text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:text-[clamp(32px,3vw,48px)]">
                     {title ?? 'Dự án tiêu biểu'}
                 </h1>
 
@@ -200,12 +200,16 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                         <div aria-hidden="true" className="min-h-[clamp(14rem,25vw,45rem)]" />
 
                                         <div className="relative z-10 flex flex-col items-start">
-                                            <span className="mb-2 text-sm font-medium uppercase text-slate-700">
+                                            <span className="mb-1 -translate-y-1 text-sm font-medium uppercase text-[#30549B]">
                                                 {project.category}
                                             </span>
                                             <h3 className="max-w-2xl text-xl font-bold leading-snug text-slate-700 sm:text-2xl md:text-3xl">
                                                 {project.title}
                                             </h3>
+                                            <span
+                                                aria-hidden="true"
+                                                className="mt-5 h-1 w-20 rounded-full bg-[#30549B]"
+                                            />
                                             <p className="mt-5 max-w-2xl leading-6 text-slate-700 md:leading-8 text-[clamp(14px,1vw,18px)]">
                                                 {project.description}
                                             </p>

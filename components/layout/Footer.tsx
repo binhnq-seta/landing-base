@@ -83,8 +83,8 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
             </ul>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:gap-16 md:pl-[16vw]">
-            <div>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:gap-16">
+            <div className="justify-self-center">
               <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">{t.colSolutions}</h3>
               <ul className="mt-4 space-y-3 font-light text-sm text-white">
                 {t.solutions.map((label, i) => (
@@ -95,7 +95,7 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
               </ul>
             </div>
 
-            <div>
+            <div className="justify-self-center">
               <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">{t.colProjects}</h3>
               <ul className="mt-4 space-y-3 font-light text-sm text-white">
                 {t.projects.map((label, i) => (

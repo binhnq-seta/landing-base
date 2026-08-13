@@ -211,25 +211,25 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
         <defs>
           {/* Edge lines: bright at piece, fade toward panel */}
           <linearGradient id="lgLeft" gradientUnits="userSpaceOnUse"
-            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={49} y2={54}>
+            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={54} y2={54}>
             <stop offset="0%"   stopColor="rgba(210,245,255,0.95)" />
             <stop offset="100%" stopColor="rgba(80,170,255,0.08)" />
           </linearGradient>
           <linearGradient id="lgRight" gradientUnits="userSpaceOnUse"
-            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={85} y2={54}>
+            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={90} y2={54}>
             <stop offset="0%"   stopColor="rgba(210,245,255,0.95)" />
             <stop offset="100%" stopColor="rgba(80,170,255,0.08)" />
           </linearGradient>
           {/* Cone body: depth falloff along beam axis */}
           <linearGradient id="coneBodyGrad" gradientUnits="userSpaceOnUse"
-            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={67} y2={54}>
+            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={72} y2={54}>
             <stop offset="0%"   stopColor="rgba(160,225,255,0.55)" />
             <stop offset="30%"  stopColor="rgba(100,200,255,0.20)" />
             <stop offset="100%" stopColor="rgba(80,170,255,0.03)" />
           </linearGradient>
           {/* Center axis: bright core stripe */}
           <linearGradient id="axisGrad" gradientUnits="userSpaceOnUse"
-            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={67} y2={54}>
+            x1={lineFrom?.x ?? 80} y1={lineFrom?.y ?? 72} x2={72} y2={54}>
             <stop offset="0%"   stopColor="rgba(230,250,255,0.92)" />
             <stop offset="45%"  stopColor="rgba(160,230,255,0.42)" />
             <stop offset="100%" stopColor="rgba(80,180,255,0.05)" />
@@ -238,7 +238,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
           {/* Clip path: exact cone boundary */}
           <clipPath id="coneClip">
             <polygon points={lineFrom
-              ? `${lineFrom.x - 1.6},${lineFrom.y} ${lineFrom.x + 1.6},${lineFrom.y} 85,54 49,54`
+              ? `${lineFrom.x - 1.6},${lineFrom.y} ${lineFrom.x + 1.6},${lineFrom.y} 90,54 54,54`
               : '0,0'} />
           </clipPath>
 
@@ -251,7 +251,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
             <rect x="-5" y="-5" width="110" height="110" fill="white" />
             {lineFrom && (
               <polygon
-                points={`${lineFrom.x - 5},${lineFrom.y + 2} ${lineFrom.x + 5},${lineFrom.y + 2} 92,53 42,53`}
+                points={`${lineFrom.x - 5},${lineFrom.y + 2} ${lineFrom.x + 5},${lineFrom.y + 2} 97,53 47,53`}
                 fill="black"
                 filter="url(#maskSoften)"
               />
@@ -283,7 +283,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
             <>
               {/* ② Wide ambient glow — the "air haze" around the beam */}
               <polygon
-                points={`${lx - 1},${py} ${rx + 1},${py} 90,54 44,54`}
+                points={`${lx - 1},${py} ${rx + 1},${py} 95,54 49,54`}
                 fill="rgba(60,150,255,0.07)"
                 filter="url(#ambientBlur)"
               />
@@ -296,24 +296,24 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
 
               {/* ④ Inner bright lobe — narrower polygon makes center visually brighter */}
               <polygon
-                points={`${px - 0.6},${py} ${px + 0.6},${py} 74,54 60,54`}
+                points={`${px - 0.6},${py} ${px + 0.6},${py} 79,54 65,54`}
                 fill="rgba(130,215,255,0.18)"
                 filter="url(#ambientBlur)"
               />
 
               {/* ⑤ Center axis — the hot core of the projector beam */}
               <line
-                x1={px} y1={py} x2={67} y2={54}
+                x1={px} y1={py} x2={72} y2={54}
                 stroke="url(#axisGrad)" strokeWidth="0.9"
                 filter="url(#axisGlow)"
                 vectorEffect="non-scaling-stroke"
               />
 
               {/* ⑥ Edge definition lines */}
-              <line x1={lx} y1={py} x2={49} y2={54}
+              <line x1={lx} y1={py} x2={54} y2={54}
                 stroke="url(#lgLeft)" strokeWidth="0.22"
                 vectorEffect="non-scaling-stroke" />
-              <line x1={rx} y1={py} x2={85} y2={54}
+              <line x1={rx} y1={py} x2={90} y2={54}
                 stroke="url(#lgRight)" strokeWidth="0.22"
                 vectorEffect="non-scaling-stroke" />
 
@@ -324,8 +324,8 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
                 fill="rgba(245,252,255,0.99)" />
 
               {/* ⑧ Panel corner anchors */}
-              <circle cx={49} cy={54} r="0.32" fill="rgba(80,180,255,0.82)" />
-              <circle cx={85} cy={54} r="0.32" fill="rgba(80,180,255,0.82)" />
+              <circle cx={54} cy={54} r="0.32" fill="rgba(80,180,255,0.82)" />
+              <circle cx={90} cy={54} r="0.32" fill="rgba(80,180,255,0.82)" />
             </>
           )
         })()}
@@ -334,7 +334,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
       {/* ── Corner showcase panel — 3D digital frame ── */}
       <div
         className={`pointer-events-none absolute z-30 transition-all duration-500 ${showcaseCorner !== null ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
-        style={{ right: '15vw', top: '12vh', width: '36%', height: '42vh' }}
+        style={{ right: '10vw', top: '12vh', width: '36%', height: '42vh' }}
         aria-hidden="true"
       >
         {displayCorner !== null && (() => {
@@ -414,7 +414,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
         className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-start justify-start px-5 pt-24 text-start md:items-center md:px-[10vw] md:pt-0"
         style={{ opacity: introComplete ? undefined : 0 }}
       >
-        <div className="w-full md:w-[clamp(400px,42%,640px)]">
+        <div className="w-full md:w-[clamp(400px,50%,950px)]">
           <h1 data-hero-heading className="mb-6 whitespace-pre-line text-[clamp(24px,2.7vw,62px)] font-extrabold text-white">
             {data?.heading ?? 'KẾT NỐI CÔNG NGHỆ\nKIẾN TẠO HẠ TẦNG TƯƠNG LAI'}
           </h1>

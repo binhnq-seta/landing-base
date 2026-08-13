@@ -96,7 +96,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
         {/* ── Left: content — z-10 keeps text above the canvas overflow ── */}
         <div className="relative z-10 flex min-h-screen flex-col justify-center px-5 py-14 md:px-0 md:pl-[10vw] md:py-24">
           <div data-core-reveal>
-            <h1 className="mb-4 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59]">
+            <h1 className="mb-4 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] md:text-[clamp(32px,3vw,48px)]">
               {data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
             </h1>
           </div>

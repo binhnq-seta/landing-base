@@ -131,7 +131,7 @@ export function PartnerSection({ data, heading }: PartnerSectionProps) {
       <div className="relative z-10 w-full">
         <h1
           data-partner-reveal
-          className="mb-4 px-6 text-center text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59]"
+          className="mb-4 px-6 text-center text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:text-[clamp(32px,3vw,48px)]"
         >
           {heading ?? 'ĐỐI TÁC CỦA CHÚNG TÔI'}
         </h1>
