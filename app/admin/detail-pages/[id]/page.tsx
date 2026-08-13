@@ -438,6 +438,7 @@ export default function DetailPageEditor() {
   const [copySlug, setCopySlug] = useState('')
   const [copyStatus, setCopyStatus] = useState<'idle' | 'saving' | 'invalid' | 'exists' | 'error'>('idle')
   const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'ok' | 'error'>('idle')
+  const [deleteStatus, setDeleteStatus] = useState<'idle' | 'deleting' | 'error'>('idle')
 
   useEffect(() => {
     setPage(null)
@@ -780,6 +781,23 @@ export default function DetailPageEditor() {
     }
   }
 
+  async function handleDelete() {
+    if (!page) return
+    const title = stripHtml(page.title) || page.slug
+    if (!window.confirm(`Xóa vĩnh viễn trang “${title}” ở cả Tiếng Việt và English?`)) return
+
+    setDeleteStatus('deleting')
+    try {
+      const query = new URLSearchParams({ type: page.type, slug: page.slug })
+      const response = await fetch(`/api/admin/content?${query}`, { method: 'DELETE' })
+      if (!response.ok) throw new Error('Delete failed')
+      router.push('/admin/detail-pages')
+      router.refresh()
+    } catch {
+      setDeleteStatus('error')
+    }
+  }
+
   return (
     <>
       {showPreview && page && (
@@ -854,6 +872,14 @@ export default function DetailPageEditor() {
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
+            onClick={handleDelete}
+            disabled={!page || deleteStatus === 'deleting'}
+            className="flex items-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-600 shadow-sm transition-colors hover:bg-red-50 disabled:opacity-40"
+          >
+            {deleteStatus === 'deleting' ? 'Đang xóa…' : 'Xóa trang'}
+          </button>
+          <button
+            type="button"
             onClick={() => {
               setCopyType(page?.type ?? 'solutions')
               setCopySlug('')
@@ -883,6 +909,10 @@ export default function DetailPageEditor() {
           </button>
         </div>
       </div>
+
+      {deleteStatus === 'error' && (
+        <p className="mb-4 text-sm font-medium text-red-600">Không thể xóa trang. Vui lòng thử lại.</p>
+      )}
 
       <div className="flex items-center justify-between gap-4">
         <LocaleTabs value={locale} onChange={setLocale} />

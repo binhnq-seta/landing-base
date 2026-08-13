@@ -32,3 +32,31 @@ export async function PUT(request: Request) {
   setContent(updated, locale)
   return NextResponse.json({ ok: true })
 }
+
+export async function DELETE(request: Request) {
+  if (!(await authorize())) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { searchParams } = new URL(request.url)
+  const type = searchParams.get('type')
+  const slug = searchParams.get('slug')
+  if ((type !== 'solutions' && type !== 'projects') || !slug) {
+    return NextResponse.json({ error: 'Invalid page identifier' }, { status: 400 })
+  }
+
+  let deleted = false
+  for (const locale of ['vi', 'en'] as const) {
+    const content = getContent(locale)
+    const detailPages = content.detailPages.filter(
+      (page) => page.type !== type || page.slug !== slug,
+    )
+    if (detailPages.length !== content.detailPages.length) deleted = true
+    setContent({ ...content, detailPages }, locale)
+  }
+
+  if (!deleted) {
+    return NextResponse.json({ error: 'Page not found' }, { status: 404 })
+  }
+  return NextResponse.json({ ok: true })
+}

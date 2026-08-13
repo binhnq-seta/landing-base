@@ -7,7 +7,7 @@ import { DetailScrollAnimations } from '@/components/detail/DetailScrollAnimatio
 import { DetailSpline } from '@/components/detail/DetailSpline'
 import { SiteFooter } from '@/components/layout/Footer'
 import { SiteHeader } from '@/components/layout/SiteHeader'
-import { detailPages, getDetailPage } from '@/lib/detail-pages'
+import { detailPages } from '@/lib/detail-pages'
 import { getContent } from '@/lib/admin/content'
 import type { CMSDetailSection, CMSDetailPage, SupportedLocale } from '@/lib/admin/content'
 import type { CSSProperties } from 'react'
@@ -34,11 +34,10 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
   const locale = await detectLocale()
   const content = getContent(locale)
   const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
-  const page = cmsPage ?? getDetailPage(type, slug)
-  if (!page) return {}
+  if (!cmsPage) return {}
   return {
-    title: `${stripHtml(page.title)} | General Systems`,
-    description: stripHtml(page.summary),
+    title: `${stripHtml(cmsPage.title)} | General Systems`,
+    description: stripHtml(cmsPage.summary),
   }
 }
 
@@ -578,23 +577,8 @@ export default async function DetailPage({ params }: DetailPageProps) {
   const content = getContent(locale)
   const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
 
-  let page: CMSDetailPage
-
-  if (cmsPage) {
-    page = cmsPage
-  } else {
-    const fallback = getDetailPage(type, slug)
-    if (!fallback) notFound()
-    page = {
-      ...fallback,
-      layout: 'headline',
-      sections: fallback.sections.map((s) => ({
-        ...s,
-        imagePosition: 'auto' as const,
-        imageStyle: 'cover' as const,
-      })),
-    }
-  }
+  if (!cmsPage) notFound()
+  const page: CMSDetailPage = cmsPage
 
   const layout = page.layout ?? 'headline'
   const relatedPages = content.detailPages
