@@ -3,7 +3,7 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSSolution, CMSSectionLabels, SupportedLocale } from '@/lib/admin/content'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { inputCls, Field, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
 
 const BLANK: CMSSolution = { slug: '', title: '', src: '', alt: '', desc: '' }
 
@@ -13,6 +13,7 @@ export default function SolutionsEditorPage() {
   const [sectionLabels, setSectionLabels] = useState<CMSSectionLabels>({ solutions: '', projects: '', viewMore: '', partners: '' })
   const [items, setItems] = useState<CMSSolution[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
@@ -53,13 +54,50 @@ export default function SolutionsEditorPage() {
     }
   }
 
+  async function handleSync() {
+    setSyncStatus('syncing')
+    const otherLocale = locale === 'vi' ? 'en' : 'vi'
+    try {
+      const otherData = await fetch(`/api/admin/content?locale=${otherLocale}`).then((r) => r.json())
+      const tgtItems = (otherData.solutions ?? []) as CMSSolution[]
+      const tgtLabels = (otherData.sectionLabels ?? {}) as CMSSectionLabels
+      const mergedItems: CMSSolution[] = items.map((src, i) => {
+        const t = tgtItems[i]
+        return {
+          slug: src.slug,
+          src: src.src,
+          title: t?.title?.trim() ? t.title : src.title,
+          alt: t?.alt?.trim() ? t.alt : src.alt,
+          desc: t?.desc?.trim() ? t.desc : src.desc,
+        }
+      })
+      const res = await fetch(`/api/admin/content?locale=${otherLocale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          solutions: mergedItems,
+          sectionLabels: { ...tgtLabels, solutions: tgtLabels.solutions?.trim() ? tgtLabels.solutions : sectionTitle },
+        }),
+      })
+      if (!res.ok) { setSyncStatus('error'); return }
+      setSyncStatus('ok')
+    } catch {
+      setSyncStatus('error')
+    } finally {
+      setTimeout(() => setSyncStatus('idle'), 3000)
+    }
+  }
+
   return (
     <div className="p-8">
       <PageHeader
         title="Giải pháp"
         description="Danh sách 6 giải pháp trong grid. Slug dùng cho URL trang chi tiết."
       />
-      <LocaleTabs value={locale} onChange={setLocale} />
+      <div className="flex items-center justify-between gap-4">
+        <LocaleTabs value={locale} onChange={setLocale} />
+        <SyncLocaleButton locale={locale} status={syncStatus} onSync={handleSync} />
+      </div>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-4">
         <Field label="Tiêu đề section">

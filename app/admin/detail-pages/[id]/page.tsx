@@ -7,7 +7,7 @@ import type { CMSDetailPage, CMSDetailPoint, CMSDetailSection, DetailPageLayout,
 import { detailPages } from '@/lib/detail-pages'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 import type { SupportedLocale } from '@/lib/admin/content'
-import { inputCls, Field, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { inputCls, Field, SaveBar, LocaleTabs, SyncLocaleButton, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
 import { DetailPagePreview } from '@/components/admin/DetailPagePreview'
 
 function stripHtml(html: string): string {
@@ -437,7 +437,7 @@ export default function DetailPageEditor() {
   const [copyType, setCopyType] = useState<'solutions' | 'projects'>('solutions')
   const [copySlug, setCopySlug] = useState('')
   const [copyStatus, setCopyStatus] = useState<'idle' | 'saving' | 'invalid' | 'exists' | 'error'>('idle')
-  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'ok' | 'error'>('idle')
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
   const [deleteStatus, setDeleteStatus] = useState<'idle' | 'deleting' | 'error'>('idle')
 
   useEffect(() => {
@@ -916,36 +916,7 @@ export default function DetailPageEditor() {
 
       <div className="flex items-center justify-between gap-4">
         <LocaleTabs value={locale} onChange={setLocale} />
-        {page && (
-          <button
-            type="button"
-            onClick={handleSync}
-            disabled={syncStatus === 'syncing'}
-            className="flex shrink-0 items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-medium text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
-            title={`Đồng bộ template và ảnh từ ${locale.toUpperCase()} sang ${locale === 'vi' ? 'EN' : 'VI'}. Nội dung đã có sẵn ở bên kia sẽ được giữ nguyên.`}
-          >
-            {syncStatus === 'syncing' ? (
-              'Đang đồng bộ…'
-            ) : syncStatus === 'ok' ? (
-              <>
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.5 6.5 12 13 5" />
-                </svg>
-                Đã đồng bộ sang {locale === 'vi' ? 'EN' : 'VI'}
-              </>
-            ) : syncStatus === 'error' ? (
-              'Lỗi, thử lại'
-            ) : (
-              <>
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2 5.5A4.5 4.5 0 0 1 10.9 4M14 10.5A4.5 4.5 0 0 1 5.1 12" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 2v3h3M5 14v-3H2" />
-                </svg>
-                Đồng bộ sang {locale === 'vi' ? 'EN' : 'VI'}
-              </>
-            )}
-          </button>
-        )}
+        {page && <SyncLocaleButton locale={locale} status={syncStatus} onSync={handleSync} />}
       </div>
 
       {!page ? (

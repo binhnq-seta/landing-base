@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSShowcaseCorner, SupportedLocale } from '@/lib/admin/content'
-import { Field, PageHeader, SaveBar, inputCls, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { Field, PageHeader, SaveBar, SyncLocaleButton, inputCls, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 
 // Stable display names for each corner id (matches config.ts order)
@@ -21,6 +21,7 @@ export default function ShowcaseEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [corners, setCorners] = useState<CMSShowcaseCorner[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
@@ -55,13 +56,45 @@ export default function ShowcaseEditorPage() {
     }
   }
 
+  async function handleSync() {
+    setSyncStatus('syncing')
+    const otherLocale = locale === 'vi' ? 'en' : 'vi'
+    try {
+      const otherData = await fetch(`/api/admin/content?locale=${otherLocale}`).then((r) => r.json())
+      const tgtCorners = (otherData.showcaseCorners ?? []) as CMSShowcaseCorner[]
+      const merged: CMSShowcaseCorner[] = corners.map((src) => {
+        const t = tgtCorners.find((c) => c.id === src.id)
+        return {
+          id: src.id,
+          image: src.image,
+          label: t?.label?.trim() ? t.label : src.label,
+          sublabel: t?.sublabel?.trim() ? t.sublabel : src.sublabel,
+        }
+      })
+      const res = await fetch(`/api/admin/content?locale=${otherLocale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ showcaseCorners: merged }),
+      })
+      if (!res.ok) { setSyncStatus('error'); return }
+      setSyncStatus('ok')
+    } catch {
+      setSyncStatus('error')
+    } finally {
+      setTimeout(() => setSyncStatus('idle'), 3000)
+    }
+  }
+
   return (
     <div className="p-8">
       <PageHeader
         title="Showcase Corners"
         description="Nhãn, phụ nhãn và ảnh hiển thị trên khung khi Rubik cube chiếu sáng vào góc."
       />
-      <LocaleTabs value={locale} onChange={setLocale} />
+      <div className="flex items-center justify-between gap-4">
+        <LocaleTabs value={locale} onChange={setLocale} />
+        <SyncLocaleButton locale={locale} status={syncStatus} onSync={handleSync} />
+      </div>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-6">
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 max-w-5xl">

@@ -3,7 +3,7 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSPartner, CMSSectionLabels, SupportedLocale } from '@/lib/admin/content'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { inputCls, Field, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
 
 export default function PartnersEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
@@ -11,6 +11,7 @@ export default function PartnersEditorPage() {
   const [sectionLabels, setSectionLabels] = useState<CMSSectionLabels>({ solutions: '', projects: '', viewMore: '', partners: '' })
   const [items, setItems] = useState<CMSPartner[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
@@ -51,13 +52,47 @@ export default function PartnersEditorPage() {
     }
   }
 
+  async function handleSync() {
+    setSyncStatus('syncing')
+    const otherLocale = locale === 'vi' ? 'en' : 'vi'
+    try {
+      const otherData = await fetch(`/api/admin/content?locale=${otherLocale}`).then((r) => r.json())
+      const tgtItems = (otherData.partners ?? []) as CMSPartner[]
+      const tgtLabels = (otherData.sectionLabels ?? {}) as CMSSectionLabels
+      const mergedItems: CMSPartner[] = items.map((src, i) => {
+        const t = tgtItems[i]
+        return {
+          src: src.src,
+          alt: t?.alt?.trim() ? t.alt : src.alt,
+        }
+      })
+      const res = await fetch(`/api/admin/content?locale=${otherLocale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          partners: mergedItems,
+          sectionLabels: { ...tgtLabels, partners: tgtLabels.partners?.trim() ? tgtLabels.partners : heading },
+        }),
+      })
+      if (!res.ok) { setSyncStatus('error'); return }
+      setSyncStatus('ok')
+    } catch {
+      setSyncStatus('error')
+    } finally {
+      setTimeout(() => setSyncStatus('idle'), 3000)
+    }
+  }
+
   return (
     <div className="p-8">
       <PageHeader
         title="Đối tác"
         description="Logo đối tác trong marquee. Upload logo rồi điền alt text."
       />
-      <LocaleTabs value={locale} onChange={setLocale} />
+      <div className="flex items-center justify-between gap-4">
+        <LocaleTabs value={locale} onChange={setLocale} />
+        <SyncLocaleButton locale={locale} status={syncStatus} onSync={handleSync} />
+      </div>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-2xl space-y-3">
         <Field label="Tiêu đề section">

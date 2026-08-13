@@ -2,7 +2,7 @@
 
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSCoreValues, CMSCoreValue, SupportedLocale } from '@/lib/admin/content'
-import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { inputCls, Field, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 
 const BLANK: CMSCoreValue = { id: '', title: '', description: '', icon: '' }
@@ -12,6 +12,7 @@ export default function CoreValuesEditorPage() {
   const [heading, setHeading] = useState('')
   const [items, setItems] = useState<CMSCoreValue[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
@@ -54,10 +55,45 @@ export default function CoreValuesEditorPage() {
     }
   }
 
+  async function handleSync() {
+    setSyncStatus('syncing')
+    const otherLocale = locale === 'vi' ? 'en' : 'vi'
+    try {
+      const otherData = await fetch(`/api/admin/content?locale=${otherLocale}`).then((r) => r.json())
+      const tgt = otherData.coreValues as CMSCoreValues | undefined
+      const merged: CMSCoreValues = {
+        heading: tgt?.heading?.trim() ? tgt.heading : heading,
+        items: items.map((src, i) => {
+          const t = tgt?.items?.[i]
+          return {
+            id: src.id,
+            icon: src.icon,
+            title: t?.title?.trim() ? t.title : src.title,
+            description: t?.description?.trim() ? t.description : src.description,
+          }
+        }),
+      }
+      const res = await fetch(`/api/admin/content?locale=${otherLocale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ coreValues: merged }),
+      })
+      if (!res.ok) { setSyncStatus('error'); return }
+      setSyncStatus('ok')
+    } catch {
+      setSyncStatus('error')
+    } finally {
+      setTimeout(() => setSyncStatus('idle'), 3000)
+    }
+  }
+
   return (
     <div className="p-8">
       <PageHeader title="Giá trị cốt lõi" description="Tiêu đề section và danh sách các giá trị." />
-      <LocaleTabs value={locale} onChange={setLocale} />
+      <div className="flex items-center justify-between gap-4">
+        <LocaleTabs value={locale} onChange={setLocale} />
+        <SyncLocaleButton locale={locale} status={syncStatus} onSync={handleSync} />
+      </div>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-6">
         <Field label="Tiêu đề section">

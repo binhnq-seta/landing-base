@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import type { SupportedLocale } from '@/lib/admin/content'
 
 export type SaveStatus = 'idle' | 'saving' | 'ok' | 'error'
+export type SyncStatus = 'idle' | 'syncing' | 'ok' | 'error'
 
 export const inputCls =
   'w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
@@ -66,5 +67,47 @@ export function LocaleTabs({
         </button>
       ))}
     </div>
+  )
+}
+
+export function SyncLocaleButton({
+  locale,
+  status,
+  onSync,
+}: {
+  locale: SupportedLocale
+  status: SyncStatus
+  onSync: () => void
+}) {
+  const target = locale === 'vi' ? 'EN' : 'VI'
+  return (
+    <button
+      type="button"
+      onClick={onSync}
+      disabled={status === 'syncing'}
+      className="flex shrink-0 items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-3 py-1.5 text-xs font-medium text-violet-700 transition-colors hover:bg-violet-100 disabled:opacity-50"
+      title={`Đồng bộ template và ảnh từ ${locale.toUpperCase()} sang ${target}. Nội dung đã có sẽ được giữ nguyên.`}
+    >
+      {status === 'syncing' ? (
+        'Đang đồng bộ…'
+      ) : status === 'ok' ? (
+        <>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.5 6.5 12 13 5" />
+          </svg>
+          Đã đồng bộ sang {target}
+        </>
+      ) : status === 'error' ? (
+        'Lỗi, thử lại'
+      ) : (
+        <>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-3.5 w-3.5" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2 5.5A4.5 4.5 0 0 1 10.9 4M14 10.5A4.5 4.5 0 0 1 5.1 12" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M11 2v3h3M5 14v-3H2" />
+          </svg>
+          Đồng bộ sang {target}
+        </>
+      )}
+    </button>
   )
 }

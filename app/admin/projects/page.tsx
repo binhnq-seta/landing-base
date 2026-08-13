@@ -3,7 +3,7 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSProject, CMSSectionLabels, SupportedLocale } from '@/lib/admin/content'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { inputCls, Field, PageHeader, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
+import { inputCls, Field, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
 
 const BLANK: CMSProject = { id: '', slug: '', category: '', title: '', img: '', description: '' }
 
@@ -14,6 +14,7 @@ export default function ProjectsEditorPage() {
   const [sectionLabels, setSectionLabels] = useState<CMSSectionLabels>({ solutions: '', projects: '', viewMore: '', partners: '' })
   const [items, setItems] = useState<CMSProject[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
@@ -56,10 +57,52 @@ export default function ProjectsEditorPage() {
     }
   }
 
+  async function handleSync() {
+    setSyncStatus('syncing')
+    const otherLocale = locale === 'vi' ? 'en' : 'vi'
+    try {
+      const otherData = await fetch(`/api/admin/content?locale=${otherLocale}`).then((r) => r.json())
+      const tgtItems = (otherData.projects ?? []) as CMSProject[]
+      const tgtLabels = (otherData.sectionLabels ?? {}) as CMSSectionLabels
+      const mergedItems: CMSProject[] = items.map((src, i) => {
+        const t = tgtItems[i]
+        return {
+          id: src.id,
+          slug: src.slug,
+          img: src.img,
+          category: src.category,
+          title: t?.title?.trim() ? t.title : src.title,
+          description: t?.description?.trim() ? t.description : src.description,
+        }
+      })
+      const res = await fetch(`/api/admin/content?locale=${otherLocale}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projects: mergedItems,
+          sectionLabels: {
+            ...tgtLabels,
+            projects: tgtLabels.projects?.trim() ? tgtLabels.projects : sectionTitle,
+            viewMore: tgtLabels.viewMore?.trim() ? tgtLabels.viewMore : viewMoreLabel,
+          },
+        }),
+      })
+      if (!res.ok) { setSyncStatus('error'); return }
+      setSyncStatus('ok')
+    } catch {
+      setSyncStatus('error')
+    } finally {
+      setTimeout(() => setSyncStatus('idle'), 3000)
+    }
+  }
+
   return (
     <div className="p-8">
       <PageHeader title="Dự án tiêu biểu" description="Danh sách dự án trong carousel. Slug dùng cho URL trang chi tiết." />
-      <LocaleTabs value={locale} onChange={setLocale} />
+      <div className="flex items-center justify-between gap-4">
+        <LocaleTabs value={locale} onChange={setLocale} />
+        <SyncLocaleButton locale={locale} status={syncStatus} onSync={handleSync} />
+      </div>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-4">
         <div className="grid grid-cols-2 gap-4">
