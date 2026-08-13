@@ -418,12 +418,12 @@ export function RubikScene({
 
             // Kill all showcase-owned tweens
             const cg = cubeRef.current?.groupRef?.current
-            gsap.killTweensOf(sceneGroupRef.current.position)
-            gsap.killTweensOf(sceneGroupRef.current.scale)
+            gsap.killTweensOf(sceneGroup.position)
+            gsap.killTweensOf(sceneGroup.scale)
             if (cg) gsap.killTweensOf(cg.rotation)
 
             // Reset scale + rotation immediately so scroll handler takes over cleanly
-            sceneGroupRef.current.scale.setScalar(HERO_SCALE)
+            sceneGroup.scale.setScalar(HERO_SCALE)
             if (cg) cg.rotation.set(CUBE_ROT_X, CUBE_ROT_Y, 0)
 
             cubeRef.current?.startIdle()

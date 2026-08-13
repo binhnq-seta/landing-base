@@ -76,6 +76,7 @@ export interface CMSDetailSection {
   imageAlt: string
   imagePosition?: DetailImagePosition
   imageStyle?: DetailImageStyle
+  backgroundOpacity?: number
   buttonHref?: string
   points?: CMSDetailPoint[]
 }
@@ -92,6 +93,7 @@ export interface CMSDetailPage {
   heroImage: string
   heroImageAlt: string
   layout?: DetailPageLayout
+  headlineTextMarginTop?: number
   sections: CMSDetailSection[]
 }
 

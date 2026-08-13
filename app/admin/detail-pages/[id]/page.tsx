@@ -10,6 +10,10 @@ import type { SupportedLocale } from '@/lib/admin/content'
 import { inputCls, Field, SaveBar, LocaleTabs, type SaveStatus } from '@/components/admin/shared'
 import { DetailPagePreview } from '@/components/admin/DetailPagePreview'
 
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, '').trim()
+}
+
 function ColorSwatch({
   label,
   value,
@@ -21,7 +25,7 @@ function ColorSwatch({
 }) {
   return (
     <label
-      className="flex cursor-pointer items-center gap-1.5 rounded px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-100"
+      className="relative flex cursor-pointer items-center gap-1.5 rounded px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-100"
       title={`Màu ${label}`}
     >
       <span>A</span>
@@ -31,7 +35,7 @@ function ColorSwatch({
       />
       <input
         type="color"
-        className="sr-only"
+        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
         value={value ?? '#000000'}
         onChange={(e) => onChange(e.target.value)}
       />
@@ -166,15 +170,7 @@ function ToolBtn({
   )
 }
 
-const FONT_SIZES = [
-  { value: '1', label: 'Rất nhỏ' },
-  { value: '2', label: 'Nhỏ' },
-  { value: '3', label: 'Bình thường' },
-  { value: '4', label: 'Lớn' },
-  { value: '5', label: 'Rất lớn' },
-  { value: '6', label: 'Cực lớn' },
-  { value: '7', label: 'Khổng lồ' },
-]
+const WORD_FONT_SIZES = [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72]
 
 const FONT_FAMILIES = [
   { value: 'sans-serif', label: 'Sans-serif' },
@@ -191,7 +187,6 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (value: 
   const isInternalChange = useRef(false)
   const savedRange = useRef<Range | null>(null)
   const colorRef = useRef<HTMLInputElement>(null)
-
   useEffect(() => {
     if (isInternalChange.current) {
       isInternalChange.current = false
@@ -226,6 +221,23 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (value: 
     document.execCommand(command, false, commandValue)
     const html = editorRef.current?.innerHTML ?? ''
     onChange(sanitizeEditorHtml(html))
+  }
+
+  function applyExactFontSize(px: number) {
+    const editor = editorRef.current
+    if (!editor) return
+    isInternalChange.current = true
+    // Use non-CSS mode so execCommand emits <font size="7"> markers we can find
+    document.execCommand('styleWithCSS', false, 'false')
+    document.execCommand('fontSize', false, '7')
+    document.execCommand('styleWithCSS', false, 'true')
+    editor.querySelectorAll('font[size="7"]').forEach((el) => {
+      const span = document.createElement('span')
+      span.style.fontSize = `${px}px`
+      span.innerHTML = (el as HTMLElement).innerHTML
+      el.parentNode?.replaceChild(span, el)
+    })
+    onChange(sanitizeEditorHtml(editor.innerHTML ?? ''))
   }
 
   function onInput() {
@@ -290,23 +302,23 @@ function RichTextEditor({ value, onChange }: { value: string; onChange: (value: 
 
         <Divider />
 
-        {/* Font size */}
+        {/* Font size — exact px like Word */}
         <select
           className="rounded border border-slate-200 bg-white px-1 py-0.5 text-xs text-slate-600 cursor-pointer"
-          title="Cỡ chữ"
+          title="Cỡ chữ (px)"
           defaultValue=""
           onMouseDown={saveRange}
           onChange={(e) => {
-            const v = e.target.value
-            if (!v) return
+            const px = parseInt(e.target.value)
+            if (!px) return
             restoreRange()
-            runCommand('fontSize', v)
+            applyExactFontSize(px)
             e.target.value = ''
           }}
         >
-          <option value="" disabled>Cỡ chữ</option>
-          {FONT_SIZES.map((s) => (
-            <option key={s.value} value={s.value}>{s.label}</option>
+          <option value="" disabled>px</option>
+          {WORD_FONT_SIZES.map((s) => (
+            <option key={s} value={s}>{s}</option>
           ))}
         </select>
 
@@ -470,7 +482,7 @@ export default function DetailPageEditor() {
     setPage((prev) => (prev ? { ...prev, [key]: value } : prev))
   }
 
-  function updateSection(i: number, key: keyof CMSDetailSection, value: string) {
+  function updateSection(i: number, key: keyof CMSDetailSection, value: string | number | undefined) {
     setPage((prev) => {
       if (!prev) return prev
       const sections = [...prev.sections]
@@ -619,6 +631,7 @@ export default function DetailPageEditor() {
         const synced: CMSDetailPage = {
           ...other,
           layout: page.layout,
+          headlineTextMarginTop: page.headlineTextMarginTop,
           sections: other.sections.map((s, i) => {
             const src = page.sections[i]
             if (!src) return s
@@ -661,7 +674,7 @@ export default function DetailPageEditor() {
           <Link href="/admin/detail-pages" className="text-sm text-blue-600 hover:underline">
             ← Trang chi tiết
           </Link>
-          <h1 className="mt-2 text-xl font-bold text-slate-800">{page?.title ?? '…'}</h1>
+          <h1 className="mt-2 text-xl font-bold text-slate-800">{page?.title ? stripHtml(page.title) : '…'}</h1>
           <p className="mt-0.5 text-xs text-slate-400">
             {type} / {slug}
           </p>
@@ -718,13 +731,37 @@ export default function DetailPageEditor() {
             </div>
           </div>
 
+          {/* Headline margin top */}
+          {(page.layout ?? 'headline') === 'headline' && (
+            <div>
+              <label className="mb-1 block text-xs font-medium text-slate-500">
+                Margin top phần text trái (vh) — mặc định 12.5 = 1/8 màn hình
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={0.5}
+                  className={`${inputCls} flex-1`}
+                  placeholder="12.5"
+                  value={page.headlineTextMarginTop ?? ''}
+                  onChange={(e) =>
+                    updatePage('headlineTextMarginTop', e.target.value !== '' ? Number(e.target.value) : undefined)
+                  }
+                />
+                <span className="shrink-0 text-xs font-mono text-slate-400">vh</span>
+              </div>
+            </div>
+          )}
+
           {/* Eyebrow */}
           <div>
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs font-medium text-slate-500">Eyebrow (nhãn nhỏ phía trên tiêu đề)</span>
               <ColorSwatch label="eyebrow" value={page.eyebrowColor} onChange={(c) => updatePage('eyebrowColor', c)} />
             </div>
-            <input className={inputCls} value={page.eyebrow} onChange={(e) => updatePage('eyebrow', e.target.value)} />
+            <RichTextEditor value={page.eyebrow} onChange={(v) => updatePage('eyebrow', v)} />
           </div>
 
           {/* Tiêu đề trang */}
@@ -733,7 +770,7 @@ export default function DetailPageEditor() {
               <span className="text-xs font-medium text-slate-500">Tiêu đề trang</span>
               <ColorSwatch label="tiêu đề" value={page.titleColor} onChange={(c) => updatePage('titleColor', c)} />
             </div>
-            <input className={inputCls} value={page.title} onChange={(e) => updatePage('title', e.target.value)} required />
+            <RichTextEditor value={page.title} onChange={(v) => updatePage('title', v)} />
           </div>
 
           {/* Tóm tắt */}
@@ -742,11 +779,7 @@ export default function DetailPageEditor() {
               <span className="text-xs font-medium text-slate-500">Tóm tắt</span>
               <ColorSwatch label="tóm tắt" value={page.summaryColor} onChange={(c) => updatePage('summaryColor', c)} />
             </div>
-            <textarea
-              className={`${inputCls} min-h-24 resize-y`}
-              value={page.summary}
-              onChange={(e) => updatePage('summary', e.target.value)}
-            />
+            <RichTextEditor value={page.summary} onChange={(v) => updatePage('summary', v)} />
           </div>
           <ImageUploader
             label="Ảnh hero"
@@ -848,7 +881,7 @@ export default function DetailPageEditor() {
                   </span>
                 </h2>
                 {isCollapsed && section.title && (
-                  <span className="ml-1 max-w-[200px] truncate text-xs text-slate-400">{section.title}</span>
+                  <span className="ml-1 max-w-[200px] truncate text-xs text-slate-400">{stripHtml(section.title)}</span>
                 )}
               </div>
               <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
@@ -969,10 +1002,9 @@ export default function DetailPageEditor() {
                   </div>
                 </div>
               </div>
-              <input
-                className={inputCls}
+              <RichTextEditor
                 value={section.title}
-                onChange={(e) => updateSection(i, 'title', e.target.value)}
+                onChange={(v) => updateSection(i, 'title', v)}
               />
             </div>
             {isHeading && (
@@ -999,6 +1031,15 @@ export default function DetailPageEditor() {
                 <RichTextEditor
                   value={section.description}
                   onChange={(nextValue) => updateSection(i, 'description', nextValue)}
+                />
+              </Field>
+            )}
+
+            {isImagePoints && (
+              <Field label='Mô tả khối (hiển thị làm tiêu đề lớn khi kiểu ảnh "Nền")'>
+                <RichTextEditor
+                  value={section.description}
+                  onChange={(v) => updateSection(i, 'description', v)}
                 />
               </Field>
             )}
@@ -1038,18 +1079,16 @@ export default function DetailPageEditor() {
                     </div>
 
                     <Field label="Tiêu đề">
-                      <input
-                        className={inputCls}
+                      <RichTextEditor
                         value={point.title}
-                        onChange={(e) => updatePoint(i, pointIndex, 'title', e.target.value)}
+                        onChange={(v) => updatePoint(i, pointIndex, 'title', v)}
                       />
                     </Field>
 
                     <Field label="Mô tả">
-                      <textarea
-                        className={`${inputCls} min-h-20 resize-y`}
+                      <RichTextEditor
                         value={point.description}
-                        onChange={(e) => updatePoint(i, pointIndex, 'description', e.target.value)}
+                        onChange={(v) => updatePoint(i, pointIndex, 'description', v)}
                       />
                     </Field>
                   </div>
@@ -1143,20 +1182,42 @@ export default function DetailPageEditor() {
 
             {isImagePoints && (
               <>
-                <Field label="Vị trí ảnh">
-                  <select
-                    className={inputCls}
-                    value={section.imagePosition === 'left' ? 'left' : 'right'}
-                    onChange={(e) => updateSection(i, 'imagePosition', e.target.value)}
-                  >
-                    <option value="right">Phải</option>
-                    <option value="left">Trái</option>
-                  </select>
-                </Field>
+                {section.imageStyle === 'background' ? (
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-2">
+                    <label className="block text-xs font-medium text-slate-500">
+                      Độ mờ phủ nền (0% = trong suốt · 100% = tối hoàn toàn, mặc định 82%)
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        className="flex-1 accent-blue-500"
+                        value={section.backgroundOpacity ?? 82}
+                        onChange={(e) => updateSection(i, 'backgroundOpacity', Number(e.target.value))}
+                      />
+                      <span className="w-10 shrink-0 text-right text-xs font-mono text-slate-600">
+                        {section.backgroundOpacity ?? 82}%
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <Field label="Vị trí ảnh">
+                    <select
+                      className={inputCls}
+                      value={section.imagePosition === 'left' ? 'left' : 'right'}
+                      onChange={(e) => updateSection(i, 'imagePosition', e.target.value)}
+                    >
+                      <option value="right">Phải</option>
+                      <option value="left">Trái</option>
+                    </select>
+                  </Field>
+                )}
                 <ImageUploader
-                  label="Ảnh khối"
+                  label={section.imageStyle === 'background' ? 'Ảnh nền' : 'Ảnh khối'}
                   value={section.image}
                   onChange={(url) => updateSection(i, 'image', url)}
+                  previewClassName="h-28 w-full object-cover rounded-lg"
                 />
                 <Field label="Alt text ảnh">
                   <input
