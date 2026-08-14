@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { gsap } from '@/lib/gsap'
 
 const AtomicCanvas = dynamic(
@@ -45,6 +46,20 @@ const CORE_VALUE_ICONS = [
 export function CoreValueSection({ data }: FeaturesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null)
   const [isVisible, setIsVisible] = useState(false)
+  const pathname = usePathname()
+  const locale = pathname.startsWith('/en') ? 'en' : 'vi'
+  const [cmsItems, setCmsItems] = useState<CVFeatureItem[] | null>(null)
+  const [cmsHeading, setCmsHeading] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch(`/api/admin/content?locale=${locale}`)
+      .then((r) => r.json())
+      .then((d: { coreValues?: { heading?: string; items?: CVFeatureItem[] } }) => {
+        if (d.coreValues?.items?.length) setCmsItems(d.coreValues.items)
+        if (d.coreValues?.heading) setCmsHeading(d.coreValues.heading)
+      })
+      .catch(() => {})
+  }, [locale])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -84,7 +99,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
     return () => ctx.revert()
   }, [])
 
-  const features = data?.features?.length ? data.features : FALLBACK_CORE_VALUES
+  const features = cmsItems ?? (data?.features?.length ? data.features : FALLBACK_CORE_VALUES)
 
   return (
     <section
@@ -98,7 +113,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
         <div className="relative z-10 flex min-h-screen flex-col justify-center px-5 py-14 md:px-0 md:pl-[10vw] md:py-24">
           <div data-core-reveal>
             <h1 className="mb-4 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] md:text-[clamp(32px,3vw,48px)]">
-              {data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
+              {cmsHeading ?? data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
             </h1>
           </div>
 

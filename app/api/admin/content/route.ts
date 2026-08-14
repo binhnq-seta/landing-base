@@ -16,9 +16,6 @@ function getLocale(request: Request): SupportedLocale {
 }
 
 export async function GET(request: Request) {
-  if (!(await authorize())) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
   return NextResponse.json(getContent(getLocale(request)))
 }
 
