@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import { AdminSidebar } from './AdminSidebar'
 
-export const metadata: Metadata = { title: 'Admin CMS – General Systems' }
+export const metadata: Metadata = {
+  title: { absolute: 'Admin CMS – General Systems' },
+  robots: { index: false, follow: false, noarchive: true },
+}
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (

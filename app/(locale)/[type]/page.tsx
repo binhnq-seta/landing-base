@@ -5,21 +5,28 @@ import { HeroSection } from '@/components/sections/HeroSection'
 import { SectionScrollRail } from '@/components/layout/SectionScrollRail'
 import { getContent } from '@/lib/admin/content'
 import type { SupportedLocale } from '@/lib/admin/content'
+import { createPageMetadata } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }): Promise<Metadata> {
   const { type: locale } = await params
   if (locale === 'en') {
-    return {
+    return createPageMetadata({
+      locale: 'en',
       title: 'General Systems | Technology Solutions',
       description: 'General Systems provides comprehensive technology solutions to help enterprises optimise performance in the digital era.',
-    }
+      path: '/en',
+      alternatePaths: { vi: '/vi', en: '/en', 'x-default': '/vi' },
+    })
   }
-  return {
+  return createPageMetadata({
+    locale: 'vi',
     title: 'General Systems | Giải Pháp Công Nghệ',
     description: 'General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả trong kỷ nguyên số.',
-  }
+    path: '/vi',
+    alternatePaths: { vi: '/vi', en: '/en', 'x-default': '/vi' },
+  })
 }
 
 const CoreValueSection = lazy(() =>

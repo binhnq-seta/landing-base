@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { SiteFooter } from '@/components/layout/Footer'
 import { SiteHeader } from '@/components/layout/SiteHeader'
+import { createPageMetadata } from '@/lib/seo'
 
 type Locale = 'vi' | 'en'
 
@@ -30,8 +31,20 @@ const COPY = {
 export async function generateMetadata({ params }: { params: Promise<{ type: string }> }): Promise<Metadata> {
   const { type } = await params
   return type === 'en'
-    ? { title: 'Contact | General Systems', description: 'Contact GS Group for technology solution consultation and partnership opportunities.' }
-    : { title: 'Liên hệ | General Systems', description: 'Liên hệ GS Group để được tư vấn giải pháp công nghệ và cơ hội hợp tác.' }
+    ? createPageMetadata({
+        locale: 'en',
+        title: 'Contact | General Systems',
+        description: 'Contact GS Group for technology solution consultation and partnership opportunities.',
+        path: '/en/contact',
+        alternatePaths: { vi: '/vi/contact', en: '/en/contact', 'x-default': '/vi/contact' },
+      })
+    : createPageMetadata({
+        locale: 'vi',
+        title: 'Liên hệ | General Systems',
+        description: 'Liên hệ GS Group để được tư vấn giải pháp công nghệ và cơ hội hợp tác.',
+        path: '/vi/contact',
+        alternatePaths: { vi: '/vi/contact', en: '/en/contact', 'x-default': '/vi/contact' },
+      })
 }
 
 function ContactIcon({ type }: { type: 'pin' | 'phone' | 'mail' | 'clock' }) {

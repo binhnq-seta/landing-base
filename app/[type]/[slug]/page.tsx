@@ -11,6 +11,7 @@ import { detailPages } from '@/lib/detail-pages'
 import { getContent } from '@/lib/admin/content'
 import type { CMSDetailSection, CMSDetailPage, SupportedLocale } from '@/lib/admin/content'
 import type { CSSProperties } from 'react'
+import { createPageMetadata } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 export const dynamicParams = true
@@ -35,10 +36,14 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
   const content = getContent(locale)
   const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
   if (!cmsPage) return {}
-  return {
-    title: `${stripHtml(cmsPage.title)} | General Systems`,
+  const title = `${stripHtml(cmsPage.title)} | General Systems`
+  return createPageMetadata({
+    locale,
+    title,
     description: stripHtml(cmsPage.summary),
-  }
+    path: `/${type}/${slug}`,
+    image: cmsPage.heroImage,
+  })
 }
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
