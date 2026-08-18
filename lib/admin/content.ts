@@ -19,6 +19,7 @@ export interface CMSHero {
   description: string
   ctaLabel: string
   ctaHref: string
+  stats?: { value: string; label: string }[]
 }
 
 export interface CMSCoreValue {
@@ -133,6 +134,7 @@ export interface CMSContent {
   solutions: CMSSolution[]
   projects: CMSProject[]
   partners: CMSPartner[]
+  partnerDescription?: string
   sectionLabels: CMSSectionLabels
   detailPages: CMSDetailPage[]
   /** Rubik cube showcase corners — display data editable per locale */
@@ -148,6 +150,11 @@ const DEFAULT_VI: CMSContent = {
       'GS-Group cung cấp các giải pháp tích hợp công nghệ tiên tiến cho các hệ thống trọng yếu, bảo đảm kết nối an toàn, tăng cường bảo mật và tối ưu vận hành.',
     ctaLabel: 'Khám phá ngay',
     ctaHref: '#solutions',
+    stats: [
+      { value: '200+', label: 'Khách hàng' },
+      { value: '350+', label: 'Dự án thành công' },
+      { value: '25+', label: 'Năm kinh nghiệm' },
+    ],
   },
   features: {
     heading: 'VÌ SAO CHỌN GS-GROUP?',
@@ -191,6 +198,7 @@ const DEFAULT_VI: CMSContent = {
     { src: '/image/partner-logo/image%2032-3.png', alt: 'Đối tác General Systems 5' },
     { src: '/image/partner-logo/image%2032-4.png', alt: 'Đối tác General Systems 6' },
   ],
+  partnerDescription: 'GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.',
   sectionLabels: {
     solutions: 'LĨNH VỰC HOẠT ĐỘNG',
     projects: 'Dự án tiêu biểu',
@@ -329,6 +337,11 @@ const DEFAULT_EN: CMSContent = {
       'General Systems provides comprehensive technology solutions that help businesses optimise performance and efficiency in the digital era.',
     ctaLabel: 'Explore Solutions',
     ctaHref: '#solutions',
+    stats: [
+      { value: '200+', label: 'Clients' },
+      { value: '350+', label: 'Successful Projects' },
+      { value: '25+', label: 'Years of Experience' },
+    ],
   },
   features: {
     heading: 'WHY CHOOSE GENERAL SYSTEMS?',
@@ -372,6 +385,7 @@ const DEFAULT_EN: CMSContent = {
     { src: '/image/partner-logo/image%2032-3.png', alt: 'General Systems Partner 5' },
     { src: '/image/partner-logo/image%2032-4.png', alt: 'General Systems Partner 6' },
   ],
+  partnerDescription: 'GS GROUP is proud to partner with leading organisations and enterprises across multiple critical sectors.',
   sectionLabels: {
     solutions: 'SOLUTIONS',
     projects: 'Featured Projects',
@@ -425,8 +439,11 @@ export function getContent(locale: SupportedLocale = 'vi'): CMSContent {
   try {
     if (!existsSync(filePath)) return defaults
     const stored = JSON.parse(readFileSync(filePath, 'utf-8')) as Partial<CMSContent>
-    // Merge top-level keys; showcaseCorners uses stored array if present
-    return { ...defaults, ...stored }
+    const merged: CMSContent = { ...defaults, ...stored }
+    // Deep-merge nested objects so new fields added to the type still get their
+    // default values when an older stored file predates them.
+    if (stored.hero) merged.hero = { ...defaults.hero, ...stored.hero }
+    return merged
   } catch {
     return defaults
   }

@@ -8,6 +8,7 @@ import { inputCls, Field, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, typ
 export default function PartnersEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [heading, setHeading] = useState('')
+  const [description, setDescription] = useState('')
   const [sectionLabels, setSectionLabels] = useState<CMSSectionLabels>({ solutions: '', projects: '', viewMore: '', partners: '' })
   const [items, setItems] = useState<CMSPartner[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
@@ -16,10 +17,11 @@ export default function PartnersEditorPage() {
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((data: { partners: CMSPartner[]; sectionLabels: CMSSectionLabels }) => {
+      .then((data: { partners: CMSPartner[]; sectionLabels: CMSSectionLabels; partnerDescription?: string }) => {
         setItems(data.partners)
         setSectionLabels(data.sectionLabels)
         setHeading(data.sectionLabels.partners)
+        setDescription(data.partnerDescription ?? '')
       })
   }, [locale])
 
@@ -42,7 +44,11 @@ export default function PartnersEditorPage() {
       const res = await fetch(`/api/admin/content?locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ partners: items, sectionLabels: { ...sectionLabels, partners: heading } }),
+        body: JSON.stringify({
+          partners: items,
+          partnerDescription: description,
+          sectionLabels: { ...sectionLabels, partners: heading },
+        }),
       })
       setStatus(res.ok ? 'ok' : 'error')
     } catch {
@@ -59,6 +65,7 @@ export default function PartnersEditorPage() {
       const otherData = await fetch(`/api/admin/content?locale=${otherLocale}`).then((r) => r.json())
       const tgtItems = (otherData.partners ?? []) as CMSPartner[]
       const tgtLabels = (otherData.sectionLabels ?? {}) as CMSSectionLabels
+      const tgtDescription = (otherData.partnerDescription ?? '') as string
       const mergedItems: CMSPartner[] = items.map((src, i) => {
         const t = tgtItems[i]
         return {
@@ -71,6 +78,7 @@ export default function PartnersEditorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           partners: mergedItems,
+          partnerDescription: tgtDescription.trim() ? tgtDescription : description,
           sectionLabels: { ...tgtLabels, partners: tgtLabels.partners?.trim() ? tgtLabels.partners : heading },
         }),
       })
@@ -97,6 +105,15 @@ export default function PartnersEditorPage() {
       <form onSubmit={handleSubmit} className="mt-6 max-w-2xl space-y-3">
         <Field label="Tiêu đề section">
           <input className={inputCls} value={heading} onChange={(e) => setHeading(e.target.value)} required />
+        </Field>
+
+        <Field label="Mô tả">
+          <textarea
+            className={`${inputCls} min-h-20 resize-y`}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Mô tả ngắn hiển thị bên dưới tiêu đề đối tác"
+          />
         </Field>
 
         {items.map((item, i) => (

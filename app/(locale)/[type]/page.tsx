@@ -61,11 +61,11 @@ export default async function Home({ params }: { params: Promise<{ type: string 
       <SectionScrollRail />
       <main className="pt-0">
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        <HeroSection data={heroData as any} showcaseCorners={content.showcaseCorners} />
+        <HeroSection data={heroData as any} showcaseCorners={content.showcaseCorners} heroStats={content.hero.stats} />
         <CoreValueSection data={coreValuesData} />
         <SolutionSection data={content.solutions} title={content.sectionLabels.solutions} />
         <ProjectSection data={content.projects} title={content.sectionLabels.projects} viewMoreLabel={content.sectionLabels.viewMore} />
-        <PartnerSection data={content.partners} heading={content.sectionLabels.partners} />
+        <PartnerSection data={content.partners} heading={content.sectionLabels.partners} description={content.partnerDescription} />
       </main>
       <SiteFooter locale={locale as SupportedLocale} />
     </>

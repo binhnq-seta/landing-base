@@ -32,9 +32,10 @@ interface HeroSectionProps {
   data?: HeroData
   siteName?: string
   showcaseCorners?: CMSShowcaseCorner[]
+  heroStats?: { value: string; label: string }[]
 }
 
-export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionProps) {
+export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats }: HeroSectionProps) {
   const t = useTranslations('hero')
 
   // Merge CMS display data into geometry config, matching by id
@@ -436,7 +437,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners }: HeroSectionPr
             </a>
           </div>
           <div ref={statsRef} className="grid grid-cols-2 gap-8 pt-20 md:grid-cols-3">
-            {(t.raw('stats') as { value: string; label: string }[]).map((stat) => (
+            {(heroStats ?? (t.raw('stats') as { value: string; label: string }[])).map((stat) => (
               <div key={stat.label} data-stat className="text-start">
                 <p className="text-4xl font-medium text-white">{stat.value}</p>
                 <p className="mt-1 pt-5 text-sm font-light text-[#E3F2FD]/65">{stat.label}</p>

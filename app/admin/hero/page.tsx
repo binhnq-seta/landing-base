@@ -4,6 +4,8 @@ import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSHero, SupportedLocale } from '@/lib/admin/content'
 import { Field, PageHeader, SaveBar, SyncLocaleButton, inputCls, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
 
+type StatItem = { value: string; label: string }
+
 export default function HeroEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [form, setForm] = useState<CMSHero>({
@@ -11,6 +13,7 @@ export default function HeroEditorPage() {
     description: '',
     ctaLabel: '',
     ctaHref: '',
+    stats: [],
   })
   const [status, setStatus] = useState<SaveStatus>('idle')
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
@@ -24,6 +27,21 @@ export default function HeroEditorPage() {
   function set(key: keyof CMSHero) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((prev) => ({ ...prev, [key]: e.target.value }))
+  }
+
+  function updateStat(i: number, key: keyof StatItem, value: string) {
+    setForm((prev) => ({
+      ...prev,
+      stats: (prev.stats ?? []).map((s, idx) => idx === i ? { ...s, [key]: value } : s),
+    }))
+  }
+
+  function addStat() {
+    setForm((prev) => ({ ...prev, stats: [...(prev.stats ?? []), { value: '', label: '' }] }))
+  }
+
+  function removeStat(i: number) {
+    setForm((prev) => ({ ...prev, stats: (prev.stats ?? []).filter((_, idx) => idx !== i) }))
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -54,6 +72,10 @@ export default function HeroEditorPage() {
         heading: tgt?.heading?.trim() ? tgt.heading : form.heading,
         description: tgt?.description?.trim() ? tgt.description : form.description,
         ctaLabel: tgt?.ctaLabel?.trim() ? tgt.ctaLabel : form.ctaLabel,
+        stats: (form.stats ?? []).map((src, i) => {
+          const t = (tgt?.stats ?? [])[i]
+          return { value: src.value, label: t?.label?.trim() ? t.label : src.label }
+        }),
       }
       const res = await fetch(`/api/admin/content?locale=${otherLocale}`, {
         method: 'PUT',
@@ -69,9 +91,11 @@ export default function HeroEditorPage() {
     }
   }
 
+  const stats = form.stats ?? []
+
   return (
     <div className="p-8">
-      <PageHeader title="Hero Section" description="Tiêu đề, mô tả và nút CTA hiển thị đầu trang." />
+      <PageHeader title="Hero Section" description="Tiêu đề, mô tả, nút CTA và thống kê hiển thị đầu trang." />
       <div className="flex items-center justify-between gap-4">
         <LocaleTabs value={locale} onChange={setLocale} />
         <SyncLocaleButton locale={locale} status={syncStatus} onSync={handleSync} />
@@ -98,6 +122,44 @@ export default function HeroEditorPage() {
           <Field label="Liên kết CTA">
             <input className={inputCls} value={form.ctaHref} onChange={set('ctaHref')} required />
           </Field>
+        </div>
+
+        <div>
+          <p className="mb-2 text-sm font-medium text-slate-700">Thống kê</p>
+          <div className="space-y-2">
+            {stats.map((stat, i) => (
+              <div key={i} className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-3">
+                <div className="grid flex-1 grid-cols-2 gap-2">
+                  <input
+                    className={inputCls}
+                    placeholder="Giá trị (vd: 200+)"
+                    value={stat.value}
+                    onChange={(e) => updateStat(i, 'value', e.target.value)}
+                  />
+                  <input
+                    className={inputCls}
+                    placeholder="Nhãn (vd: Khách hàng)"
+                    value={stat.label}
+                    onChange={(e) => updateStat(i, 'label', e.target.value)}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeStat(i)}
+                  className="shrink-0 text-xs text-red-400 hover:text-red-600 transition-colors"
+                >
+                  Xóa
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addStat}
+              className="w-full rounded-xl border-2 border-dashed border-slate-300 py-2.5 text-sm font-medium text-slate-500 hover:border-blue-400 hover:text-blue-600 transition-colors"
+            >
+              + Thêm thống kê
+            </button>
+          </div>
         </div>
 
         <SaveBar status={status} />

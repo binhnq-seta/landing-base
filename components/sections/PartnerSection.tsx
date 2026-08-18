@@ -23,9 +23,10 @@ interface PartnerLogo {
 interface PartnerSectionProps {
   data?: PartnerLogo[]
   heading?: string
+  description?: string
 }
 
-export function PartnerSection({ data, heading }: PartnerSectionProps) {
+export function PartnerSection({ data, heading, description }: PartnerSectionProps) {
   const logos = data ?? PARTNER_LOGOS
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -140,7 +141,7 @@ export function PartnerSection({ data, heading }: PartnerSectionProps) {
           data-partner-reveal
           className="mx-auto mb-12 max-w-3xl px-6 text-center font-sans text-base leading-relaxed text-slate-600 md:text-lg"
         >
-          GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.
+          {description || 'GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.'}
         </p>
 
         <div
