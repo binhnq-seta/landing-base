@@ -2,7 +2,8 @@
 
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSHero, SupportedLocale } from '@/lib/admin/content'
-import { Field, PageHeader, SaveBar, SyncLocaleButton, inputCls, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
+import { Field, FieldWithSize, PageHeader, SaveBar, SyncLocaleButton, inputCls, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
+import { RichTextEditor } from '@/components/admin/RichTextEditor'
 
 type StatItem = { value: string; label: string }
 
@@ -69,6 +70,7 @@ export default function HeroEditorPage() {
       const tgt = otherData.hero as CMSHero | undefined
       const merged: CMSHero = {
         ctaHref: form.ctaHref,
+        headingSize: form.headingSize,
         heading: tgt?.heading?.trim() ? tgt.heading : form.heading,
         description: tgt?.description?.trim() ? tgt.description : form.description,
         ctaLabel: tgt?.ctaLabel?.trim() ? tgt.ctaLabel : form.ctaLabel,
@@ -102,18 +104,14 @@ export default function HeroEditorPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-2xl space-y-5">
-        <Field label="Tiêu đề chính">
+        <FieldWithSize label="Tiêu đề chính" size={form.headingSize} onSizeChange={(v) => setForm((p) => ({ ...p, headingSize: v }))} mode="heading">
           <input className={inputCls} value={form.heading} onChange={set('heading')} required />
-        </Field>
+        </FieldWithSize>
 
-        <Field label="Mô tả">
-          <textarea
-            className={`${inputCls} min-h-28 resize-y`}
-            value={form.description}
-            onChange={set('description')}
-            required
-          />
-        </Field>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Mô tả</label>
+          <RichTextEditor value={form.description} onChange={(v) => setForm((p) => ({ ...p, description: v }))} />
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <Field label="Nhãn nút CTA">

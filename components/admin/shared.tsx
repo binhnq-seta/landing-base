@@ -70,6 +70,73 @@ export function LocaleTabs({
   )
 }
 
+const HEADING_SIZE_OPTIONS = [
+  { value: 'sm', label: 'SM — Nhỏ' },
+  { value: 'base', label: 'Base — Mặc định' },
+  { value: 'lg', label: 'LG — Lớn' },
+  { value: 'xl', label: 'XL — Rất lớn' },
+]
+
+const TEXT_SIZE_OPTIONS = [
+  { value: 'xs', label: 'XS — 12px' },
+  { value: 'sm', label: 'SM — 14px' },
+  { value: 'base', label: 'Base — 16px' },
+  { value: 'lg', label: 'LG — 18px' },
+  { value: 'xl', label: 'XL — 20px' },
+  { value: '2xl', label: '2XL — 24px' },
+]
+
+export function FontSizeSelect({
+  value,
+  onChange,
+  mode = 'text',
+}: {
+  value?: string
+  onChange: (v: string) => void
+  mode?: 'heading' | 'text'
+}) {
+  const opts = mode === 'heading' ? HEADING_SIZE_OPTIONS : TEXT_SIZE_OPTIONS
+  const def = mode === 'heading' ? 'base' : 'base'
+  return (
+    <select
+      value={value ?? def}
+      onChange={(e) => onChange(e.target.value)}
+      className="rounded-lg border border-slate-300 px-2 py-1.5 text-xs text-slate-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+    >
+      {opts.map((o) => (
+        <option key={o.value} value={o.value}>{o.label}</option>
+      ))}
+    </select>
+  )
+}
+
+export function FieldWithSize({
+  label,
+  size,
+  onSizeChange,
+  mode = 'text',
+  children,
+}: {
+  label: string
+  size?: string
+  onSizeChange: (v: string) => void
+  mode?: 'heading' | 'text'
+  children: ReactNode
+}) {
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <label className="text-sm font-medium text-slate-700">{label}</label>
+        <div className="flex items-center gap-1.5 text-xs text-slate-500">
+          <span>Cỡ chữ:</span>
+          <FontSizeSelect value={size} onChange={onSizeChange} mode={mode} />
+        </div>
+      </div>
+      {children}
+    </div>
+  )
+}
+
 export function SyncLocaleButton({
   locale,
   status,

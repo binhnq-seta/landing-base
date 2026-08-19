@@ -3,11 +3,13 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSPartner, CMSSectionLabels, SupportedLocale } from '@/lib/admin/content'
 import { ImageUploader } from '@/components/admin/ImageUploader'
-import { inputCls, Field, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
+import { inputCls, Field, FieldWithSize, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
+import { RichTextEditor } from '@/components/admin/RichTextEditor'
 
 export default function PartnersEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [heading, setHeading] = useState('')
+  const [headingSize, setHeadingSize] = useState<string | undefined>(undefined)
   const [description, setDescription] = useState('')
   const [sectionLabels, setSectionLabels] = useState<CMSSectionLabels>({ solutions: '', projects: '', viewMore: '', partners: '' })
   const [items, setItems] = useState<CMSPartner[]>([])
@@ -17,11 +19,12 @@ export default function PartnersEditorPage() {
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((data: { partners: CMSPartner[]; sectionLabels: CMSSectionLabels; partnerDescription?: string }) => {
+      .then((data: { partners: CMSPartner[]; sectionLabels: CMSSectionLabels; partnerDescription?: string; partnerHeadingSize?: string }) => {
         setItems(data.partners)
         setSectionLabels(data.sectionLabels)
         setHeading(data.sectionLabels.partners)
         setDescription(data.partnerDescription ?? '')
+        setHeadingSize(data.partnerHeadingSize)
       })
   }, [locale])
 
@@ -47,6 +50,7 @@ export default function PartnersEditorPage() {
         body: JSON.stringify({
           partners: items,
           partnerDescription: description,
+          partnerHeadingSize: headingSize,
           sectionLabels: { ...sectionLabels, partners: heading },
         }),
       })
@@ -79,6 +83,7 @@ export default function PartnersEditorPage() {
         body: JSON.stringify({
           partners: mergedItems,
           partnerDescription: tgtDescription.trim() ? tgtDescription : description,
+          partnerHeadingSize: headingSize,
           sectionLabels: { ...tgtLabels, partners: tgtLabels.partners?.trim() ? tgtLabels.partners : heading },
         }),
       })
@@ -103,18 +108,14 @@ export default function PartnersEditorPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-2xl space-y-3">
-        <Field label="Tiêu đề section">
+        <FieldWithSize label="Tiêu đề section" size={headingSize} onSizeChange={setHeadingSize} mode="heading">
           <input className={inputCls} value={heading} onChange={(e) => setHeading(e.target.value)} required />
-        </Field>
+        </FieldWithSize>
 
-        <Field label="Mô tả">
-          <textarea
-            className={`${inputCls} min-h-20 resize-y`}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Mô tả ngắn hiển thị bên dưới tiêu đề đối tác"
-          />
-        </Field>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-slate-700">Mô tả</label>
+          <RichTextEditor value={description} onChange={setDescription} minHeight="min-h-20" />
+        </div>
 
         {items.map((item, i) => (
           <div key={i} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">

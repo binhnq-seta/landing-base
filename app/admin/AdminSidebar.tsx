@@ -11,6 +11,7 @@ const NAV = [
   { href: '/admin/solutions', label: 'Giải pháp' },
   { href: '/admin/projects', label: 'Dự án' },
   { href: '/admin/partners', label: 'Đối tác' },
+  { href: '/admin/footer', label: 'Footer' },
   { href: '/admin/detail-pages', label: 'Trang chi tiết' },
   { href: '/admin/settings', label: 'Cài đặt' },
 ]

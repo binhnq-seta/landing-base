@@ -2,7 +2,8 @@
 
 import { useState, useEffect, type FormEvent } from 'react'
 import type { CMSCoreValues, CMSCoreValue, SupportedLocale } from '@/lib/admin/content'
-import { inputCls, Field, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
+import { inputCls, Field, FieldWithSize, PageHeader, SaveBar, SyncLocaleButton, LocaleTabs, type SaveStatus, type SyncStatus } from '@/components/admin/shared'
+import { RichTextEditor } from '@/components/admin/RichTextEditor'
 import { ImageUploader } from '@/components/admin/ImageUploader'
 
 const BLANK: CMSCoreValue = { id: '', title: '', description: '', icon: '' }
@@ -10,6 +11,7 @@ const BLANK: CMSCoreValue = { id: '', title: '', description: '', icon: '' }
 export default function CoreValuesEditorPage() {
   const [locale, setLocale] = useState<SupportedLocale>('vi')
   const [heading, setHeading] = useState('')
+  const [headingSize, setHeadingSize] = useState<string | undefined>(undefined)
   const [items, setItems] = useState<CMSCoreValue[]>([])
   const [status, setStatus] = useState<SaveStatus>('idle')
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
@@ -19,6 +21,7 @@ export default function CoreValuesEditorPage() {
       .then((r) => r.json())
       .then((data: { coreValues: CMSCoreValues }) => {
         setHeading(data.coreValues.heading)
+        setHeadingSize(data.coreValues.headingSize)
         setItems(data.coreValues.items)
       })
   }, [locale])
@@ -45,7 +48,7 @@ export default function CoreValuesEditorPage() {
       const res = await fetch(`/api/admin/content?locale=${locale}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coreValues: { heading, items } }),
+        body: JSON.stringify({ coreValues: { heading, headingSize, items } }),
       })
       setStatus(res.ok ? 'ok' : 'error')
     } catch {
@@ -63,11 +66,13 @@ export default function CoreValuesEditorPage() {
       const tgt = otherData.coreValues as CMSCoreValues | undefined
       const merged: CMSCoreValues = {
         heading: tgt?.heading?.trim() ? tgt.heading : heading,
+        headingSize,
         items: items.map((src, i) => {
           const t = tgt?.items?.[i]
           return {
             id: src.id,
             icon: src.icon,
+            titleSize: src.titleSize,
             title: t?.title?.trim() ? t.title : src.title,
             description: t?.description?.trim() ? t.description : src.description,
           }
@@ -96,14 +101,14 @@ export default function CoreValuesEditorPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="mt-6 max-w-3xl space-y-6">
-        <Field label="Tiêu đề section">
+        <FieldWithSize label="Tiêu đề section" size={headingSize} onSizeChange={setHeadingSize} mode="heading">
           <input
             className={inputCls}
             value={heading}
             onChange={(e) => setHeading(e.target.value)}
             required
           />
-        </Field>
+        </FieldWithSize>
 
         <div>
           <div className="mb-3 flex items-center justify-between">
@@ -138,22 +143,19 @@ export default function CoreValuesEditorPage() {
                       onChange={(e) => updateItem(i, 'id', e.target.value)}
                     />
                   </Field>
-                  <Field label="Tiêu đề">
+                  <FieldWithSize label="Tiêu đề" size={item.titleSize} onSizeChange={(v) => updateItem(i, 'titleSize', v)} mode="text">
                     <input
                       className={inputCls}
                       value={item.title}
                       onChange={(e) => updateItem(i, 'title', e.target.value)}
                       required
                     />
-                  </Field>
+                  </FieldWithSize>
                 </div>
-                <Field label="Mô tả">
-                  <textarea
-                    className={`${inputCls} min-h-20 resize-y`}
-                    value={item.description}
-                    onChange={(e) => updateItem(i, 'description', e.target.value)}
-                  />
-                </Field>
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-slate-700">Mô tả</label>
+                  <RichTextEditor value={item.description} onChange={(v) => updateItem(i, 'description', v)} minHeight="min-h-20" />
+                </div>
                 <div className="mt-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-3">
                   <p className="mb-2 text-xs font-semibold text-slate-600">Icon</p>
                   {item.icon?.trim().startsWith('<') ? (

@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useRef } from 'react'
 import { gsap } from '@/lib/gsap'
+import { HEADING_SIZE_CLS } from '@/lib/admin/sizes'
 
 const PARTNER_LOGOS = [
   { src: '/image/partner-logo/petro.png', alt: 'PetroVietnam' },
@@ -23,10 +24,11 @@ interface PartnerLogo {
 interface PartnerSectionProps {
   data?: PartnerLogo[]
   heading?: string
+  headingSize?: string
   description?: string
 }
 
-export function PartnerSection({ data, heading, description }: PartnerSectionProps) {
+export function PartnerSection({ data, heading, headingSize, description }: PartnerSectionProps) {
   const logos = data ?? PARTNER_LOGOS
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
@@ -132,7 +134,7 @@ export function PartnerSection({ data, heading, description }: PartnerSectionPro
       <div className="relative z-10 w-full">
         <h1
           data-partner-reveal
-          className="mb-4 px-6 text-center text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:text-[clamp(32px,3vw,48px)]"
+          className={`mb-4 px-6 text-center font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] ${HEADING_SIZE_CLS[headingSize ?? 'base'] ?? 'text-[clamp(22px,2vw,34px)] md:text-[clamp(32px,3vw,48px)]'}`}
         >
           {heading ?? 'ĐỐI TÁC CỦA CHÚNG TÔI'}
         </h1>
@@ -140,9 +142,8 @@ export function PartnerSection({ data, heading, description }: PartnerSectionPro
         <p
           data-partner-reveal
           className="mx-auto mb-12 max-w-3xl px-6 text-center font-sans text-base leading-relaxed text-slate-600 md:text-lg"
-        >
-          {description || 'GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.'}
-        </p>
+          dangerouslySetInnerHTML={{ __html: description || 'GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.' }}
+        />
 
         <div
           data-partner-reveal

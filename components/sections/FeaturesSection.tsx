@@ -2,6 +2,8 @@
 
 import type { FeaturesSection as FeaturesData } from '@/types/strapi'
 import type { CMSFeatureItem } from '@/lib/admin/content'
+import { HEADING_SIZE_CLS, TEXT_SIZE_CLS } from '@/lib/admin/sizes'
+// TEXT_SIZE_CLS used for item titleSize
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { gsap } from '@/lib/gsap'
@@ -53,13 +55,15 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
   const locale = pathname.startsWith('/en') ? 'en' : 'vi'
   const [cmsItems, setCmsItems] = useState<CMSFeatureItem[] | null>(null)
   const [cmsHeading, setCmsHeading] = useState<string | null>(null)
+  const [cmsHeadingSize, setCmsHeadingSize] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((d: { features?: { heading?: string; items?: CMSFeatureItem[] } }) => {
+      .then((d: { features?: { heading?: string; headingSize?: string; items?: CMSFeatureItem[] } }) => {
         if (d.features?.items?.length) setCmsItems(d.features.items)
         if (d.features?.heading) setCmsHeading(d.features.heading)
+        if (d.features?.headingSize) setCmsHeadingSize(d.features.headingSize)
       })
       .catch(() => {})
   }, [locale])
@@ -146,7 +150,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
         </div>
         <div className="relative flex flex-col px-5 md:px-0 mr-0 md:mr-5 justify-center max-w-[800px] min-h-screen py-14 md:py-24">
           <div data-feature-reveal className="text-start">
-            <h1 className="mb-12 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] text-start bottom-0 md:text-[clamp(32px,3vw,48px)]">
+            <h1 className={`mb-12 font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] text-start bottom-0 ${HEADING_SIZE_CLS[cmsHeadingSize ?? 'base'] ?? 'text-[clamp(22px,2vw,34px)] md:text-[clamp(32px,3vw,48px)]'}`}>
               {cmsHeading ?? data?.heading ?? headingFallback}
             </h1>
           </div>
@@ -168,8 +172,8 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
                       ICONS[i % ICONS.length]
                     )}
                   </div>
-                  <h3 data-feature-title className="mb-2 text-xl font-bold text-[#30549B]">{feature.title}</h3>
-                  <p data-feature-description className="text-[#30549B] leading-relaxed">{feature.description}</p>
+                  <h3 data-feature-title className={`mb-2 font-bold text-[#30549B] ${TEXT_SIZE_CLS[(feature as CMSFeatureItem).titleSize ?? 'xl'] ?? 'text-xl'}`}>{feature.title}</h3>
+                  <p data-feature-description className="text-[#30549B] leading-relaxed" dangerouslySetInnerHTML={{ __html: feature.description }} />
                 </div>
               </div>
             ))}

@@ -14,8 +14,13 @@ function contentPath(locale: SupportedLocale): string {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+export { HEADING_SIZE_CLS, BODY_SIZE_CLS, TEXT_SIZE_CLS } from './sizes'
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
 export interface CMSHero {
   heading: string
+  headingSize?: string
   description: string
   ctaLabel: string
   ctaHref: string
@@ -25,12 +30,14 @@ export interface CMSHero {
 export interface CMSCoreValue {
   id: string
   title: string
+  titleSize?: string
   description: string
   icon?: string
 }
 
 export interface CMSCoreValues {
   heading: string
+  headingSize?: string
   items: CMSCoreValue[]
 }
 
@@ -111,13 +118,33 @@ export interface CMSShowcaseCorner {
 export interface CMSFeatureItem {
   id: string
   title: string
+  titleSize?: string
   description: string
   icon?: string
 }
 
 export interface CMSFeatures {
   heading: string
+  headingSize?: string
   items: CMSFeatureItem[]
+}
+
+export interface CMSFooter {
+  companyName: string
+  companyNameSize?: string
+  address1: string
+  address2: string
+  phone: string
+  email: string
+  website: string
+  websiteHref?: string
+  contactSize?: string
+  colTitleSize?: string
+  bodySize?: string
+  colSolutions: string
+  colProjects: string
+  copyright: string
+  copyrightSize?: string
 }
 
 export interface CMSSectionLabels {
@@ -135,7 +162,9 @@ export interface CMSContent {
   projects: CMSProject[]
   partners: CMSPartner[]
   partnerDescription?: string
+  partnerHeadingSize?: string
   sectionLabels: CMSSectionLabels
+  footer: CMSFooter
   detailPages: CMSDetailPage[]
   /** Rubik cube showcase corners — display data editable per locale */
   showcaseCorners: CMSShowcaseCorner[]
@@ -199,6 +228,18 @@ const DEFAULT_VI: CMSContent = {
     { src: '/image/partner-logo/image%2032-4.png', alt: 'Đối tác General Systems 6' },
   ],
   partnerDescription: 'GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.',
+  footer: {
+    companyName: 'CÔNG TY CỔ PHẦN TẬP ĐOÀN PHÁT TRIỂN CÔNG NGHỆ VÀ ĐẦU TƯ - GS GROUP',
+    address1: 'Số 2 lô F1 Nguyễn Cảnh Dị, Định Công, Hà Nội',
+    address2: 'Phòng 809, Deaha Business Centre, 360 Kim Mã, Giảng Võ, Hà Nội',
+    phone: '0987 359 603',
+    email: 'contact@gs-group.vn',
+    website: 'www.gs-group.vn',
+    websiteHref: 'https://www.gs-group.vn',
+    colSolutions: 'Giải pháp',
+    colProjects: 'Dự án tiêu biểu',
+    copyright: 'General Systems. All Rights Reserved.',
+  },
   sectionLabels: {
     solutions: 'LĨNH VỰC HOẠT ĐỘNG',
     projects: 'Dự án tiêu biểu',
@@ -386,6 +427,18 @@ const DEFAULT_EN: CMSContent = {
     { src: '/image/partner-logo/image%2032-4.png', alt: 'General Systems Partner 6' },
   ],
   partnerDescription: 'GS GROUP is proud to partner with leading organisations and enterprises across multiple critical sectors.',
+  footer: {
+    companyName: 'GS GROUP TECHNOLOGY DEVELOPMENT AND INVESTMENT JOINT STOCK COMPANY',
+    address1: 'No. 2, F1 Lot, Nguyen Canh Di, Dinh Cong, Hanoi',
+    address2: 'Room 809, Deaha Business Centre, 360 Kim Ma, Giang Vo, Hanoi',
+    phone: '0987 359 603',
+    email: 'contact@gs-group.vn',
+    website: 'www.gs-group.vn',
+    websiteHref: 'https://www.gs-group.vn',
+    colSolutions: 'Solutions',
+    colProjects: 'Notable Projects',
+    copyright: 'General Systems. All Rights Reserved.',
+  },
   sectionLabels: {
     solutions: 'SOLUTIONS',
     projects: 'Featured Projects',
@@ -443,6 +496,9 @@ export function getContent(locale: SupportedLocale = 'vi'): CMSContent {
     // Deep-merge nested objects so new fields added to the type still get their
     // default values when an older stored file predates them.
     if (stored.hero) merged.hero = { ...defaults.hero, ...stored.hero }
+    if (stored.footer) merged.footer = { ...defaults.footer, ...stored.footer }
+    if (stored.features) merged.features = { ...defaults.features, ...stored.features }
+    if (stored.coreValues) merged.coreValues = { ...defaults.coreValues, ...stored.coreValues }
     return merged
   } catch {
     return defaults

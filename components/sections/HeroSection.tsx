@@ -11,6 +11,7 @@ import { gsap } from '@/lib/gsap'
 import { HERO_INTRO_COMPLETE_EVENT } from '@/lib/intro'
 import { SHOWCASE_CORNERS } from '@/components/canvas/rubik/config'
 import type { CMSShowcaseCorner } from '@/lib/admin/content'
+import { HEADING_SIZE_CLS } from '@/lib/admin/sizes'
 import type { HeroSection as HeroData } from '@/types/strapi'
 
 // Three.js canvas — client-only, no SSR
@@ -33,9 +34,10 @@ interface HeroSectionProps {
   siteName?: string
   showcaseCorners?: CMSShowcaseCorner[]
   heroStats?: { value: string; label: string }[]
+  heroHeadingSize?: string
 }
 
-export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats }: HeroSectionProps) {
+export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, heroHeadingSize }: HeroSectionProps) {
   const t = useTranslations('hero')
 
   // Merge CMS display data into geometry config, matching by id
@@ -412,16 +414,18 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats }: He
 
       {/* ── Hero copy — hidden until intro completes ── */}
       <div
-        className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-start justify-start px-5 pt-24 text-start md:items-center md:px-[10vw] md:pt-0"
+        className="pointer-events-none relative z-20 mx-auto flex min-h-screen items-start justify-start px-5 pt-24 text-start md:items-center md:pl-20 md:pr-5 md:pt-0"
         style={{ opacity: introComplete ? undefined : 0 }}
       >
         <div className="w-full md:w-[clamp(400px,50%,950px)]">
-          <h1 data-hero-heading className="mb-6 whitespace-pre-line text-[clamp(24px,2.7vw,62px)] font-extrabold text-white">
+          <h1 data-hero-heading className={`mb-6 whitespace-pre-line font-extrabold text-white ${HEADING_SIZE_CLS[heroHeadingSize ?? 'xl'] ?? 'text-[clamp(24px,2.7vw,62px)]'}`}>
             {data?.heading ?? 'KẾT NỐI CÔNG NGHỆ\nKIẾN TẠO HẠ TẦNG TƯƠNG LAI'}
           </h1>
-          <p data-hero-sub className="mb-10 text-start text-[clamp(16px,1vw,22px)] font-light text-[#E3F2FD]/75">
-            {data?.description ?? 'General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.'}
-          </p>
+          <p
+            data-hero-sub
+            className="mb-10 text-start text-[clamp(16px,1vw,22px)] font-light text-[#E3F2FD]/75 [&_*]:text-[#E3F2FD]/75"
+            dangerouslySetInnerHTML={{ __html: data?.description ?? 'General Systems cung cấp các giải pháp công nghệ toàn diện, giúp doanh nghiệp tối ưu hiệu quả và tối ưu hoá trong kỷ nguyên số.' }}
+          />
           <div data-hero-cta className="flex flex-col justify-start gap-4 sm:flex-row">
             <a
               href={data?.cta?.href ?? '#solutions'}

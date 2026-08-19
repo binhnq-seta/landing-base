@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { gsap } from '@/lib/gsap'
+import { HEADING_SIZE_CLS, TEXT_SIZE_CLS } from '@/lib/admin/sizes'
 
 const AtomicCanvas = dynamic(
   () => import('@/components/canvas/AtomicCanvas').then((m) => m.AtomicCanvas),
@@ -14,7 +15,9 @@ const AtomicCanvas = dynamic(
 interface CVFeatureItem {
   id: string | number
   title: string
+  titleSize?: string
   description: string
+  descSize?: string
   icon?: string
 }
 
@@ -50,13 +53,15 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
   const locale = pathname.startsWith('/en') ? 'en' : 'vi'
   const [cmsItems, setCmsItems] = useState<CVFeatureItem[] | null>(null)
   const [cmsHeading, setCmsHeading] = useState<string | null>(null)
+  const [cmsHeadingSize, setCmsHeadingSize] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((d: { coreValues?: { heading?: string; items?: CVFeatureItem[] } }) => {
+      .then((d: { coreValues?: { heading?: string; headingSize?: string; items?: CVFeatureItem[] } }) => {
         if (d.coreValues?.items?.length) setCmsItems(d.coreValues.items)
         if (d.coreValues?.heading) setCmsHeading(d.coreValues.heading)
+        if (d.coreValues?.headingSize) setCmsHeadingSize(d.coreValues.headingSize)
       })
       .catch(() => {})
   }, [locale])
@@ -112,7 +117,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
         {/* ── Left: content — z-10 keeps text above the canvas overflow ── */}
         <div className="relative z-10 flex min-h-screen flex-col justify-center px-5 py-14 md:px-0 md:pl-[10vw] md:py-24">
           <div data-core-reveal>
-            <h1 className="mb-4 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] md:text-[clamp(32px,3vw,48px)]">
+            <h1 className={`mb-4 font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] ${HEADING_SIZE_CLS[cmsHeadingSize ?? 'base'] ?? 'text-[clamp(22px,2vw,34px)] md:text-[clamp(32px,3vw,48px)]'}`}>
               {cmsHeading ?? data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
             </h1>
           </div>
@@ -140,12 +145,10 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
                     />
                   )}
                   <div className="min-w-0">
-                    <h3 className="mb-2 text-xl font-bold text-[#30549B]">
+                    <h3 className={`mb-2 font-bold text-[#30549B] ${TEXT_SIZE_CLS[feature.titleSize ?? 'xl'] ?? 'text-xl'}`}>
                       {feature.title}
                     </h3>
-                    <p className="font-light leading-relaxed text-[#30549B]">
-                      {feature.description}
-                    </p>
+                    <p className="font-light leading-relaxed text-[#30549B]" dangerouslySetInnerHTML={{ __html: feature.description }} />
                   </div>
                 </div>
               </div>
