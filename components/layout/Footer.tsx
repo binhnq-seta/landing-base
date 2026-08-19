@@ -75,8 +75,8 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
           </div>
 
           {/* Nav columns */}
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:gap-16">
-            <div className="sm:justify-self-center">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-x-3 md:pr-20">
+            <div className="sm:justify-self-start">
               <h3 className={`font-semibold uppercase tracking-[0.2em] text-white ${colTitleSize}`}>{f.colSolutions}</h3>
               <ul className={`mt-4 space-y-3 font-light text-white ${bodySize}`}>
                 {solutions.map(({ label, slug }) => (
@@ -87,7 +87,7 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
               </ul>
             </div>
 
-            <div className="sm:justify-self-center">
+            <div>
               <h3 className={`font-semibold uppercase tracking-[0.2em] text-white ${colTitleSize}`}>{f.colProjects}</h3>
               <ul className={`mt-4 space-y-3 font-light text-white ${bodySize}`}>
                 {projects.map(({ label, slug }) => (
@@ -101,7 +101,7 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
         </div>
 
         {/* Copyright */}
-        <div className="ml-0 md:ml-20 mt-10 flex flex-col gap-3 border-t border-[#BEDBFF] font-light pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="ml-0 mr-0 mt-10 flex flex-col gap-3 border-t border-[#BEDBFF] font-light pt-6 md:ml-20 md:mr-20 sm:flex-row sm:items-center sm:justify-between">
           <p className={`text-white ${copySize}`}>© {year} {siteName ?? f.copyright}</p>
         </div>
       </div>
