@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { SiteHeader } from '@/components/layout/SiteHeader'
+import { SiteHeader, type NavItem } from '@/components/layout/SiteHeader'
 import { FeaturesSection } from '@/components/sections/FeaturesSection'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { useSmoothScroll } from '@/context/SmoothScrollProvider'
@@ -35,9 +35,11 @@ interface HeroSectionProps {
   showcaseCorners?: CMSShowcaseCorner[]
   heroStats?: { value: string; label: string }[]
   heroHeadingSize?: string
+  navSolutions?: NavItem[]
+  navProjects?: NavItem[]
 }
 
-export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, heroHeadingSize }: HeroSectionProps) {
+export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, heroHeadingSize, navSolutions, navProjects }: HeroSectionProps) {
   const t = useTranslations('hero')
 
   // Merge CMS display data into geometry config, matching by id
@@ -188,7 +190,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
 
       {/* ── Header — starts hidden, GSAP reveals on introComplete ── */}
       <div data-hero-header className="relative z-50 -translate-y-4 opacity-0">
-        <SiteHeader overlay dark />
+        <SiteHeader overlay dark navSolutions={navSolutions} navProjects={navProjects} />
       </div>
 
       {/* ── Three.js Rubik canvas — sticky so it tracks both viewports ── */}

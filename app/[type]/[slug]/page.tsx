@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { DetailScrollAnimations } from '@/components/detail/DetailScrollAnimations'
 import { DetailSpline } from '@/components/detail/DetailSpline'
 import { SiteFooter } from '@/components/layout/Footer'
-import { SiteHeader } from '@/components/layout/SiteHeader'
+import { SiteHeaderServer } from '@/components/layout/SiteHeaderServer'
 import { detailPages } from '@/lib/detail-pages'
 import { getContent } from '@/lib/admin/content'
 import type { CMSDetailSection, CMSDetailPage, SupportedLocale } from '@/lib/admin/content'
@@ -403,8 +403,8 @@ function RelatedPages({
   const copy = RELATED_PAGE_TEXT[locale]
 
   return (
-    <section className="bg-white px-5 py-12 text-[#00162F] md:px-12 md:py-16 lg:px-16">
-      <div className="mx-auto max-w-[1120px]">
+    <section className="bg-white text-[#00162F]">
+      <div className="mx-auto max-w-[1400px] px-5 py-12 md:px-12 md:py-16 lg:px-16">
         <h2 data-detail-reveal className="text-2xl font-semibold tracking-[-0.03em] md:text-3xl">
           {copy.heading}
         </h2>
@@ -592,7 +592,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
 
   return (
     <>
-      <SiteHeader overlay dark={layout === 'immersive'} locale={locale} />
+      <SiteHeaderServer overlay dark={layout === 'immersive'} locale={locale} />
       <main className="relative overflow-hidden text-slate-900">
         <div
           className="pointer-events-none absolute left-[-40vw] top-[40vh] z-0 h-screen w-screen"

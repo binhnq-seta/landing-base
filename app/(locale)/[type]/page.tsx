@@ -51,6 +51,13 @@ export default async function Home({ params }: { params: Promise<{ type: string 
     cta: { id: 0, label: content.hero.ctaLabel, href: content.hero.ctaHref },
   }
 
+  const navSolutions = content.solutions.map((s) => ({ label: s.title, href: `/solutions/${s.slug}` }))
+  const seenSlugs = new Set<string>()
+  const navProjects = content.projects.reduce<{ label: string; href: string }[]>((acc, p) => {
+    if (!seenSlugs.has(p.slug)) { seenSlugs.add(p.slug); acc.push({ label: p.title, href: `/projects/${p.slug}` }) }
+    return acc
+  }, [])
+
   const coreValuesData = {
     heading: content.coreValues.heading,
     features: content.coreValues.items,
@@ -61,7 +68,7 @@ export default async function Home({ params }: { params: Promise<{ type: string 
       <SectionScrollRail />
       <main className="pt-0">
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-        <HeroSection data={heroData as any} showcaseCorners={content.showcaseCorners} heroStats={content.hero.stats} heroHeadingSize={content.hero.headingSize} />
+        <HeroSection data={heroData as any} showcaseCorners={content.showcaseCorners} heroStats={content.hero.stats} heroHeadingSize={content.hero.headingSize} navSolutions={navSolutions} navProjects={navProjects} />
         <CoreValueSection data={coreValuesData} />
         <SolutionSection data={content.solutions} title={content.sectionLabels.solutions} />
         <ProjectSection data={content.projects} title={content.sectionLabels.projects} viewMoreLabel={content.sectionLabels.viewMore} />

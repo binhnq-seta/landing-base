@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ContactForm } from '@/components/contact/ContactForm'
 import { SiteFooter } from '@/components/layout/Footer'
-import { SiteHeader } from '@/components/layout/SiteHeader'
+import { SiteHeaderServer } from '@/components/layout/SiteHeaderServer'
 import { createPageMetadata } from '@/lib/seo'
 
 type Locale = 'vi' | 'en'
@@ -72,7 +72,7 @@ export default async function ContactPage({ params }: { params: Promise<{ type: 
   ]
 
   return <>
-    <SiteHeader locale={locale} />
+    <SiteHeaderServer locale={locale} />
     <main className="overflow-hidden bg-[#f8fafc]">
       <section className="relative bg-[#172A4D] px-5 pb-28 pt-20 text-white md:px-20 md:pb-36 md:pt-28">
         <div className="absolute -right-24 -top-32 size-[30rem] rounded-full border border-white/10" />
