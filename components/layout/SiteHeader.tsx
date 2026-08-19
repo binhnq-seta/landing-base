@@ -42,21 +42,14 @@ const PROJECTS_EN: NavItem[] = [
 const NAV_VI: NavLink[] = [
   { label: 'Trang chủ', href: '/#home' },
   {
-    label: 'Về chúng tôi',
-    href: '/#about',
-    children: [
-      { label: 'Về GS Group', href: '/#home' },
-      { label: 'Tầm nhìn & sứ mệnh', href: '/#features' },
-      { label: 'Giá trị cốt lõi', href: '/#core-values' },
-    ],
-  },
-  {
     label: 'Giải pháp',
     href: '/#solutions',
-    columns: [
-      { label: 'Giải pháp', href: '/#solutions', items: SOLUTIONS_VI },
-      { label: 'Dự án tiêu biểu', href: '/#projects', items: PROJECTS_VI },
-    ],
+    children: SOLUTIONS_VI,
+  },
+  {
+    label: 'Dự án tiêu biểu',
+    href: '/#projects',
+    children: PROJECTS_VI,
   },
   { label: 'Liên hệ', href: '/contact' },
 ]
@@ -64,21 +57,14 @@ const NAV_VI: NavLink[] = [
 const NAV_EN: NavLink[] = [
   { label: 'Home', href: '/#home' },
   {
-    label: 'About Us',
-    href: '/#about',
-    children: [
-      { label: 'About GS Group', href: '/#home' },
-      { label: 'Vision & Mission', href: '/#features' },
-      { label: 'Core Values', href: '/#core-values' },
-    ],
-  },
-  {
     label: 'Solutions',
     href: '/#solutions',
-    columns: [
-      { label: 'Solutions', href: '/#solutions', items: SOLUTIONS_EN },
-      { label: 'Notable Projects', href: '/#projects', items: PROJECTS_EN },
-    ],
+    children: SOLUTIONS_EN,
+  },
+  {
+    label: 'Notable Projects',
+    href: '/#projects',
+    children: PROJECTS_EN,
   },
   { label: 'Contact', href: '/contact' },
 ]
@@ -137,7 +123,10 @@ export function SiteHeader({ overlay = false, dark = false, locale: localeProp }
 
   const isActive = (label: string) => {
     if (label === 'Giải pháp' || label === 'Solutions') {
-      return pathname.startsWith('/solutions') || pathname.startsWith('/projects')
+      return pathname.includes('/solutions')
+    }
+    if (label === 'Dự án tiêu biểu' || label === 'Notable Projects') {
+      return pathname.includes('/projects')
     }
     if (label === 'Trang chủ' || label === 'Home') {
       return pathname === '/' || pathname === '/vi' || pathname === '/en'

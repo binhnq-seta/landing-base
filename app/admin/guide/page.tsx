@@ -24,16 +24,17 @@ export default function GuidePage() {
             ['#solutions', '5. Giải pháp'],
             ['#projects', '6. Dự án'],
             ['#partners', '7. Đối tác'],
-            ['#section-labels', '8. Nhãn section'],
-            ['#detail-pages', '9. Trang chi tiết'],
-            ['#rich-text', '10. Định dạng văn bản (Rich Text)'],
-            ['#icon-guide', '11. Upload icon / SVG code'],
-            ['#image-style', '12. Chọn style ảnh'],
-            ['#detail-button', '13. Nút "Xem thêm"'],
-            ['#slug', '14. Cách điền Slug'],
-            ['#settings', '15. Cài đặt'],
-            ['#workflow', '16. Quy trình thêm nội dung mới'],
-            ['#copy-page', '17. Sao chép trang chi tiết'],
+            ['#footer', '8. Footer'],
+            ['#section-labels', '9. Nhãn section'],
+            ['#detail-pages', '10. Trang chi tiết'],
+            ['#rich-text', '11. Định dạng văn bản (Rich Text)'],
+            ['#icon-guide', '12. Upload icon / SVG code'],
+            ['#image-style', '13. Chọn style ảnh'],
+            ['#detail-button', '14. Nút "Xem thêm"'],
+            ['#slug', '15. Cách điền Slug'],
+            ['#settings', '16. Cài đặt'],
+            ['#workflow', '17. Quy trình thêm nội dung mới'],
+            ['#copy-page', '18. Sao chép trang chi tiết'],
           ].map(([href, label]) => (
             <li key={href}>
               <a href={href} className="hover:underline">{label}</a>
@@ -48,8 +49,8 @@ export default function GuidePage() {
         <Section id="hero" icon="🦸" title="1. Hero">
           <p>Trang <strong>Hero</strong> cho phép chỉnh nội dung xuất hiện trên màn hình đầu tiên khi vào website.</p>
           <FieldTable rows={[
-            ['Tiêu đề (Heading)', 'Dòng tiêu đề lớn nằm giữa trang'],
-            ['Mô tả (Description)', 'Đoạn văn ngắn bên dưới tiêu đề'],
+            ['Tiêu đề (Heading)', 'Dòng tiêu đề lớn nằm giữa trang — có dropdown chọn cỡ chữ (sm / base / lg / xl)'],
+            ['Mô tả (Description)', 'Đoạn văn bên dưới tiêu đề — soạn thảo bằng Rich Text Editor (xem mục 11)'],
             ['Nhãn nút CTA', 'Chữ hiển thị trên nút hành động (ví dụ: "Khám Phá Giải Pháp")'],
             ['Href nút CTA', 'Liên kết khi nhấn nút, thường là #solutions'],
             ['Stats', 'Số liệu thống kê hiển thị phía dưới (giá trị + nhãn)'],
@@ -73,11 +74,11 @@ export default function GuidePage() {
           <p>Section liệt kê các lý do nổi bật, hiển thị dưới dạng lưới thẻ trên trang chủ.</p>
           <FieldTable rows={[
             ['Tiêu đề section', 'Đầu đề của cả section'],
-            ['Mỗi mục: Tiêu đề', 'Tiêu đề ngắn của lý do (1–5 từ)'],
-            ['Mỗi mục: Mô tả', 'Nội dung giải thích chi tiết'],
-            ['Mỗi mục: Icon', 'Icon hiển thị trên thẻ — upload ảnh hoặc dán SVG code (xem mục 11)'],
+            ['Mỗi mục: Tiêu đề', 'Tiêu đề ngắn của lý do — có dropdown chọn cỡ chữ (xs / sm / base / lg / xl)'],
+            ['Mỗi mục: Mô tả', 'Nội dung giải thích chi tiết — soạn thảo bằng Rich Text Editor (xem mục 11)'],
+            ['Mỗi mục: Icon', 'Icon hiển thị trên thẻ — upload ảnh hoặc dán SVG code (xem mục 12)'],
           ]} />
-          <Note>Nếu không cài icon, hệ thống tự dùng icon mặc định theo thứ tự mục. Xem mục 11 để biết cách thêm icon tùy chỉnh.</Note>
+          <Note>Nếu không cài icon, hệ thống tự dùng icon mặc định theo thứ tự mục. Xem mục 12 để biết cách thêm icon tùy chỉnh.</Note>
         </Section>
 
         {/* ── 4. Core Values ── */}
@@ -85,11 +86,11 @@ export default function GuidePage() {
           <p>Các giá trị cốt lõi của công ty, hiển thị dạng thẻ có icon.</p>
           <FieldTable rows={[
             ['Tiêu đề section', 'Đầu đề của section giá trị cốt lõi'],
-            ['Mỗi mục: Tiêu đề', 'Tên giá trị (ví dụ: "Uy tín & Tin cậy")'],
-            ['Mỗi mục: Mô tả', 'Diễn giải giá trị đó'],
-            ['Mỗi mục: Icon', 'Icon hiển thị trên thẻ — upload ảnh hoặc dán SVG code (xem mục 11)'],
+            ['Mỗi mục: Tiêu đề', 'Tên giá trị (ví dụ: "Uy tín & Tin cậy") — có dropdown chọn cỡ chữ (xs / sm / base / lg / xl)'],
+            ['Mỗi mục: Mô tả', 'Diễn giải giá trị đó — soạn thảo bằng Rich Text Editor (xem mục 11)'],
+            ['Mỗi mục: Icon', 'Icon hiển thị trên thẻ — upload ảnh hoặc dán SVG code (xem mục 12)'],
           ]} />
-          <Note>Nếu không cài icon, hệ thống tự dùng icon mặc định theo thứ tự mục. Xem mục 11 để biết cách thêm icon tùy chỉnh.</Note>
+          <Note>Nếu không cài icon, hệ thống tự dùng icon mặc định theo thứ tự mục. Xem mục 12 để biết cách thêm icon tùy chỉnh.</Note>
         </Section>
 
         {/* ── 5. Solutions ── */}
@@ -99,7 +100,7 @@ export default function GuidePage() {
             ['Tên giải pháp', 'Tiêu đề thẻ giải pháp'],
             ['Mô tả', 'Đoạn mô tả ngắn'],
             ['Ảnh', 'Ảnh bìa của thẻ giải pháp'],
-            ['Slug', 'Mã định danh URL cho trang chi tiết (xem mục 14)'],
+            ['Slug', 'Mã định danh URL cho trang chi tiết (xem mục 15)'],
           ]} />
         </Section>
 
@@ -119,19 +120,52 @@ export default function GuidePage() {
         <Section id="partners" icon="🤝" title="7. Đối tác">
           <p>Logo và tên các đối tác hiển thị trong section Đối tác trên trang chủ.</p>
           <FieldTable rows={[
-            ['Tên đối tác', 'Tên hiển thị dưới logo'],
-            ['Logo', 'Đường dẫn hoặc tải ảnh logo lên'],
+            ['Tiêu đề section', 'Đầu đề của section — có dropdown chọn cỡ chữ (sm / base / lg / xl)'],
+            ['Mô tả', 'Đoạn mô tả phía dưới tiêu đề — soạn thảo bằng Rich Text Editor (xem mục 11)'],
+            ['Mỗi logo: Ảnh', 'Đường dẫn hoặc tải ảnh logo lên'],
+            ['Mỗi logo: Tên công ty (alt)', 'Tên đối tác — dùng cho alt text ảnh (SEO & accessibility)'],
           ]} />
         </Section>
 
-        {/* ── 8. Section Labels ── */}
-        <Section id="section-labels" icon="🏷️" title="8. Nhãn section">
+        {/* ── 8. Footer ── */}
+        <Section id="footer" icon="🦶" title="8. Footer">
+          <p>Quản lý toàn bộ nội dung và cỡ chữ của footer website. Footer chia làm 3 nhóm:</p>
+
+          <h3 className="mt-4 mb-2 font-bold text-slate-800">Thông tin công ty</h3>
+          <FieldTable rows={[
+            ['Tên công ty', 'Hiển thị đầu footer — có dropdown chọn cỡ chữ'],
+            ['Địa chỉ 1 / Địa chỉ 2', 'Hai dòng địa chỉ — soạn thảo bằng Rich Text Editor (xem mục 11); cỡ chữ inline trong editor'],
+            ['Cỡ chữ liên hệ', 'Một dropdown điều chỉnh cùng lúc cỡ chữ của SĐT, Email, Website'],
+            ['Số điện thoại', 'Số hiển thị và liên kết tel:'],
+            ['Email', 'Địa chỉ email liên hệ'],
+            ['Website (hiển thị)', 'Tên miền hiển thị (ví dụ: gs-group.vn)'],
+            ['Website (href)', 'Đường dẫn đầy đủ khi nhấn vào (ví dụ: https://gs-group.vn)'],
+          ]} />
+
+          <h3 className="mt-4 mb-2 font-bold text-slate-800">Cột điều hướng</h3>
+          <FieldTable rows={[
+            ['Tiêu đề cột (cỡ chữ)', 'Dropdown chọn cỡ chữ cho tiêu đề cột Giải pháp và Dự án'],
+            ['Tiêu đề cột Giải pháp', 'Nhãn đầu cột bên trái (ví dụ: "GIẢI PHÁP")'],
+            ['Tiêu đề cột Dự án', 'Nhãn đầu cột bên phải (ví dụ: "DỰ ÁN TIÊU BIỂU")'],
+            ['Nội dung danh sách link (cỡ chữ)', 'Dropdown chọn cỡ chữ cho các link trong cột — link tự lấy từ dữ liệu Giải pháp / Dự án'],
+          ]} />
+
+          <h3 className="mt-4 mb-2 font-bold text-slate-800">Copyright</h3>
+          <FieldTable rows={[
+            ['Nội dung copyright', 'Dòng bản quyền cuối trang — có dropdown chọn cỡ chữ'],
+          ]} />
+
+          <Note>Tên miền SĐT, Email, Website và các cỡ chữ được đồng bộ sang ngôn ngữ kia khi nhấn <em>Đồng bộ sang EN/VI</em>. Nội dung văn bản (tên công ty, địa chỉ, nhãn cột, copyright) giữ nguyên bản dịch của từng ngôn ngữ.</Note>
+        </Section>
+
+        {/* ── 9. Section Labels ── */}
+        <Section id="section-labels" icon="🏷️" title="9. Nhãn section">
           <p>Tùy chỉnh các tiêu đề, phụ đề và mô tả mặc định của các section trên trang chủ mà không thuộc trang nào cụ thể.</p>
           <Note>Nếu để trống, hệ thống sẽ dùng nội dung mặc định đã cấu hình sẵn trong code.</Note>
         </Section>
 
-        {/* ── 9. Trang chi tiết ── */}
-        <Section id="detail-pages" icon="📄" title="9. Trang chi tiết">
+        {/* ── 10. Trang chi tiết ── */}
+        <Section id="detail-pages" icon="📄" title="10. Trang chi tiết">
           <p>Quản lý nội dung các trang chi tiết cho Giải pháp và Dự án. Mỗi trang chi tiết gồm:</p>
           <ul className="ml-5 mt-2 list-disc space-y-1 text-slate-700 text-sm">
             <li>Danh sách các <strong>section</strong> có thứ tự — kéo để sắp xếp lại</li>
@@ -162,7 +196,7 @@ export default function GuidePage() {
           <div className="space-y-4">
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
               <p className="font-semibold text-slate-800 mb-1">🎨 Định dạng tiêu đề & văn bản</p>
-              <p>Tất cả các ô tiêu đề, mô tả, nội dung trong trang chi tiết đều hỗ trợ <strong>rich text</strong> — có thể in đậm, đổi màu, chỉnh cỡ chữ v.v. Xem chi tiết tại <a href="#rich-text" className="text-blue-600 underline">mục 10</a>.</p>
+              <p>Tất cả các ô tiêu đề, mô tả, nội dung trong trang chi tiết đều hỗ trợ <strong>rich text</strong> — có thể in đậm, đổi màu, chỉnh cỡ chữ v.v. Xem chi tiết tại <a href="#rich-text" className="text-blue-600 underline">mục 11</a>.</p>
             </div>
 
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
@@ -186,9 +220,18 @@ export default function GuidePage() {
           </div>
         </Section>
 
-        {/* ── 10. Rich Text ── */}
-        <Section id="rich-text" icon="✏️" title="10. Định dạng văn bản (Rich Text Editor)">
-          <p>Hầu hết các ô văn bản trong <strong>Trang chi tiết</strong> đều có thanh công cụ định dạng phía trên. Các thao tác có thể thực hiện:</p>
+        {/* ── 11. Rich Text ── */}
+        <Section id="rich-text" icon="✏️" title="11. Định dạng văn bản (Rich Text Editor)">
+          <p>Tất cả các ô mô tả / nội dung dài trong CRM đều dùng <strong>Rich Text Editor</strong> — có thanh công cụ định dạng phía trên. Áp dụng cho:</p>
+          <ul className="ml-5 mt-1 mb-3 list-disc space-y-0.5 text-slate-700">
+            <li><strong>Hero</strong> — trường Mô tả</li>
+            <li><strong>Vì sao chọn chúng tôi</strong> — Mô tả của từng mục</li>
+            <li><strong>Giá trị cốt lõi</strong> — Mô tả của từng mục</li>
+            <li><strong>Đối tác</strong> — trường Mô tả section</li>
+            <li><strong>Footer</strong> — Địa chỉ 1 và Địa chỉ 2</li>
+            <li><strong>Trang chi tiết</strong> — tất cả ô Nội dung (body) trong từng section</li>
+          </ul>
+          <p>Các thao tác có thể thực hiện:</p>
 
           <div className="overflow-x-auto mt-3">
             <table className="w-full text-sm border-collapse">
@@ -224,8 +267,8 @@ export default function GuidePage() {
           </div>
         </Section>
 
-        {/* ── 11. Icon Guide ── */}
-        <Section id="icon-guide" icon="🎨" title="11. Upload icon / SVG code">
+        {/* ── 12. Icon Guide ── */}
+        <Section id="icon-guide" icon="🎨" title="12. Upload icon / SVG code">
           <p>Các mục trong <strong>Vì sao chọn chúng tôi</strong> và <strong>Giá trị cốt lõi</strong> cho phép cài icon tùy chỉnh theo hai cách: upload ảnh hoặc dán SVG code.</p>
 
           <h3 className="mt-4 mb-2 font-bold text-slate-800">So sánh hai cách</h3>
@@ -269,8 +312,8 @@ export default function GuidePage() {
           <Note>Hai cách dùng cùng một trường dữ liệu — nếu vừa upload vừa dán SVG, cái nào nhập sau sẽ ghi đè cái trước. Nhấn <strong>Xóa</strong> để xóa SVG code hiện tại và chuyển sang upload ảnh.</Note>
         </Section>
 
-        {/* ── 12. Image Style ── */}
-        <Section id="image-style" icon="🖼️" title="12. Chọn style ảnh">
+        {/* ── 13. Image Style ── */}
+        <Section id="image-style" icon="🖼️" title="13. Chọn style ảnh">
           <p>Khi section có trường <strong>Ảnh</strong>, bạn cần chọn <strong>Image Style</strong> để quyết định cách ảnh được hiển thị:</p>
           <div className="overflow-x-auto mt-3">
             <table className="w-full text-sm border-collapse">
@@ -293,8 +336,8 @@ export default function GuidePage() {
           <Note>Với kind <code>image-points</code>, thường chọn <strong>cover</strong> hoặc <strong>background</strong>. Với sơ đồ/biểu đồ, chọn <strong>contain</strong>. Khi chọn <strong>background</strong>, dùng thanh kéo <em>Opacity màn phủ</em> để điều chỉnh độ tối.</Note>
         </Section>
 
-        {/* ── 13. Detail Button ── */}
-        <Section id="detail-button" icon="🔗" title='13. Nút "Xem thêm"'>
+        {/* ── 14. Detail Button ── */}
+        <Section id="detail-button" icon="🔗" title='14. Nút "Xem thêm"'>
           <p>Mỗi trang chi tiết (Giải pháp / Dự án) có thể bật/tắt nút <strong>"Xem chi tiết"</strong> dẫn tới trang riêng:</p>
           <ul className="ml-5 mt-2 list-disc space-y-1 text-slate-700 text-sm">
             <li>Bật nút: tích vào ô <strong>"Hiển thị nút xem thêm"</strong></li>
@@ -304,8 +347,8 @@ export default function GuidePage() {
           <Note>Nếu trang chi tiết chưa có nội dung, hãy tắt nút để tránh dẫn vào trang trống.</Note>
         </Section>
 
-        {/* ── 14. Slug ── */}
-        <Section id="slug" icon="🔑" title="14. Cách điền Slug">
+        {/* ── 15. Slug ── */}
+        <Section id="slug" icon="🔑" title="15. Cách điền Slug">
           <p>Slug là mã định danh URL cho từng giải pháp hoặc dự án. Slug quyết định đường dẫn trang chi tiết.</p>
 
           <h3 className="mt-4 mb-2 font-bold text-slate-800">Quy tắc đặt slug</h3>
@@ -336,8 +379,8 @@ export default function GuidePage() {
           </div>
         </Section>
 
-        {/* ── 15. Settings ── */}
-        <Section id="settings" icon="⚙️" title="15. Cài đặt">
+        {/* ── 16. Settings ── */}
+        <Section id="settings" icon="⚙️" title="16. Cài đặt">
           <h3 className="mb-2 font-bold text-slate-800">Đổi mật khẩu</h3>
           <FieldTable rows={[
             ['Mật khẩu hiện tại', 'Nhập mật khẩu đang dùng để xác thực'],
@@ -355,24 +398,24 @@ export default function GuidePage() {
           <Note>Không chia sẻ mật khẩu qua kênh không bảo mật. Mỗi thành viên nên có tài khoản riêng.</Note>
         </Section>
 
-        {/* ── 16. Workflow ── */}
-        <Section id="workflow" icon="🔄" title="16. Quy trình thêm nội dung mới">
+        {/* ── 17. Workflow ── */}
+        <Section id="workflow" icon="🔄" title="17. Quy trình thêm nội dung mới">
           <ol className="ml-5 list-decimal space-y-3 text-slate-700 text-sm">
             <li><strong>Chuẩn bị ảnh:</strong> Đặt tên ảnh theo format <code className="rounded bg-slate-100 px-1">ten-du-an.jpg</code>, không dùng tiếng Việt hay khoảng trắng.</li>
             <li><strong>Tải ảnh lên:</strong> Dùng nút "Tải ảnh lên" trong CRM — ảnh sẽ lưu vào <code className="rounded bg-slate-100 px-1">/public/image/</code>.</li>
-            <li><strong>Tạo mục:</strong> Vào trang tương ứng (Giải pháp / Dự án) → điền thông tin → điền Slug theo quy tắc mục 14 → Lưu.</li>
+            <li><strong>Tạo mục:</strong> Vào trang tương ứng (Giải pháp / Dự án) → điền thông tin → điền Slug theo quy tắc mục 15 → Lưu.</li>
             <li><strong>Bật trang chi tiết:</strong> Vào <strong>Trang chi tiết</strong> → chọn mục vừa tạo → tích "Hiển thị nút xem thêm".</li>
             <li><strong>Thêm các section:</strong> Nhấn "Thêm section" → chọn loại phù hợp → điền nội dung → chọn style ảnh.</li>
-            <li><strong>Định dạng văn bản:</strong> Bôi đen text trong ô soạn thảo → dùng toolbar để in đậm, đổi màu, chỉnh cỡ chữ (xem mục 10).</li>
-            <li><strong>Thêm icon (nếu cần):</strong> Vào mục Vì sao chọn / Giá trị cốt lõi → dán SVG code vào ô icon của từng mục (xem mục 11).</li>
+            <li><strong>Định dạng văn bản:</strong> Bôi đen text trong ô soạn thảo → dùng toolbar để in đậm, đổi màu, chỉnh cỡ chữ (xem mục 11).</li>
+            <li><strong>Thêm icon (nếu cần):</strong> Vào mục Vì sao chọn / Giá trị cốt lõi → dán SVG code vào ô icon của từng mục (xem mục 12).</li>
             <li><strong>Sắp xếp thứ tự:</strong> Kéo thả các section để sắp xếp theo thứ tự muốn hiển thị.</li>
             <li><strong>Kiểm tra tiếng Anh:</strong> Chuyển tab sang EN → điền bản dịch cho các trường cần thiết.</li>
             <li><strong>Lưu và xem trước:</strong> Nhấn Lưu → nhấn "Xem trang web" ở sidebar để kiểm tra kết quả.</li>
           </ol>
         </Section>
 
-        {/* ── 17. Sao chép trang chi tiết ── */}
-        <Section id="copy-page" icon="📋" title="17. Sao chép trang chi tiết">
+        {/* ── 18. Sao chép trang chi tiết ── */}
+        <Section id="copy-page" icon="📋" title="18. Sao chép trang chi tiết">
           <p>Tính năng <strong>Sao chép trang</strong> giúp tạo nhanh một trang chi tiết mới với toàn bộ nội dung giống hệt trang hiện tại, chỉ thay đổi category và slug.</p>
           <p><strong>Cách dùng:</strong></p>
           <ol className="ml-5 list-decimal space-y-1">
@@ -381,7 +424,7 @@ export default function GuidePage() {
             <li>Trong hộp thoại xuất hiện:
               <ul className="ml-5 mt-1 list-disc space-y-1">
                 <li>Chọn <strong>Category</strong>: <em>Giải pháp (solutions)</em> hoặc <em>Dự án (projects)</em>.</li>
-                <li>Nhập <strong>Slug mới</strong> — theo cùng quy tắc mục 14: chữ thường, số, dấu gạch ngang, không dấu cách.</li>
+                <li>Nhập <strong>Slug mới</strong> — theo cùng quy tắc mục 15: chữ thường, số, dấu gạch ngang, không dấu cách.</li>
               </ul>
             </li>
             <li>Nhấn <strong>Sao chép</strong> để xác nhận. Hệ thống sẽ tạo trang mới và chuyển thẳng vào trang vừa tạo.</li>
