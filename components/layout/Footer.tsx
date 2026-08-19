@@ -1,8 +1,5 @@
 import { getContent, TEXT_SIZE_CLS, type SupportedLocale } from '@/lib/admin/content'
 
-const SOLUTION_SLUGS = ['giai-phap-tich-hop', 'an-ninh-quoc-phong', 'bao-mat-attt', 'dien-luc-nang-luong', 'vien-thong', 'hang-khong']
-const PROJECT_SLUGS  = ['phan-mem-phan-bay-aves', 'he-thong-gsm-co-dong', 'he-thong-an-toan-thong-tin']
-
 const CONTACT_ICON_CLASS = 'mt-0.5 size-4 shrink-0 text-[#BEDBFF]'
 
 interface SiteFooterProps {
@@ -22,10 +19,12 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
   const bodySize      = TEXT_SIZE_CLS[f.bodySize        ?? 'sm']  ?? 'text-sm'
   const copySize      = TEXT_SIZE_CLS[f.copyrightSize   ?? 'sm']  ?? 'text-sm'
 
-  const solutions = content.solutions.map((s) => s.title)
-  const projects  = content.projects
-    .filter((p, i, arr) => arr.findIndex((x) => x.slug === p.slug) === i)
-    .map((p) => p.title)
+  const solutions = content.solutions.map((s) => ({ label: s.title, slug: s.slug }))
+  const seen = new Set<string>()
+  const projects = content.projects.reduce<{ label: string; slug: string }[]>((acc, p) => {
+    if (!seen.has(p.slug)) { seen.add(p.slug); acc.push({ label: p.title, slug: p.slug }) }
+    return acc
+  }, [])
 
   return (
     <footer id="footer" className="bg-[#172A4D]">
@@ -80,9 +79,9 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
             <div className="sm:justify-self-center">
               <h3 className={`font-semibold uppercase tracking-[0.2em] text-white ${colTitleSize}`}>{f.colSolutions}</h3>
               <ul className={`mt-4 space-y-3 font-light text-white ${bodySize}`}>
-                {solutions.map((label, i) => (
-                  <li key={SOLUTION_SLUGS[i]}>
-                    <a href={`/solutions/${SOLUTION_SLUGS[i]}`} className="transition-colors hover:text-[#A31F1A]">{label}</a>
+                {solutions.map(({ label, slug }) => (
+                  <li key={slug}>
+                    <a href={`/solutions/${slug}`} className="transition-colors hover:text-[#A31F1A]">{label}</a>
                   </li>
                 ))}
               </ul>
@@ -91,9 +90,9 @@ export function SiteFooter({ locale = 'vi', siteName }: SiteFooterProps) {
             <div className="sm:justify-self-center">
               <h3 className={`font-semibold uppercase tracking-[0.2em] text-white ${colTitleSize}`}>{f.colProjects}</h3>
               <ul className={`mt-4 space-y-3 font-light text-white ${bodySize}`}>
-                {projects.map((label, i) => (
-                  <li key={PROJECT_SLUGS[i]}>
-                    <a href={`/projects/${PROJECT_SLUGS[i]}`} className="transition-colors hover:text-[#A31F1A]">{label}</a>
+                {projects.map(({ label, slug }) => (
+                  <li key={slug}>
+                    <a href={`/projects/${slug}`} className="transition-colors hover:text-[#A31F1A]">{label}</a>
                   </li>
                 ))}
               </ul>
