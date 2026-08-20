@@ -30,13 +30,6 @@ interface FeaturesSectionProps {
   data?: CVFeaturesData
 }
 
-const FALLBACK_CORE_VALUES: CVFeatureItem[] = [
-  { id: '01', title: 'Giá trị và Niềm tin là trên hết',      description: 'Cung cấp giải pháp end-to-end phù hợp với mọi nhu cầu doanh nghiệp.' },
-  { id: '02', title: 'Tôn trọng giá trị cá nhân',            description: 'Ứng dụng công nghệ mới nhất tối ưu hiệu quả và nâng cao năng lực cạnh tranh.' },
-  { id: '03', title: 'Tư duy hệ thống – Tư duy toàn cầu',   description: 'Đội ngũ giàu kinh nghiệm, tận tâm đồng hành cùng khách hàng trên mọi hành trình.' },
-  { id: '04', title: 'Học tập liên tục – Đổi mới không ngừng', description: 'Cam kết chất lượng, bảo mật và hỗ trợ lâu dài cho mọi giải pháp.' },
-  { id: '05', title: 'Một công ty – Một gia đình',            description: 'Xây dựng văn hoá gắn kết, chia sẻ và phát triển bền vững cùng nhau.' },
-]
 
 const CORE_VALUE_ICONS = [
   '/assets/coreSection-icon/badge.svg',
@@ -104,7 +97,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
     return () => ctx.revert()
   }, [])
 
-  const features = cmsItems ?? (data?.features?.length ? data.features : FALLBACK_CORE_VALUES)
+  const features = cmsItems ?? data?.features ?? []
 
   return (
     <section
@@ -118,7 +111,7 @@ export function CoreValueSection({ data }: FeaturesSectionProps) {
         <div className="relative z-10 flex min-h-screen flex-col justify-center px-5 py-14 md:px-0 md:pl-[10vw] md:py-24">
           <div data-core-reveal>
             <h1 className={`mb-4 font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] ${HEADING_SIZE_CLS[cmsHeadingSize ?? 'base'] ?? 'text-[clamp(22px,2vw,34px)] md:text-[clamp(32px,3vw,48px)]'}`}>
-              {cmsHeading ?? data?.heading ?? 'GIÁ TRỊ CỐT LÕI'}
+              {cmsHeading ?? data?.heading}
             </h1>
           </div>
 

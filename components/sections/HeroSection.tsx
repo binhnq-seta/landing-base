@@ -63,6 +63,8 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
   const [displayCorner, setDisplayCorner] = useState<number | null>(null)
   // Screen-space start point for the connecting line (% coordinates)
   const [lineFrom, setLineFrom] = useState<{ x: number; y: number } | null>(null)
+  // Hide the fixed overlay when user scrolls past the hero section
+  const [isHeroActive, setIsHeroActive] = useState(true)
 
   const statsRef = useScrollReveal<HTMLDivElement>({
     from: { opacity: 0, y: 30 },
@@ -70,6 +72,17 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
     start: 'top 85%',
     childSelector: '[data-stat]',
   })
+
+  // Hide fixed SVG overlay when hero section scrolls fully out of view
+  useEffect(() => {
+    const section = containerRef.current
+    if (!section) return
+    const onScroll = () => {
+      setIsHeroActive(section.getBoundingClientRect().bottom > 0)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   // Lock scroll + touch during loading; unlock when introComplete
   useEffect(() => {
@@ -208,7 +221,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
       </div>
 
       <svg
-        className={`pointer-events-none fixed inset-0 z-30 h-full w-full transition-opacity duration-700 ${showcaseCorner !== null && lineFrom ? 'opacity-100' : 'opacity-0'}`}
+        className={`pointer-events-none fixed inset-0 z-30 h-full w-full transition-opacity duration-700 ${showcaseCorner !== null && lineFrom && isHeroActive ? 'opacity-100' : 'opacity-0'}`}
         viewBox="0 0 100 100"
         preserveAspectRatio="none"
         aria-hidden="true"
@@ -338,7 +351,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
 
       {/* ── Corner showcase panel — 3D digital frame ── */}
       <div
-        className={`pointer-events-none absolute z-30 transition-all duration-500 ${showcaseCorner !== null ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
+        className={`pointer-events-none absolute z-30 transition-all duration-500 ${showcaseCorner !== null && isHeroActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
         style={{ right: '10vw', top: '12vh', width: '36%', height: '42vh' }}
         aria-hidden="true"
       >

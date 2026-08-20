@@ -4,21 +4,6 @@ import { useRouter } from 'next/navigation'
 import { useRef, useEffect, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
-const SOLUTION_IMAGE = [
-  { title: 'An ninh - Quốc phòng', src: '/image/solution/military.jpg',     alt: 'An ninh - Quốc phòng', desc: 'Tích hợp các giải pháp công nghệ đáp ứng yêu cầu cao về bảo mật, độ tin cậy và khả năng vận hành liên tục cho các hệ thống an ninh – quốc phòng.' },
-  { title: 'Bảo mật - ATTT',        src: '/image/solution/security.jpg',     alt: 'Bảo mật - ATTT',       desc: 'Tích hợp các giải pháp bảo mật giúp phát hiện sớm mối đe dọa, bảo vệ hạ tầng CNTT và tăng cường năng lực phòng vệ trước các nguy cơ an ninh mạng.' },
-  { title: 'Điện lực - Năng lượng', src: '/image/solution/energy.jpg',       alt: 'Điện lực - Năng lượng',desc: 'Tích hợp các giải pháp phần mềm công nghiệp hỗ trợ quản lý dữ liệu, tài sản, bảo trì và vận hành, góp phần nâng cao hiệu quả khai thác, tối ưu nguồn lực và đảm bảo hệ thống điện, năng lượng vận hành an toàn, ổn định.' },
-  { title: 'Viễn thông',            src: '/image/solution/tele.jpg',          alt: 'Viễn thông',           desc: 'Cung cấp các giải pháp viễn thông thế hệ mới, hỗ trợ phát triển hệ sinh thái dịch vụ số, tăng cường bảo mật và nâng cao giá trị cho thuê bao.' },
-  { title: 'Hàng không',            src: '/image/solution/air.jpg',           alt: 'Hàng không',           desc: 'Cung cấp các giải pháp số hoá hoạt động khai thác sân bay, hỗ trợ quản lý dữ liệu, điều phối nguồn lực và nâng cao hiệu quả vận hành.' },
-]
-
-const SOLUTION_SLUGS = [
-  'an-ninh-quoc-phong', 'bao-mat-attt',
-  'dien-luc-nang-luong', 'vien-thong', 'hang-khong',
-]
-
 // ─── Layout constants ─────────────────────────────────────────────────────────
 
 const ROW_ACTIVE = 1.4, ROW_REST = 0.6
@@ -39,7 +24,8 @@ interface SolutionSectionProps { data?: SolutionItem[]; title?: string }
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function SolutionSection({ data, title }: SolutionSectionProps) {
-  const solutions = data ?? SOLUTION_IMAGE.map((item, i) => ({ ...item, slug: SOLUTION_SLUGS[i] }))
+  const solutions = data ?? []
+  if (solutions.length === 0) return null
   const router = useRouter()
 
   // ── Refs ──────────────────────────────────────────────────────────────────
@@ -109,7 +95,7 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
       {/* Mobile layout */}
       <div className="block md:hidden px-5 py-14">
         <h1 className="mb-8 text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] text-center">
-          {title ? <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</> : <>GIẢI <br /> PHÁP</>}
+          {title && <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</>}
         </h1>
         <div className="grid grid-cols-2 gap-3">
           {solutions.map((solution, index) => (
@@ -143,10 +129,7 @@ export default function SolutionSection({ data, title }: SolutionSectionProps) {
 
         <div className="flex h-full items-end justify-center px-6">
           <h1 ref={sectionTitleRef} className="mb-20 text-[clamp(32px,3vw,48px)] z-1 font-extrabold leading-[1.3] tracking-[-0.01em] text-[#263A59] text-center">
-            {title
-              ? <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</>
-              : (<>GIẢI <br /> PHÁP</>)
-            }
+            {title && <>{title.split(' ').slice(0, Math.ceil(title.split(' ').length / 2)).join(' ')}<br />{title.split(' ').slice(Math.ceil(title.split(' ').length / 2)).join(' ')}</>}
           </h1>
         </div>
 

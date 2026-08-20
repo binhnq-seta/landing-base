@@ -136,13 +136,13 @@ export function PartnerSection({ data, heading, headingSize, description }: Part
           data-partner-reveal
           className={`mb-4 px-6 text-center font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] ${HEADING_SIZE_CLS[headingSize ?? 'base'] ?? 'text-[clamp(22px,2vw,34px)] md:text-[clamp(32px,3vw,48px)]'}`}
         >
-          {heading ?? 'ĐỐI TÁC CỦA CHÚNG TÔI'}
+          {heading}
         </h1>
 
         <p
           data-partner-reveal
           className="mx-auto mb-12 max-w-3xl px-6 text-center font-sans text-base leading-relaxed text-slate-600 md:text-lg"
-          dangerouslySetInnerHTML={{ __html: description || 'GS GROUP tự hào đồng hành cùng các đối tác, tổ chức và doanh nghiệp hàng đầu trong nhiều lĩnh vực trọng điểm.' }}
+          dangerouslySetInnerHTML={{ __html: description || '' }}
         />
 
         <div

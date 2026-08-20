@@ -160,7 +160,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                       className={`group relative flex h-full min-h-[200px] flex-col justify-between overflow-hidden rounded-2xl border border-blue-200 bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl ${href ? 'cursor-pointer' : ''}`}
                     >
                       <div>
-                        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-600">Case Study</p>
+                        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-blue-600">{locale === 'en' ? 'Case Study' : 'Điển hình'}</p>
                         <h3 className="text-lg font-bold leading-snug text-[#00162F]">{point.title}</h3>
                         {point.description && (
                           <p className="mt-2 text-sm leading-relaxed text-slate-600">{point.description}</p>
@@ -168,7 +168,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                       </div>
                       {href && (
                         <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-blue-600 transition-colors group-hover:text-blue-800">
-                          Xem chi tiết
+                          {locale === 'en' ? 'View details' : 'Xem chi tiết'}
                           <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true">
                             <path fillRule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clipRule="evenodd" />
                           </svg>
@@ -583,7 +583,18 @@ export default async function DetailPage({ params }: DetailPageProps) {
   const cmsPage = content.detailPages?.find((p) => p.type === type && p.slug === slug)
 
   if (!cmsPage) notFound()
-  const page: CMSDetailPage = cmsPage
+
+  // Always sync title from the source list (projects / solutions) so renaming
+  // in the CRM list propagates here automatically. Fall back to the detail
+  // page's own title only when the item isn't found in the list.
+  const sourceTitle =
+    type === 'projects'
+      ? content.projects.find((p) => p.slug === slug)?.title
+      : content.solutions.find((s) => s.slug === slug)?.title
+  const page: CMSDetailPage = {
+    ...cmsPage,
+    title: sourceTitle ?? cmsPage.title,
+  }
 
   const layout = page.layout ?? 'headline'
   const relatedPages = content.detailPages
@@ -593,20 +604,25 @@ export default async function DetailPage({ params }: DetailPageProps) {
   return (
     <>
       <SiteHeaderServer overlay dark={layout === 'immersive'} locale={locale} />
-      <main className="relative overflow-hidden text-slate-900">
-        <div
-          className="pointer-events-none absolute left-[-40vw] top-[40vh] z-0 h-screen w-screen"
-          aria-hidden="true"
-        >
-          <DetailSpline sceneUrl="/model/circle.splinecode" />
-        </div>
-        <article data-detail-page className="relative z-10">
+      <main className="relative text-slate-900">
+        <article data-detail-page>
           <DetailScrollAnimations />
 
-          {layout === 'headline'   && <HeroHeadline  page={page} />}
-          {layout === 'magazine'   && <HeroMagazine  page={page} />}
-          {layout === 'immersive'  && <HeroImmersive page={page} />}
-          {layout === 'editorial'  && <HeroEditorial page={page} />}
+          {/* Spline is clipped to hero bounds so lighting doesn't bleed into content sections */}
+          <div className="relative overflow-hidden">
+            <div
+              className="pointer-events-none absolute left-[-40vw] top-[40vh] z-0 h-screen w-screen"
+              aria-hidden="true"
+            >
+              <DetailSpline sceneUrl="/model/circle.splinecode" />
+            </div>
+            <div className="relative z-10">
+              {layout === 'headline'   && <HeroHeadline  page={page} />}
+              {layout === 'magazine'   && <HeroMagazine  page={page} />}
+              {layout === 'immersive'  && <HeroImmersive page={page} />}
+              {layout === 'editorial'  && <HeroEditorial page={page} />}
+            </div>
+          </div>
 
           <ContentSections sections={page.sections} locale={locale} />
           <RelatedPages pages={relatedPages} locale={locale} />

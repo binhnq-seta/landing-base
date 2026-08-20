@@ -35,19 +35,6 @@ const ICONS = [
   </svg>,
 ]
 
-const FALLBACK_FEATURES_VI = [
-  { id: 1, title: 'Am hiểu hệ thống trọng yếu', description: 'Hiểu sâu đặc thù vận hành và yêu cầu kỹ thuật của các hệ thống đòi hỏi tiêu chuẩn cao về an toàn, bảo mật và độ tin cậy.' },
-  { id: 2, title: 'Làm chủ công nghệ', description: 'Tiếp cận, đánh giá và triển khai các giải pháp công nghệ phù hợp với yêu cầu kỹ thuật và mục tiêu của từng dự án.' },
-  { id: 3, title: 'Kinh nghiệm thực chiến', description: 'Được kiểm chứng qua nhiều dự án quy mô lớn cho các cơ quan, tổ chức và doanh nghiệp trong những lĩnh vực trọng yếu.' },
-  { id: 4, title: 'Giải pháp phù hợp thực tiễn', description: 'Đề xuất và triển khai các giải pháp phù hợp với nhu cầu thực tế, bảo đảm hiệu quả đầu tư và khả năng phát triển lâu dài.' },
-]
-
-const FALLBACK_FEATURES_EN = [
-  { id: 1, title: 'Comprehensive Solutions', description: 'Providing end-to-end solutions tailored to every business need.' },
-  { id: 2, title: 'Advanced Technology', description: 'Applying the latest technology to optimise efficiency and competitive advantage.' },
-  { id: 3, title: 'Expert Team', description: 'An experienced team committed to accompanying clients on every journey.' },
-  { id: 4, title: 'Quality Commitment', description: 'Committed to quality, security and long-term support for every solution.' },
-]
 
 export function FeaturesSection({ data }: FeaturesSectionProps) {
   const sectionRef = useRef<HTMLElement>(null)
@@ -134,12 +121,8 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
     }
   }, [])
 
-  const fallback = locale === 'en' ? FALLBACK_FEATURES_EN : FALLBACK_FEATURES_VI
-  const features = cmsItems ?? (data?.features?.length ? data.features : fallback)
+  const features = cmsItems ?? data?.features ?? []
 
-  const headingFallback = locale === 'en'
-    ? <><span>WHY CHOOSE</span> <span className="text-[#D62828]">GS-GROUP</span>?</>
-    : <>VÌ SAO CHỌN <span className="text-[#D62828]">GS-GROUP</span>?</>
 
   return (
     <section ref={sectionRef} id="features" className="relative min-h-screen bg-[#EEF5FD]">
@@ -151,7 +134,7 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
         <div className="relative flex flex-col px-5 md:px-0 mr-0 md:mr-5 justify-center max-w-[800px] min-h-screen py-14 md:py-24">
           <div data-feature-reveal className="text-start">
             <h1 className={`mb-12 font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap text-[#263A59] text-start bottom-0 ${HEADING_SIZE_CLS[cmsHeadingSize ?? 'base'] ?? 'text-[clamp(22px,2vw,34px)] md:text-[clamp(32px,3vw,48px)]'}`}>
-              {cmsHeading ?? data?.heading ?? headingFallback}
+              {cmsHeading ?? data?.heading}
             </h1>
           </div>
 

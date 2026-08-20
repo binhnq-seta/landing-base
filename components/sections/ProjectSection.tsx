@@ -5,44 +5,6 @@ import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from '@/lib/gsap'
 
-const PROJECTS = [
-    {
-        id: '01',
-        slug: 'he-thong-gsm-co-dong',
-        category: 'CỤC KTNV - BỘ CÔNG AN | 2017',
-        title: 'Hệ thống GSM cơ động và Phân tích tín hiệu vô tuyến',
-        img: '/image/project/gms.jpg',
-        description:
-            'GS-Group được lựa chọn triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến, đáp ứng các yêu cầu khắt khe về kỹ thuật, độ ổn định và bảo mật trong lĩnh vực an ninh. Dự án đánh dấu năng lực của GS-Group trong việc triển khai các hệ thống công nghệ cho các cơ quan trọng yếu.',
-    },
-    {
-        id: '01b',
-        slug: 'he-thong-gsm-co-dong',
-        category: 'CỤC KTNV - BỘ CÔNG AN | 2017',
-        title: 'Hệ thống GSM cơ động và Phân tích tín hiệu vô tuyến',
-        img: '/image/project/gms.jpg',
-        description:
-            'GS-Group được lựa chọn triển khai Hệ thống GSM cơ động và Hệ thống phân tích tín hiệu vô tuyến phục vụ nhiệm vụ chuyên môn của Cục Kỹ thuật Nghiệp vụ – Bộ Công an. Dự án đòi hỏi yêu cầu cao về kỹ thuật, tính bảo mật và độ tin cậy, góp phần khẳng định năng lực triển khai các hệ thống công nghệ phục vụ lĩnh vực an ninh.',
-    },
-    {
-        id: '02',
-        slug: 'phan-mem-phan-bay-aves',
-        category: 'VIETNAM AIRLINES | 2018',
-        title: 'Hệ thống lập kế hoạch phân bay phi công và tiếp viên (AVES)',
-        img: '/image/project/aves.jpg',
-        description:
-            'GS-Group triển khai giải pháp AVES hỗ trợ lập kế hoạch và điều phối lịch phân bay cho đội ngũ phi công và tiếp viên của Vietnam Airlines. Sau khi hệ thống đi vào vận hành, GS-Group tiếp tục đồng hành thông qua các dịch vụ bảo trì, nâng cấp và hỗ trợ kỹ thuật, đảm bảo hệ thống hoạt động ổn định và đáp ứng yêu cầu khai thác lâu dài.',
-    },
-    {
-        id: '03',
-        slug: 'he-thong-an-toan-thong-tin',
-        category: 'TỔNG CÔNG TY TRUYỀN TẢI ĐIỆN QUỐC GIA',
-        title: 'Hệ thống An toàn thông tin',
-        img: '/image/project/sec.jpg',
-        description:
-            'Triển khai hệ thống an toàn thông tin nhằm xây dựng hạ tầng bảo mật tổng thể cho Tổng công ty Truyền tải điện Quốc gia. Giải pháp góp phần bảo vệ hệ thống công nghệ thông tin, hỗ trợ vận hành lưới điện an toàn, liên tục và đáp ứng các yêu cầu về an toàn thông tin đối với hạ tầng năng lượng trọng yếu.',
-    },
-]
 
 interface ProjectItem {
     id: string
@@ -60,7 +22,8 @@ interface ProjectSectionProps {
 }
 
 export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSectionProps) {
-    const PROJECTS_DATA = data ?? PROJECTS
+    const PROJECTS_DATA = data ?? []
+    if (PROJECTS_DATA.length === 0) return null
     const [activeIndex, setActiveIndex] = useState(0)
     const sectionRef = useRef<HTMLElement>(null)
     const touchStartXRef = useRef<number | null>(null)
@@ -133,7 +96,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
         <section ref={sectionRef} id="projects" className="relative flex items-center overflow-hidden bg-[#EAF3FC] py-12 md:min-h-screen md:py-16 lg:py-0">
             <div className="relative z-10 flex w-full flex-col gap-6 md:gap-8">
                 <h1 data-project-reveal className="px-[5vh] text-start text-[clamp(22px,2vw,34px)] font-extrabold leading-[1.1] tracking-[-0.01em] whitespace-nowrap uppercase text-[#263A59] md:px-[10vw] md:text-[clamp(32px,3vw,48px)]">
-                    {title ?? 'Dự án tiêu biểu'}
+                    {title}
                 </h1>
 
                 <div data-project-reveal>
@@ -175,7 +138,7 @@ export default function ProjectSection({ data, title, viewMoreLabel }: ProjectSe
                                         <div className="absolute inset-y-0 left-0 z-0 w-[48%] overflow-hidden rounded-l-[1.5rem] bg-blue-50/70 sm:w-[52%] lg:w-[56%] lg:rounded-l-[2rem]">
                                             <Image
                                                 src={project.img}
-                                                alt="Dự án tiêu biểu"
+                                                alt={project.title}
                                                 fill
                                                 sizes="40vw"
                                                 quality={75}
