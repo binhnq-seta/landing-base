@@ -50,8 +50,9 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
       return cms ? { ...c, label: cms.label, sublabel: cms.sublabel, image: cms.image } : c
     })
   }, [cmsCorners])
-  const { lenisRef } = useSmoothScroll()
+  const { lenisRef, stopLenis, startLenis } = useSmoothScroll()
   const containerRef = useRef<HTMLElement>(null)
+  const scrollLockedRef = useRef(true)
 
   // Phase 1: Three.js scene initialised → fade loading overlay to reveal particles
   const [overlayFading, setOverlayFading] = useState(false)
@@ -73,43 +74,67 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
     childSelector: '[data-stat]',
   })
 
-  // Hide fixed SVG overlay when hero section scrolls fully out of view
+  // Hide fixed SVG overlay when user scrolls past the first ~15% of viewport.
+  // FeaturesSection lives inside HeroSection so we can't use section.bottom —
+  // instead use raw scrollY (overlay belongs to the hero's first viewport only).
   useEffect(() => {
-    const section = containerRef.current
-    if (!section) return
     const onScroll = () => {
-      setIsHeroActive(section.getBoundingClientRect().bottom > 0)
+      setIsHeroActive(window.scrollY < window.innerHeight * 0.15)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Lock scroll + touch during loading; unlock when introComplete
+  // Scroll lock: active from mount until introComplete (rubik assembled + 1.5 s buffer).
+  // Lenis is created stopped by SmoothScrollProvider, so it won't scroll on its own.
+  // overflow:hidden + wheel/touchmove preventDefault guard against native scroll.
+  // history.scrollRestoration = 'manual' prevents browser from restoring scroll
+  // position on reload / back-navigation before React effects run.
+  // Cleanup always starts Lenis so pages that don't mount HeroSection scroll normally.
   useEffect(() => {
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+
     const html = document.documentElement
     const body = document.body
-    const lenis = lenisRef.current
-    window.scrollTo(0, 0)
-    html.style.overflow = 'hidden'
-    body.style.overflow = 'hidden'
+    html.style.overflow    = 'hidden'
+    body.style.overflow    = 'hidden'
     body.style.touchAction = 'none'
-    lenis?.stop()
+    window.scrollTo(0, 0)
 
-    if (!introComplete) {
-      return () => {
-        html.style.overflow = ''
-        body.style.overflow = ''
-        body.style.touchAction = ''
-        lenis?.start()
-      }
+    // stopLenis() queues a pending-stop even if Lenis hasn't been created yet.
+    // SmoothScrollProvider's effect (parent, runs after children) will honour it.
+    stopLenis()
+
+    const block = (e: Event) => { e.preventDefault() }
+    const reset = () => { if (scrollLockedRef.current) window.scrollTo(0, 0) }
+    window.addEventListener('wheel',     block, { passive: false })
+    window.addEventListener('touchmove', block, { passive: false })
+    window.addEventListener('scroll',    reset, { passive: true  })
+
+    return () => {
+      window.removeEventListener('wheel',     block)
+      window.removeEventListener('touchmove', block)
+      window.removeEventListener('scroll',    reset)
+      html.style.overflow    = ''
+      body.style.overflow    = ''
+      body.style.touchAction = ''
+      // Always start Lenis on unmount so other pages scroll normally
+      scrollLockedRef.current = false
+      startLenis()
     }
+  }, [stopLenis, startLenis])
 
-    html.style.overflow = ''
-    body.style.overflow = ''
+  // Release the lock when introComplete fires (after assembly + 1.5 s)
+  useEffect(() => {
+    if (!introComplete) return
+    const html = document.documentElement
+    const body = document.body
+    scrollLockedRef.current = false
+    html.style.overflow    = ''
+    body.style.overflow    = ''
     body.style.touchAction = ''
-    lenis?.start()
-    return undefined
-  }, [introComplete, lenisRef])
+    startLenis()
+  }, [introComplete, startLenis])
 
   // Animate hero elements in + emit event for SectionScrollRail
   useEffect(() => {
@@ -135,9 +160,11 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
     requestAnimationFrame(() => setOverlayFading(true))
   }, [])
 
-  // Rubik cube fully assembled in hero position → complete intro
+  // Rubik cube fully assembled in hero position → complete intro.
+  // Extra 1.5 s delay keeps scroll locked while the hero text entrance plays,
+  // preventing the user from scrolling before the showcase has a chance to start.
   const handleAssemblyComplete = useCallback(() => {
-    setIntroComplete(true)
+    setTimeout(() => setIntroComplete(true), 1500)
   }, [])
 
   const handleCornerShowcase = useCallback((idx: number | null, lf?: { x: number; y: number }) => {
