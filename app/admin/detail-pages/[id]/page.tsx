@@ -182,6 +182,7 @@ export default function DetailPageEditor() {
   const [copySlug, setCopySlug] = useState('')
   const [copyStatus, setCopyStatus] = useState<'idle' | 'saving' | 'invalid' | 'exists' | 'error'>('idle')
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle')
+  const [sourceTitle, setSourceTitle] = useState<string>('')
   const [deleteStatus, setDeleteStatus] = useState<'idle' | 'deleting' | 'error'>('idle')
 
   useEffect(() => {
@@ -190,7 +191,9 @@ export default function DetailPageEditor() {
 
     fetch(`/api/admin/content?locale=${locale}`)
       .then((r) => r.json())
-      .then((data: { detailPages?: CMSDetailPage[] }) => {
+      .then((data: { detailPages?: CMSDetailPage[]; solutions?: { slug: string; title: string }[]; projects?: { slug: string; title: string }[] }) => {
+        const list = type === 'projects' ? (data.projects ?? []) : (data.solutions ?? [])
+        setSourceTitle(list.find((x) => x.slug === slug)?.title ?? '')
         const cmsPages = data.detailPages ?? []
         setAllPages(cmsPages)
         const cmsPage = cmsPages.find((p) => p.type === type && p.slug === slug)
@@ -608,7 +611,7 @@ export default function DetailPageEditor() {
           <Link href="/admin/detail-pages" className="text-sm text-blue-600 hover:underline">
             ← Trang chi tiết
           </Link>
-          <h1 className="mt-2 text-xl font-bold text-slate-800">{page?.title ? stripHtml(page.title) : '…'}</h1>
+          <h1 className="mt-2 text-xl font-bold text-slate-800">{sourceTitle || (page?.title ? stripHtml(page.title) : '…')}</h1>
           <p className="mt-0.5 text-xs text-slate-400">
             {type} / {slug}
           </p>
@@ -732,13 +735,16 @@ export default function DetailPageEditor() {
             <RichTextEditor value={page.eyebrow} onChange={(v) => updatePage('eyebrow', v)} />
           </div>
 
-          {/* Tiêu đề trang */}
+          {/* Tiêu đề trang — lấy tự động từ tên trong danh sách dự án/giải pháp */}
           <div>
             <div className="mb-1 flex items-center justify-between">
               <span className="text-xs font-medium text-slate-500">Tiêu đề trang</span>
               <ColorSwatch label="tiêu đề" value={page.titleColor} onChange={(c) => updatePage('titleColor', c)} />
             </div>
-            <RichTextEditor value={page.title} onChange={(v) => updatePage('title', v)} />
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700">
+              {sourceTitle || <span className="italic text-slate-400">Chưa có — đặt tên trong trang Dự án / Giải pháp</span>}
+            </div>
+            <p className="mt-1 text-xs text-slate-400">Tiêu đề được lấy tự động từ tên trong danh sách. Để thay đổi, vào trang Dự án hoặc Giải pháp.</p>
           </div>
 
           {/* Tóm tắt */}

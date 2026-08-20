@@ -9,23 +9,32 @@ function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, '').trim()
 }
 
+type SourceItem = { slug: string; title: string }
+
 export default function DetailPagesListPage() {
   const [cmsPages, setCmsPages] = useState<CMSDetailPage[]>([])
+  const [sourceTitles, setSourceTitles] = useState<Record<string, string>>({})
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
     fetch('/api/admin/content?locale=vi')
       .then((r) => r.json())
-      .then((data: { detailPages?: CMSDetailPage[] }) => setCmsPages(data.detailPages ?? []))
+      .then((data: { detailPages?: CMSDetailPage[]; solutions?: SourceItem[]; projects?: SourceItem[] }) => {
+        setCmsPages(data.detailPages ?? [])
+        const map: Record<string, string> = {}
+        for (const s of data.solutions ?? []) map[`solutions--${s.slug}`] = s.title
+        for (const p of data.projects ?? []) map[`projects--${p.slug}`] = p.title
+        setSourceTitles(map)
+      })
   }, [])
 
   function getTitle(type: string, slug: string, fallback: string) {
-    return stripHtml(cmsPages.find((p) => p.type === type && p.slug === slug)?.title ?? fallback)
+    return sourceTitles[`${type}--${slug}`] || stripHtml(fallback)
   }
 
   async function deletePage(page: CMSDetailPage) {
-    const title = stripHtml(page.title) || page.slug
+    const title = sourceTitles[`${page.type}--${page.slug}`] || stripHtml(page.title) || page.slug
     if (!window.confirm(`Xóa vĩnh viễn trang “${title}” ở cả Tiếng Việt và English?`)) return
 
     const id = `${page.type}--${page.slug}`

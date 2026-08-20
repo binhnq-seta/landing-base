@@ -584,9 +584,9 @@ export default async function DetailPage({ params }: DetailPageProps) {
 
   if (!cmsPage) notFound()
 
-  // Always sync title from the source list (projects / solutions) so renaming
-  // in the CRM list propagates here automatically. Fall back to the detail
-  // page's own title only when the item isn't found in the list.
+  // Title always comes from the source list (projects / solutions) so it stays
+  // in sync with menu and footer. Falls back to any value stored in detailPages
+  // only when the item isn't found in the list (edge case).
   const sourceTitle =
     type === 'projects'
       ? content.projects.find((p) => p.slug === slug)?.title
