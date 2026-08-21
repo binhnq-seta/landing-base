@@ -23,6 +23,11 @@ export function ImageUploader({
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Ảnh quá lớn. Vui lòng chọn ảnh nhỏ hơn 10 MB.')
+      if (fileRef.current) fileRef.current.value = ''
+      return
+    }
     setUploading(true)
     setError('')
     try {

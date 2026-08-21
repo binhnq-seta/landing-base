@@ -72,9 +72,9 @@ export function FeaturesSection({ data }: FeaturesSectionProps) {
     const revealTween = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: 'top 95%',
-        end: 'bottom 85%',
-        scrub: 2.5,
+        start: 'top 65%',
+        end: 'bottom 80%',
+        scrub: 1,
       },
     })
 

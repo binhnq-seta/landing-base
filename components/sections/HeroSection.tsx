@@ -86,12 +86,19 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
   }, [])
 
   // Scroll lock: active from mount until introComplete (rubik assembled + 1.5 s buffer).
+  // Skipped entirely on mobile (< 768 px) — native touch scroll feels better there.
   // Lenis is created stopped by SmoothScrollProvider, so it won't scroll on its own.
   // overflow:hidden + wheel/touchmove preventDefault guard against native scroll.
   // history.scrollRestoration = 'manual' prevents browser from restoring scroll
   // position on reload / back-navigation before React effects run.
   // Cleanup always starts Lenis so pages that don't mount HeroSection scroll normally.
   useEffect(() => {
+    // On mobile, skip the lock entirely — just let Lenis run normally
+    if (window.innerWidth < 768) {
+      scrollLockedRef.current = false
+      return () => { startLenis() }
+    }
+
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
 
     const html = document.documentElement
@@ -164,7 +171,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
   // Extra 1.5 s delay keeps scroll locked while the hero text entrance plays,
   // preventing the user from scrolling before the showcase has a chance to start.
   const handleAssemblyComplete = useCallback(() => {
-    setTimeout(() => setIntroComplete(true), 1500)
+    setTimeout(() => setIntroComplete(true), 500)
   }, [])
 
   const handleCornerShowcase = useCallback((idx: number | null, lf?: { x: number; y: number }) => {
