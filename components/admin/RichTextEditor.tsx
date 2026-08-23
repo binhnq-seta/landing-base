@@ -59,6 +59,7 @@ export function RichTextEditor({
   const editorRef = useRef<HTMLDivElement>(null)
   const isInternalChange = useRef(false)
   const savedRange = useRef<Range | null>(null)
+  const pendingColor = useRef('#000000')
 
   useEffect(() => {
     if (isInternalChange.current) {
@@ -193,7 +194,8 @@ export function RichTextEditor({
             type="color"
             defaultValue="#000000"
             className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-            onChange={(e) => { restoreRange(); runCommand('foreColor', e.target.value) }}
+            onChange={(e) => { pendingColor.current = e.target.value }}
+            onBlur={() => { restoreRange(); runCommand('foreColor', pendingColor.current) }}
           />
         </label>
 
