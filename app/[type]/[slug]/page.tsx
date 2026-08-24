@@ -600,6 +600,12 @@ export default async function DetailPage({ params }: DetailPageProps) {
   const relatedPages = content.detailPages
     .filter((item) => item.type === type && item.slug !== slug)
     .slice(0, 3)
+    .map((item) => {
+      const src = item.type === 'projects'
+        ? content.projects.find((p) => p.slug === item.slug)?.title
+        : content.solutions.find((s) => s.slug === item.slug)?.title
+      return src ? { ...item, title: src } : item
+    })
 
   return (
     <>
