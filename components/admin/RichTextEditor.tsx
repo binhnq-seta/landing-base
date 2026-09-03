@@ -60,6 +60,7 @@ export function RichTextEditor({
   const isInternalChange = useRef(false)
   const savedRange = useRef<Range | null>(null)
   const pendingColor = useRef('#000000')
+  const pendingBgColor = useRef('#ffff00')
 
   useEffect(() => {
     if (isInternalChange.current) {
@@ -196,6 +197,21 @@ export function RichTextEditor({
             className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
             onChange={(e) => { pendingColor.current = e.target.value }}
             onBlur={() => { restoreRange(); runCommand('foreColor', pendingColor.current) }}
+          />
+        </label>
+
+        <label
+          className="relative flex cursor-pointer items-center gap-1 rounded px-1.5 py-0.5 hover:bg-slate-200"
+          title="Màu nền chữ"
+          onMouseDown={saveRange}
+        >
+          <span className="text-xs font-bold" style={{ background: '#facc15', padding: '0 2px', borderRadius: 2 }}>A</span>
+          <input
+            type="color"
+            defaultValue="#ffff00"
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            onChange={(e) => { pendingBgColor.current = e.target.value }}
+            onBlur={() => { restoreRange(); runCommand('hiliteColor', pendingBgColor.current) }}
           />
         </label>
 

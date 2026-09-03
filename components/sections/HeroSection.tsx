@@ -171,7 +171,7 @@ export function HeroSection({ data, showcaseCorners: cmsCorners, heroStats, hero
   // Extra 1.5 s delay keeps scroll locked while the hero text entrance plays,
   // preventing the user from scrolling before the showcase has a chance to start.
   const handleAssemblyComplete = useCallback(() => {
-    setTimeout(() => setIntroComplete(true), 500)
+    setTimeout(() => setIntroComplete(true), 600)
   }, [])
 
   const handleCornerShowcase = useCallback((idx: number | null, lf?: { x: number; y: number }) => {

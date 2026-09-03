@@ -113,6 +113,29 @@ const SECTION_TITLE_SIZE_CLS: Record<string, string> = {
   '4xl':'text-5xl sm:text-6xl',
 }
 
+// ─── PDF download button ─────────────────────────────────────────────────────
+
+function PdfButton({ section, locale }: { section: CMSDetailSection; locale: SupportedLocale }) {
+  if (!section.pdfUrl) return null
+  return (
+    <a
+      href={section.pdfUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-6 inline-flex items-center gap-2.5 rounded-full border-2 border-[#00162F] px-5 py-2 text-sm font-semibold text-[#00162F] transition-all hover:bg-[#00162F] hover:text-white"
+    >
+      <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+      {section.pdfLabel || (locale === 'en' ? 'View PDF document' : 'Xem tài liệu PDF')}
+    </a>
+  )
+}
+
 // ─── Content sections (always alternating split) ───────────────────────────────
 
 function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; locale: SupportedLocale }) {
@@ -124,16 +147,21 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
         const sectionKind = section.kind ?? 'content'
         if (sectionKind === 'heading') {
           return (
-            <section key={section.title + i} className={`rounded-[1.5rem] px-5 py-4 md:px-10 md:py-6 ${section.titleAlign === 'left' ? 'text-left' : section.titleAlign === 'right' ? 'text-right' : 'text-center'}`}>
+            <section
+              key={section.title + i}
+              className={`rounded-[1.5rem] px-5 py-4 md:px-10 md:py-6 ${section.titleAlign === 'left' ? 'text-left' : section.titleAlign === 'right' ? 'text-right' : 'text-center'}`}
+              style={section.backgroundColor ? { background: section.backgroundColor } : undefined}
+            >
               <h2
                 data-detail-reveal
-                className={`mx-auto max-w-4xl font-extrabold uppercase leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'}`}
+                className={`mx-auto max-w-4xl font-extrabold uppercase leading-[1.2] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'}`}
                 style={{ color: section.titleColor ?? '#00162F' }}
                 dangerouslySetInnerHTML={{ __html: section.title }}
               />
               {section.description && (
                 <div data-detail-reveal data-detail-delay="0.1" className="mx-auto mt-2 max-w-2xl text-lg font-semibold text-slate-500 md:text-xl [&_p]:mb-1" dangerouslySetInnerHTML={{ __html: section.description }} />
               )}
+              <PdfButton section={section} locale={locale} />
             </section>
           )
         }
@@ -141,15 +169,20 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
         if (sectionKind === 'casestudies') {
           const points = section.points ?? []
           return (
-            <section key={section.title + i} className="space-y-6">
+            <section
+              key={section.title + i}
+              className={`space-y-6 ${section.backgroundColor ? 'rounded-[1.5rem] px-6 py-8 md:px-12 md:py-12' : ''}`}
+              style={section.backgroundColor ? { background: section.backgroundColor } : undefined}
+            >
               {section.title && (
                 <h2
                   data-detail-reveal
-                  className={`max-w-4xl font-extrabold uppercase leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                  className={`max-w-4xl font-extrabold uppercase leading-[1.2] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
                   style={{ color: section.titleColor ?? '#00162F' }}
                   dangerouslySetInnerHTML={{ __html: section.title }}
                 />
               )}
+              <PdfButton section={section} locale={locale} />
               <div className="grid gap-4 sm:grid-cols-2">
                 {points.map((point, idx) => {
                   const href = point.href
@@ -230,6 +263,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                       </article>
                     ))}
                   </div>
+                  <PdfButton section={section} locale={locale} />
                 </div>
               </section>
             )
@@ -238,13 +272,17 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
           // ── Default side-by-side variant ──────────────────────────────────
           const imgRight = section.imagePosition !== 'left'
           return (
-            <section key={section.title + i}>
+            <section
+              key={section.title + i}
+              className={section.backgroundColor ? 'rounded-[1.5rem] px-6 py-8 md:px-12 md:py-12' : ''}
+              style={section.backgroundColor ? { background: section.backgroundColor } : undefined}
+            >
               <div className="grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:gap-10 lg:gap-12">
                 <div className={`space-y-6 ${imgRight ? 'order-2 md:order-1' : 'order-2 md:order-2'}`}>
                   {section.title && (
                     <h2
                       data-detail-reveal
-                      className={`font-extrabold uppercase leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                      className={`font-extrabold uppercase leading-[1.2] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
                       style={{ color: section.titleColor ?? '#00162F' }}
                       dangerouslySetInnerHTML={{ __html: section.title }}
                     />
@@ -278,6 +316,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                       <p className="text-sm text-slate-400">Chưa có dữ liệu text/desc cho khối này.</p>
                     )}
                   </div>
+                  <PdfButton section={section} locale={locale} />
                 </div>
 
                 <div className={`${imgRight ? 'order-1 md:order-2' : 'order-1 md:order-1'} md:sticky md:top-28`}>
@@ -318,7 +357,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
               <div className="relative z-10 px-8 py-14 md:px-16 md:py-20">
                 <h2
                   data-detail-reveal
-                  className={`max-w-3xl font-extrabold leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                  className={`max-w-3xl font-extrabold leading-[1.2] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
                   style={{ color: section.titleColor ?? '#ffffff' }}
                   dangerouslySetInnerHTML={{ __html: section.title }}
                 />
@@ -329,13 +368,18 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                   dangerouslySetInnerHTML={{ __html: toRichHtml(section.description) }}
                 />
                 <SectionButton href={section.buttonHref} locale={locale} variant="light" />
+                <PdfButton section={section} locale={locale} />
               </div>
             </section>
           )
         }
 
         return (
-          <section key={section.title + i} className="grid items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
+          <section
+            key={section.title + i}
+            className={`grid items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16 ${section.backgroundColor ? 'rounded-[1.5rem] px-6 py-8 md:px-12 md:py-12' : ''}`}
+            style={section.backgroundColor ? { background: section.backgroundColor } : undefined}
+          >
             <div
               data-detail-reveal
               className={`relative overflow-hidden rounded-[1.5rem] bg-slate-200 md:rounded-[2rem] ${imgAspect(style)} ${style === 'contain' ? 'object-contain bg-slate-100' : ''} ${imgRight ? 'md:order-2' : ''}`}
@@ -359,7 +403,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
               <h2
                 data-detail-reveal
                 data-detail-delay="0.08"
-                className={`max-w-xl font-extrabold leading-[1.1] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
+                className={`max-w-xl font-extrabold leading-[1.2] tracking-[-0.01em] ${section.titleSize ? SECTION_TITLE_SIZE_CLS[section.titleSize] : 'text-[clamp(2rem,2.5vw,3rem)]'} ${section.titleAlign === 'center' ? 'text-center' : section.titleAlign === 'right' ? 'text-right' : ''}`}
                 style={{ color: section.titleColor ?? '#00162F' }}
                 dangerouslySetInnerHTML={{ __html: section.title }}
               />
@@ -370,6 +414,7 @@ function ContentSections({ sections, locale }: { sections: CMSDetailSection[]; l
                 dangerouslySetInnerHTML={{ __html: toRichHtml(section.description) }}
               />
               <SectionButton href={section.buttonHref} locale={locale} />
+              <PdfButton section={section} locale={locale} />
             </div>
           </section>
         )

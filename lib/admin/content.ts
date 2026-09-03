@@ -80,6 +80,7 @@ export interface CMSDetailSection {
   titleSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
   titleAlign?: 'left' | 'center' | 'right'
   titleColor?: string
+  backgroundColor?: string
   description: string
   image: string
   imageAlt: string
@@ -87,6 +88,8 @@ export interface CMSDetailSection {
   imageStyle?: DetailImageStyle
   backgroundOpacity?: number
   buttonHref?: string
+  pdfUrl?: string
+  pdfLabel?: string
   points?: CMSDetailPoint[]
 }
 

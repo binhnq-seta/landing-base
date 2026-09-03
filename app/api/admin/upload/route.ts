@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { verifySessionToken } from '@/lib/admin/auth'
-import { writeFile, mkdir } from 'node:fs/promises'
+import { writeFile, mkdir, unlink } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml', 'application/pdf']
 const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 
 async function authorize(): Promise<boolean> {
@@ -61,4 +61,32 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ url: `/uploads/${name}` })
+}
+
+export async function DELETE(request: Request) {
+  if (!(await authorize())) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { url } = await request.json() as { url?: string }
+  if (!url || !url.startsWith('/uploads/')) {
+    return NextResponse.json({ error: 'Chỉ xóa được file trong /uploads/.' }, { status: 400 })
+  }
+
+  // Prevent path traversal: filename must not contain directory separators
+  const filename = path.basename(url)
+  if (!filename || filename !== url.slice('/uploads/'.length)) {
+    return NextResponse.json({ error: 'Tên file không hợp lệ.' }, { status: 400 })
+  }
+
+  const filePath = path.join(process.cwd(), 'public', 'uploads', filename)
+  try {
+    await unlink(filePath)
+  } catch (err) {
+    const code = (err as NodeJS.ErrnoException).code
+    if (code === 'ENOENT') return NextResponse.json({ ok: true }) // already gone
+    return NextResponse.json({ error: 'Không thể xóa file.' }, { status: 500 })
+  }
+
+  return NextResponse.json({ ok: true })
 }

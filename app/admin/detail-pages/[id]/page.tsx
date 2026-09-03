@@ -397,6 +397,8 @@ export default function DetailPageEditor() {
               kind: src.kind,
               titleSize: src.titleSize,
               titleAlign: src.titleAlign,
+              backgroundColor: src.backgroundColor,
+              pdfUrl: src.pdfUrl,
             }
           }),
         }
@@ -449,6 +451,8 @@ export default function DetailPageEditor() {
             buttonHref: src.buttonHref,
             titleSize: src.titleSize,
             titleAlign: src.titleAlign,
+            backgroundColor: src.backgroundColor,
+            pdfUrl: src.pdfUrl,
             title: !isEmpty(tgt?.title) ? tgt!.title : src.title,
             description: !isEmpty(tgt?.description) ? tgt!.description : src.description,
             imageAlt: !isEmpty(tgt?.imageAlt) ? tgt!.imageAlt : src.imageAlt,
@@ -905,6 +909,36 @@ export default function DetailPageEditor() {
               </select>
             </Field>
 
+            {/* Background color for section */}
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-medium text-slate-500">Màu nền mục</label>
+              <label
+                className="relative flex cursor-pointer items-center gap-1.5 rounded px-1.5 py-0.5 text-[10px] text-slate-400 hover:bg-slate-100"
+                title="Màu nền mục"
+              >
+                <span
+                  className="inline-block h-4 w-8 rounded border border-slate-300"
+                  style={{ background: section.backgroundColor ?? 'transparent' }}
+                />
+                <input
+                  type="color"
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                  value={section.backgroundColor ?? '#ffffff'}
+                  onChange={(e) => updateSection(i, 'backgroundColor', e.target.value)}
+                />
+              </label>
+              {section.backgroundColor && (
+                <button
+                  type="button"
+                  onClick={() => updateSection(i, 'backgroundColor', undefined)}
+                  className="text-[10px] text-slate-400 hover:text-red-500"
+                  title="Xóa màu nền"
+                >
+                  ✕ Bỏ màu nền
+                </button>
+              )}
+            </div>
+
             {/* Title + size + alignment row */}
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2">
@@ -1069,6 +1103,28 @@ export default function DetailPageEditor() {
                 ))}
               </div>
             )}
+
+            {/* PDF upload — available for all section types */}
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 space-y-2">
+              <p className="text-xs font-semibold text-slate-500">File PDF đính kèm (tuỳ chọn)</p>
+              <ImageUploader
+                label=""
+                value={section.pdfUrl ?? ''}
+                onChange={(url) => updateSection(i, 'pdfUrl', url)}
+                fileType="pdf"
+              />
+              {section.pdfUrl && (
+                <div>
+                  <label className="text-xs font-medium text-slate-500">Nhãn nút PDF</label>
+                  <input
+                    className={`mt-1 ${inputCls}`}
+                    placeholder='Mặc định: "Xem tài liệu PDF"'
+                    value={section.pdfLabel ?? ''}
+                    onChange={(e) => updateSection(i, 'pdfLabel', e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
 
             {!isHeading && !isImagePoints && (
               <>
